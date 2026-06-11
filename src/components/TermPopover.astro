@@ -111,6 +111,12 @@ const popId = `pop-${slug}`;
     color: var(--accent);
   }
 
+  /* The explicit display below would otherwise override the `hidden`
+     attribute's UA `display:none` (equal specificity, author wins), leaving
+     every panel visible and overlapping. Keep this rule. */
+  .term-panel[hidden] {
+    display: none;
+  }
   .term-panel {
     position: absolute;
     left: 0;

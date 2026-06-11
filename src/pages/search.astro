@@ -65,6 +65,7 @@ import { withBase } from '@lib/paths';
   type Pagefind = {
     search: (q: string) => Promise<{ results: { data: () => Promise<PagefindResultData> }[] }>;
     options?: (o: Record<string, unknown>) => Promise<void>;
+    init?: () => Promise<void>;
   };
 
   let pagefind: Pagefind | null = null;
@@ -73,15 +74,19 @@ import { withBase } from '@lib/paths';
   async function getPagefind(): Promise<Pagefind | null> {
     if (pagefind || loadError) return pagefind;
     try {
-      // Runtime path; Vite must not try to bundle it.
-      pagefind = (await import(/* @vite-ignore */ `${BASE}pagefind/pagefind.js`)) as Pagefind;
-      await pagefind.options?.({ excerptLength: 24 });
+      // Runtime path; Vite must not try to bundle it. Pagefind builds this file
+      // at `astro build`, so search runs in build/preview/production — not dev.
+      const mod = (await import(/* @vite-ignore */ `${BASE}pagefind/pagefind.js`)) as Pagefind;
+      // options()/init() are best-effort: never let them break search.
+      try { await mod.options?.({ excerptLength: 24 }); } catch { /* ignore */ }
+      try { await mod.init?.(); } catch { /* ignore */ }
+      pagefind = mod;
       return pagefind;
     } catch {
       loadError = true;
       if (statusEl)
         statusEl.textContent =
-          'Search index unavailable. Run a production build (it indexes at build time).';
+          'Search isn’t available here. It’s built at compile time, so use a production build (npm run build && npm run preview) rather than the dev server.';
       return null;
     }
   }

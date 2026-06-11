@@ -10,9 +10,12 @@ export interface Props {
   themeNames: Record<string, string>; // slug -> display name
   status: 'complete' | 'in-review' | 'stub';
   fifteenDay?: boolean;
+  sourceUrl: string; // erisale deep link (or book landing if page unknown)
+  page?: number; // erisale page number, when confirmed
 }
 
-const { number, slug, title, essence, themes, themeNames, status, fifteenDay } = Astro.props;
+const { number, slug, title, essence, themes, themeNames, status, fifteenDay, sourceUrl, page } =
+  Astro.props;
 const href = withBase(`/flashes/${slug}/`);
 ---
 
@@ -41,6 +44,9 @@ const href = withBase(`/flashes/${slug}/`);
         <span class="chip">{themeNames[t] ?? t}</span>
       ))
     }
+    <a class="card-source" href={sourceUrl} rel="noopener" target="_blank">
+      {page ? `erisale · p. ${page} →` : 'erisale →'}
+    </a>
   </div>
 </article>
 
@@ -155,4 +161,13 @@ const href = withBase(`/flashes/${slug}/`);
     color: var(--muted);
     border: 1px dashed var(--hairline);
   }
+  .card-source {
+    margin-left: auto;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .card-source:hover { color: var(--accent-strong); text-decoration: underline; }
 </style>

@@ -1,0 +1,370 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CompanionNotice from '@components/CompanionNotice.astro';
+import OpeningVerses from '@components/OpeningVerses.astro';
+import ReadToggle from '@components/ReadToggle.astro';
+import { withBase } from '@lib/paths';
+
+export async function getStaticPaths() {
+  const flashes = (await getCollection('flashes')).sort(
+    (a, b) => a.data.number - b.data.number
+  );
+  return flashes.map((flash, i) => ({
+    params: { slug: flash.id },
+    props: {
+      flash,
+      prev: i > 0 ? flashes[i - 1] : null,
+      next: i < flashes.length - 1 ? flashes[i + 1] : null,
+    },
+  }));
+}
+
+const { flash, prev, next } = Astro.props;
+const d = flash.data;
+const { Content } = await render(flash);
+
+const themes = await getCollection('themes');
+const themeNames: Record<string, string> = Object.fromEntries(
+  themes.map((t) => [t.id, t.data.name])
+);
+
+const glossary = await getCollection('glossary');
+const termNames: Record<string, string> = Object.fromEntries(
+  glossary.map((g) => [g.id, g.data.term])
+);
+
+const sourceUrl = d.source.erisaleUrlEn;
+---
+
+<BaseLayout title={d.title} description={d.essence}>
+  <article class="wrap flash">
+    {/* ---- Header ---- */}
+    <header class="flash-head glow-title">
+      <p class="eyebrow">
+        <a href={withBase('/flashes/')}>The Flashes</a> · No. {d.number}
+        {d.status !== 'complete' && <span class="status-pill">{d.status === 'in-review' ? 'In review' : 'Outline coming'}</span>}
+      </p>
+      <h1>{d.title}</h1>
+      {d.titleTr && <p class="title-tr ui muted" lang="tr">{d.titleTr}</p>}
+      <p class="essence">{d.essence}</p>
+
+      {d.special?.fifteenDayReminder && (
+        <p class="fifteen-day ui">
+          <span aria-hidden="true">✦</span> Nursî asked that this Flash be read at
+          least once every fifteen days.
+        </p>
+      )}
+
+      <div class="head-meta ui">
+        {d.readingTimeMin && <span class="meta-item">~{d.readingTimeMin} min companion read</span>}
+        {d.context?.writtenWhere && <span class="meta-item">{d.context.writtenWhere}</span>}
+        {d.context?.writtenWhen && <span class="meta-item">{d.context.writtenWhen}</span>}
+      </div>
+
+      <div class="head-actions">
+        <a class="source-btn ui" href={sourceUrl} rel="noopener" target="_blank">
+          Read the full text on erisale.com →
+        </a>
+        <ReadToggle number={d.number} />
+      </div>
+
+      {d.context?.note && <p class="context-note ui muted">{d.context.note}</p>}
+    </header>
+
+    <CompanionNotice sourceUrl={sourceUrl} />
+
+    {/* ---- Opening verses ---- */}
+    {d.openingVerses && d.openingVerses.length > 0 && (
+      <OpeningVerses verses={d.openingVerses} />
+    )}
+
+    {/* ---- Outline ---- */}
+    {d.outline.length > 0 && (
+      <section class="outline" aria-label="Structural outline">
+        <h2 class="section-head">Outline</h2>
+        <p class="section-sub ui muted">Our structural map of the Flash — not the text itself.</p>
+        <ol class="outline-list">
+          {d.outline.map((node) => (
+            <li class="outline-node" id={node.id}>
+              <h3 class="outline-heading">
+                {node.sourcePageRef ? (
+                  <a href={node.sourcePageRef} rel="noopener" target="_blank">{node.heading}</a>
+                ) : (
+                  node.heading
+                )}
+              </h3>
+              {node.note && <p class="outline-note">{node.note}</p>}
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    <hr class="gleam" />
+
+    {/* ---- Companion summary (the markdown body) ---- */}
+    <section class="summary" aria-label="Companion summary">
+      <h2 class="section-head">Companion summary</h2>
+      <div class="prose summary-body">
+        <Content />
+      </div>
+    </section>
+
+    {/* ---- Key concepts ---- */}
+    {d.keyConcepts.length > 0 && (
+      <section class="concepts" aria-label="Key concepts">
+        <h2 class="section-head">Key concepts</h2>
+        <ul class="concept-list ui">
+          {d.keyConcepts.map((slug) => (
+            <li>
+              <a class="concept" href={`${withBase('/glossary/')}#${slug}`}>
+                {termNames[slug] ?? slug}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {/* ---- Cross references ---- */}
+    {d.crossRefs && d.crossRefs.length > 0 && (
+      <section class="crossrefs ui" aria-label="Cross references">
+        <h2 class="section-head">Related elsewhere</h2>
+        <ul>
+          {d.crossRefs.map((c) => (
+            <li>
+              <strong>{c.work}</strong> — {c.ref}
+              {c.note && <span class="muted"> · {c.note}</span>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {/* ---- Themes ---- */}
+    {d.themes.length > 0 && (
+      <section class="flash-themes ui" aria-label="Themes">
+        {d.themes.map((t) => (
+          <a class="chip" href={`${withBase('/themes/')}#${t}`}>{themeNames[t] ?? t}</a>
+        ))}
+      </section>
+    )}
+
+    <hr class="gleam" />
+
+    {/* ---- Footer source link + prev/next ---- */}
+    <footer class="flash-foot ui">
+      <a class="source-btn" href={sourceUrl} rel="noopener" target="_blank">
+        Read the full text on erisale.com →
+      </a>
+      <nav class="flash-nav" aria-label="Flash navigation">
+        {prev ? (
+          <a class="nav-prev" href={withBase(`/flashes/${prev.id}/`)}>
+            <span class="nav-dir">← Previous</span>
+            <span class="nav-title">{prev.data.title}</span>
+          </a>
+        ) : <span />}
+        {next ? (
+          <a class="nav-next" href={withBase(`/flashes/${next.id}/`)}>
+            <span class="nav-dir">Next →</span>
+            <span class="nav-title">{next.data.title}</span>
+          </a>
+        ) : <span />}
+      </nav>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .flash { max-width: var(--measure); }
+
+  .flash-head { padding-block: var(--space-l) var(--space-s); }
+  .eyebrow a { color: var(--muted); text-decoration: none; }
+  .eyebrow a:hover { color: var(--accent); }
+  .status-pill {
+    margin-left: var(--space-2xs);
+    padding: 0.1rem 0.5rem;
+    border: 1px dashed var(--hairline);
+    border-radius: 100px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .title-tr { margin: calc(-1 * var(--space-2xs)) 0 var(--space-s); font-size: var(--step-0); }
+  .essence {
+    font-size: var(--step-1);
+    color: var(--text);
+    margin-top: var(--space-2xs);
+  }
+  .fifteen-day {
+    display: flex;
+    gap: var(--space-2xs);
+    align-items: baseline;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    padding: var(--space-2xs) var(--space-s);
+    font-size: var(--step--1);
+    color: var(--text);
+  }
+  .fifteen-day span { color: var(--accent); }
+
+  .head-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    font-size: var(--step--1);
+    color: var(--muted);
+    margin-block: var(--space-s);
+  }
+  .meta-item { white-space: nowrap; }
+
+  .head-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    align-items: center;
+    margin-bottom: var(--space-s);
+  }
+  .source-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2xs) var(--space-m);
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: var(--step--1);
+    text-decoration: none;
+    border-radius: var(--radius-s);
+    transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .source-btn:hover { background: var(--accent-strong); color: var(--bg); }
+  @media (prefers-reduced-motion: no-preference) {
+    .source-btn:hover { transform: translateY(-1px); }
+  }
+  .context-note { font-size: var(--step--1); margin-top: var(--space-2xs); }
+
+  .section-head {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-3xs);
+  }
+  .section-sub { font-size: var(--step--1); margin-top: 0; }
+
+  /* Outline */
+  .outline-list {
+    list-style: none;
+    counter-reset: outline;
+    margin: var(--space-s) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+  .outline-node {
+    counter-increment: outline;
+    padding: var(--space-s) var(--space-m);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-m);
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .outline-node:hover { transform: translateX(3px); }
+  }
+  .outline-heading {
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    font-weight: 600;
+    margin: 0;
+  }
+  .outline-heading::before {
+    content: counter(outline) '. ';
+    color: var(--accent);
+    font-family: var(--font-ui);
+  }
+  .outline-heading a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--accent); }
+  .outline-note {
+    margin: var(--space-3xs) 0 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+  }
+
+  /* Summary */
+  .summary-body :global(p:first-child) {
+    font-size: var(--step--1);
+    color: var(--muted);
+    font-family: var(--font-ui);
+    border-left: 2px solid var(--hairline);
+    padding-left: var(--space-s);
+  }
+
+  /* Concepts */
+  .concept-list {
+    list-style: none;
+    margin: var(--space-s) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+  .concept {
+    display: inline-block;
+    padding: var(--space-3xs) var(--space-s);
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: var(--step--1);
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .concept:hover { border-color: var(--accent); color: var(--accent); }
+
+  .crossrefs ul { list-style: none; padding: 0; margin: var(--space-s) 0 0; }
+  .crossrefs li { margin-bottom: var(--space-2xs); font-size: var(--step--1); }
+
+  .flash-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+  }
+  .flash-themes .chip {
+    padding: var(--space-3xs) var(--space-s);
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: var(--step--1);
+  }
+  .flash-themes .chip:hover { color: var(--accent); border-color: var(--accent); }
+
+  .flash-foot { display: flex; flex-direction: column; gap: var(--space-l); }
+  .flash-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-m);
+  }
+  .flash-nav a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    text-decoration: none;
+    color: var(--text);
+    padding: var(--space-s);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .flash-nav a:hover { border-color: var(--accent); }
+  .nav-next { text-align: right; }
+  .nav-dir { font-size: var(--step--1); color: var(--accent); }
+  .nav-title { font-size: var(--step--1); color: var(--muted); }
+
+  @media (max-width: 34rem) {
+    .flash-nav { grid-template-columns: 1fr; }
+    .nav-next { text-align: left; }
+  }
+</style>

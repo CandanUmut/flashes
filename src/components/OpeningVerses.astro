@@ -1,0 +1,76 @@
+---
+export interface Verse {
+  arabic: string;
+  translationEn: string;
+  reference: string;
+  translationSource: string;
+}
+export interface Props {
+  verses: Verse[];
+}
+const { verses } = Astro.props;
+---
+
+<section class="verses" aria-label="Opening verses">
+  <h2 class="section-head">Opening verses</h2>
+  <ol class="verse-list">
+    {
+      verses.map((v) => (
+        <li class="verse">
+          <p class="arabic" lang="ar" dir="rtl">{v.arabic}</p>
+          <p class="verse-en">
+            “{v.translationEn}”
+            <span class="verse-ref ui">{v.reference}</span>
+          </p>
+          <p class="verse-src ui muted">Translation: {v.translationSource}</p>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="verse-disclaimer ui muted">
+    Arabic verse text is shown as-is. English meanings are limited, attributed
+    quotations of individual verses for study reference.
+  </p>
+</section>
+
+<style>
+  .verses {
+    margin-block: var(--space-l);
+  }
+  .verse-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+  .verse {
+    padding: var(--space-m);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+  }
+  .verse .arabic {
+    margin: 0 0 var(--space-2xs);
+    text-align: right;
+  }
+  .verse-en {
+    margin: 0;
+    font-size: var(--step-0);
+  }
+  .verse-ref {
+    display: inline-block;
+    margin-left: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--accent);
+  }
+  .verse-src {
+    margin: var(--space-3xs) 0 0;
+    font-size: 0.75rem;
+  }
+  .verse-disclaimer {
+    margin-top: var(--space-s);
+    font-size: 0.75rem;
+  }
+</style>

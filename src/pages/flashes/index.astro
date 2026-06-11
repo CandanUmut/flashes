@@ -1,11 +1,165 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import ComingSoon from '@components/ComingSoon.astro';
+import FlashCard from '@components/FlashCard.astro';
+
+const flashes = (await getCollection('flashes')).sort(
+  (a, b) => a.data.number - b.data.number
+);
+const themes = await getCollection('themes');
+
+const themeNames: Record<string, string> = Object.fromEntries(
+  themes.map((t) => [t.id, t.data.name])
+);
+
+// Only offer filters for themes actually used by at least one Flash.
+const usedThemeSlugs = new Set(flashes.flatMap((f) => f.data.themes));
+const filterThemes = themes
+  .filter((t) => usedThemeSlugs.has(t.id))
+  .map((t) => ({ slug: t.id, name: t.data.name }));
 ---
 
-<BaseLayout title="The Flashes">
-  <ComingSoon
-    title="The 33 Flashes"
-    note="An index of all 33 Flashes — each with its number, title, one-line essence, theme tags and reading status."
-  />
+<BaseLayout title="The Flashes" description="An index of all 33 Flashes from Lem'alar — outlines, essences and themes, with links to the official text.">
+  <section class="wrap">
+    <header class="index-head glow-title">
+      <p class="eyebrow">Lem’alar · 33 Flashes</p>
+      <h1>The Flashes</h1>
+      <p class="prose muted">
+        Companion notes for each of the thirty-three Flashes — a one-line
+        essence, themes, and a link to read the original. Filter by theme, and
+        flashes you mark as read are dotted.
+      </p>
+    </header>
+
+    <div class="toolbar ui">
+      <div class="filters" role="group" aria-label="Filter by theme">
+        <button type="button" class="filter is-active" data-theme="all" aria-pressed="true">
+          All <span class="count">{flashes.length}</span>
+        </button>
+        {
+          filterThemes.map((t) => (
+            <button type="button" class="filter" data-theme={t.slug} aria-pressed="false">
+              {t.name}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <p class="empty-msg ui muted" hidden>No Flashes match this theme.</p>
+
+    <ul class="flash-grid" id="flash-grid">
+      {
+        flashes.map((f) => (
+          <li>
+            <FlashCard
+              number={f.data.number}
+              slug={f.id}
+              title={f.data.title}
+              essence={f.data.essence}
+              themes={f.data.themes}
+              themeNames={themeNames}
+              status={f.data.status}
+              fifteenDay={f.data.special?.fifteenDayReminder}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </BaseLayout>
+
+<script>
+  import { getReadFlashes } from '@lib/progress';
+
+  // Mark read flashes (read-only display; toggling happens on the Flash page).
+  const read = getReadFlashes();
+  document.querySelectorAll<HTMLElement>('.flash-card[data-flash]').forEach((card) => {
+    if (read.has(Number(card.dataset.flash))) card.classList.add('is-read');
+  });
+
+  // Theme filter.
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter'));
+  const cards = Array.from(document.querySelectorAll<HTMLLIElement>('#flash-grid > li'));
+  const emptyMsg = document.querySelector<HTMLElement>('.empty-msg');
+
+  function applyFilter(theme: string) {
+    let visible = 0;
+    cards.forEach((li) => {
+      const card = li.querySelector<HTMLElement>('.flash-card');
+      const themes = (card?.dataset.themes ?? '').split(/\s+/).filter(Boolean);
+      const show = theme === 'all' || themes.includes(theme);
+      li.hidden = !show;
+      if (show) visible++;
+    });
+    buttons.forEach((b) => {
+      const active = b.dataset.theme === theme;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    if (emptyMsg) emptyMsg.hidden = visible !== 0;
+  }
+
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => applyFilter(b.dataset.theme ?? 'all'))
+  );
+</script>
+
+<style>
+  .index-head {
+    padding-block: var(--space-l) var(--space-m);
+    text-align: center;
+  }
+  .index-head .prose { margin-inline: auto; }
+
+  .toolbar {
+    margin-block: var(--space-m);
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    justify-content: center;
+  }
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 38px;
+    padding: var(--space-3xs) var(--space-s);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    color: var(--muted);
+    font-size: var(--step--1);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .filter:hover { color: var(--text); border-color: var(--accent); }
+  .filter.is-active {
+    color: var(--bg);
+    background: var(--accent);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .filter .count {
+    font-size: 0.72rem;
+    opacity: 0.8;
+  }
+
+  .empty-msg {
+    text-align: center;
+    padding-block: var(--space-l);
+  }
+
+  .flash-grid {
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  }
+  .flash-grid > li { display: flex; }
+  .flash-grid > li[hidden] { display: none; }
+</style>

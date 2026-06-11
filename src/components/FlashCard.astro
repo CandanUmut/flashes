@@ -1,0 +1,146 @@
+---
+import { withBase } from '@lib/paths';
+
+export interface Props {
+  number: number;
+  slug: string;
+  title: string;
+  essence: string;
+  themes: string[]; // theme slugs
+  themeNames: Record<string, string>; // slug -> display name
+  status: 'complete' | 'in-review' | 'stub';
+  fifteenDay?: boolean;
+}
+
+const { number, slug, title, essence, themes, themeNames, status, fifteenDay } = Astro.props;
+const href = withBase(`/flashes/${slug}/`);
+---
+
+<article
+  class="flash-card"
+  data-flash={number}
+  data-themes={themes.join(' ')}
+>
+  <a class="card-link" href={href} aria-label={`${title} — open companion notes`}>
+    <header class="card-head">
+      <span class="card-number" aria-hidden="true">{number}</span>
+      <span class="read-dot" title="Read" aria-hidden="true"></span>
+    </header>
+    <h2 class="card-title">{title}</h2>
+    <p class="card-essence">{essence}</p>
+  </a>
+
+  <div class="card-meta ui">
+    {fifteenDay && <span class="badge badge-15">Read every 15 days</span>}
+    {status !== 'complete' && <span class="badge badge-status">{status === 'in-review' ? 'In review' : 'Outline coming'}</span>}
+    {
+      themes.map((t) => (
+        <span class="chip">{themeNames[t] ?? t}</span>
+      ))
+    }
+  </div>
+</article>
+
+<style>
+  .flash-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .flash-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flash-card:hover { border-color: var(--accent); }
+  }
+  .flash-card:focus-within { border-color: var(--accent); }
+
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-m) var(--space-m) var(--space-s);
+    text-decoration: none;
+    color: var(--text);
+    flex: 1;
+  }
+  .card-link:focus-visible { outline-offset: -3px; }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-number {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+    filter: drop-shadow(0 0 10px var(--glow));
+  }
+  .read-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--hairline);
+    background: transparent;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  /* Marked-read state, toggled by the index script. */
+  .flash-card.is-read .read-dot {
+    opacity: 1;
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--glow);
+  }
+  .flash-card.is-read .card-number { color: var(--muted); filter: none; }
+
+  .card-title {
+    font-size: var(--step-1);
+    margin: 0;
+  }
+  .card-essence {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    max-width: none;
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-2xs);
+    padding: 0 var(--space-m) var(--space-m);
+    align-items: center;
+  }
+  .chip,
+  .badge {
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    padding: 0.18rem 0.5rem;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .chip {
+    color: var(--muted);
+    border: 1px solid var(--hairline);
+  }
+  .badge-15 {
+    color: var(--bg);
+    background: var(--accent);
+    font-weight: 600;
+  }
+  .badge-status {
+    color: var(--muted);
+    border: 1px dashed var(--hairline);
+  }
+</style>

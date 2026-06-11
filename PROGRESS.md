@@ -43,10 +43,18 @@ Toggle the theme (top-right); check Home → About; confirm nav links work.
 
 **Preview:** content isn't surfaced in pages yet (that's Phase 2). To inspect, open the `.md`/`.yaml` files under `src/content/`. `npm run check` validates all of it against the schemas.
 
-### ⏭ Phase 2 — Reading/companion pages  (NEXT)
-- Flashes index (`/flashes/`): card grid (number, title, essence, theme tags, read-status placeholder), theme filter, 15-day badge on the 21st.
-- Single Flash page (`/flashes/[slug]/`): header (number, title, essence, context, est. time, prominent erisale link), clickable outline with deep links, companion summary (rendered), key concepts, opening verses (Arabic + translation + source), cross-refs, `CompanionNotice`.
-- Fully responsive + accessible; quality floor (§11) per page.
+### ✅ Phase 2 — Reading/companion pages  (DONE)
+- **Flashes index** (`/flashes/`): responsive card grid (number, title, essence, theme chips, 15-day badge, status badge), client-side **theme filter** (accessible buttons, aria-pressed, empty state), **read-status** dots (reads localStorage). `FlashCard` component.
+- **Single Flash page** (`/flashes/[slug]/`): header (no., title, TR title, essence, est. read time, context, prominent gold **erisale source button**, **mark-as-read** toggle), 15-day notice on the 21st, `CompanionNotice` banner, **opening verses** (Arabic RTL + translation + source attribution), clickable **outline** (deep-links where `sourcePageRef` set), rendered **companion summary**, **key concepts** (→ glossary), **cross-refs**, theme chips, footer source link + **prev/next** nav.
+- New components: `FlashCard`, `OpeningVerses`, `ReadToggle`. New lib: `progress.ts` (localStorage read-status store, fully guarded).
+- 39 pages build clean; Pagefind indexed 39; all internal links base-aware (verified `/flashes/flashes/21/`, concept/theme deep links). `astro check`: 0/0/0.
+- Note: concept/theme links currently point to `/glossary/#slug` and `/themes/#slug` (index anchors). Phase 3 upgrades these to dedicated term/theme pages.
+
+### ⏭ Phase 3 — Glossary & themes  (NEXT)
+- Glossary list page + `/glossary/[slug]/` term pages (definition, Arabic, related terms, "appears in" Flash links).
+- Theme index + `/themes/[slug]/` pages (cross-Flash navigation).
+- Inline term **popovers** on Flash pages (keyboard-accessible, dismissible).
+- Upgrade concept/theme links from index-anchors to dedicated pages.
 
 ## ⚠️ Needs your attention (faithfulness)
 - **Flashes 31–33:** the Vahide collection's contents run to the 30th Flash; I could not confirm reliable subjects for 31–33, so they are honest stubs with `TODO(review)` notes and neutral essences (no invented subjects). Please advise on their correct subjects/status, or whether the collection should present only 1–30 as discrete Flashes.

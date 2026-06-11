@@ -59,10 +59,15 @@ Toggle the theme (top-right); check Home → About; confirm nav links work.
 - Upgraded Flash-page concept links → glossary term pages, theme chips → theme pages.
 - 73 pages build clean (6 + 33 + 22 + 12); Pagefind indexed 73; `astro check` 0/0/0. Verified 10 popovers on the 21st Flash and all cross-links resolve.
 
-### ⏭ Phase 4 — Search  (NEXT)
-- Pagefind UI on `/search/` over companion content only (already indexing in build).
-- Clean results page; header search affordance.
-- Ensure source text is never indexed (we only host companion content anyway).
+### ✅ Phase 4 — Search  (DONE)
+- `/search/` uses `astro-pagefind`'s `Search` component, themed to our design tokens (both modes); bundle correctly base-pathed to `/flashes/pagefind/`.
+- Header/Footer marked `data-pagefind-ignore`; search page self-excluded — only companion content is indexed (we host no source text regardless).
+- `?q=` query param syncs into the box so searches are linkable; `<noscript>` fallback with base-aware links.
+- 73 fragments indexed at build. **Note:** search only works in `build`/`preview`, not `dev` (Pagefind indexes at build time).
+
+### ⏭ Phase 5 — Personalization  (NEXT)
+- Bookmarks, per-Flash notes, continue-reading on Home, 15-day tracker for the 21st Flash, reset-data control, privacy note. Builds on `progress.ts` localStorage store.
+- Light/dark toggle persistence already shipped (Phase 0).
 
 ## ⚠️ Needs your attention (faithfulness)
 - **Flashes 31–33:** the Vahide collection's contents run to the 30th Flash; I could not confirm reliable subjects for 31–33, so they are honest stubs with `TODO(review)` notes and neutral essences (no invented subjects). Please advise on their correct subjects/status, or whether the collection should present only 1–30 as discrete Flashes.

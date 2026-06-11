@@ -1,11 +1,94 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import ComingSoon from '@components/ComingSoon.astro';
+import Search from 'astro-pagefind/components/Search';
+import { withBase } from '@lib/paths';
 ---
 
-<BaseLayout title="Search" indexable={false}>
-  <ComingSoon
-    title="Search"
-    note="Full-text search across the companion notes, outlines and glossary — running entirely in your browser, with no server."
-  />
+<BaseLayout title="Search" description="Search the companion notes, outlines and glossary — runs entirely in your browser.">
+  <section class="wrap search-page" data-pagefind-ignore>
+    <header class="search-head glow-title">
+      <p class="eyebrow">Companion search</p>
+      <h1>Search</h1>
+      <p class="prose muted">
+        Search across the companion notes, outlines, glossary and themes. This
+        runs entirely in your browser — nothing is sent anywhere. It does not
+        search the original text; for that, read on
+        <a href="https://www.erisale.com/?locale=en" rel="noopener" target="_blank">erisale.com</a>.
+      </p>
+    </header>
+
+    <div class="search-shell">
+      <Search id="search" className="companion-search" uiOptions={{ showImages: false, excerptLength: 18 }} />
+    </div>
+
+    <noscript>
+      <p class="ui muted">Search needs JavaScript. You can still browse the
+        <a href={withBase('/flashes/')}>Flashes</a> and <a href={withBase('/glossary/')}>glossary</a> directly.</p>
+    </noscript>
+  </section>
 </BaseLayout>
+
+<script>
+  // Sync a ?q= query param into the search box so searches are linkable.
+  function applyQueryParam() {
+    const q = new URLSearchParams(location.search).get('q');
+    if (!q) return;
+    const input = document.querySelector<HTMLInputElement>('.companion-search input[type="text"]');
+    if (input) {
+      input.value = q;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  }
+  // The Pagefind UI mounts asynchronously; retry briefly until the input exists.
+  let tries = 0;
+  const timer = setInterval(() => {
+    const ready = document.querySelector('.companion-search input[type="text"]');
+    if (ready || tries++ > 40) {
+      clearInterval(timer);
+      if (ready) applyQueryParam();
+    }
+  }, 100);
+</script>
+
+<style>
+  .search-head { padding-block: var(--space-l) var(--space-m); text-align: center; }
+  .search-head .prose { margin-inline: auto; }
+  .search-shell { margin-top: var(--space-m); }
+</style>
+
+{/* Theme the Pagefind default UI with our design tokens. */}
+<style is:global>
+  .companion-search {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-text: var(--text);
+    --pagefind-ui-background: var(--surface);
+    --pagefind-ui-border: var(--hairline);
+    --pagefind-ui-tag: var(--surface-2);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: var(--radius-m);
+    --pagefind-ui-font: var(--font-ui);
+  }
+  .companion-search .pagefind-ui__search-input {
+    background: var(--surface);
+    color: var(--text);
+    font-size: var(--step-0);
+  }
+  .companion-search .pagefind-ui__result {
+    border-top: 1px solid var(--hairline);
+  }
+  .companion-search .pagefind-ui__result-title a {
+    color: var(--text);
+  }
+  .companion-search .pagefind-ui__result-title a:hover {
+    color: var(--accent);
+  }
+  .companion-search .pagefind-ui__result-excerpt {
+    color: var(--muted);
+  }
+  .companion-search mark {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--text);
+    border-radius: 3px;
+  }
+</style>

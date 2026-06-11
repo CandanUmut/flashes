@@ -74,9 +74,16 @@ Toggle the theme (top-right); check Home → About; confirm nav links work.
 - About → privacy: `ResetData` control (confirm dialog, clears all on-device data, keeps theme) + one-line privacy note.
 - 73 pages build clean; `astro check` 0/0/0.
 
-### ⏭ Phase 6 — i18n  (NEXT)
-- Turkish (`/tr/`) routing scaffold via Astro i18n; EN complete, TR structural/partial.
-- Surface `titleTr`/`definitionTr` where present; a language switch in the header.
+### ✅ Phase 6 — i18n scaffold  (DONE)
+- `src/i18n/ui.ts`: locales, `t()` dictionary (EN + TR chrome), `getLocale`/`logicalPath`/`localePath`/`languageSwitchTarget`. `@i18n` path alias added.
+- **Bilingual chrome**: Header + Footer localize labels/links by URL locale; `LanguageSwitch` in the header (EN↔TR, falls back to the other locale's home when a page has no twin).
+- **Turkish pages**: `/tr/` Home and `/tr/about/` — fully translated (our own copy), honest note that the English companion is complete while Turkish content is in progress; TR content-section links point to the (English) reading routes for now.
+- Data already carries `titleTr`/`definitionTr` (e.g. 21st Flash) for future TR content.
+- 75 pages build clean; `astro check` 0/0/0. Verified `lang="tr"`, localized nav, and switch targets both directions.
+- **Partial by design** (per brief): TR translations of the Flash/glossary/theme content routes are future work; chrome + Home + About demonstrate the routing.
+
+### ⏭ Phase 7 — Production hardening  (NEXT)
+- A11y audit (focus, landmarks, contrast, popover/toggle semantics), print stylesheet for Flash pages, SEO (canonical, hreflang, sitemap, OG), performance pass, final content/contribution review.
 
 ## ⚠️ Needs your attention (faithfulness)
 - **Flashes 31–33:** the Vahide collection's contents run to the 30th Flash; I could not confirm reliable subjects for 31–33, so they are honest stubs with `TODO(review)` notes and neutral essences (no invented subjects). Please advise on their correct subjects/status, or whether the collection should present only 1–30 as discrete Flashes.

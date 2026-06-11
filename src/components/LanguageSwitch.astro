@@ -1,0 +1,28 @@
+---
+import { getLocale, languageSwitchTarget, t } from '@i18n/ui';
+
+const locale = getLocale(Astro.url);
+const { href } = languageSwitchTarget(Astro.url);
+const label = t(locale, 'lang.switch'); // shows the *other* language's name
+---
+
+<a class="lang-switch ui" href={href} hreflang={locale === 'en' ? 'tr' : 'en'} aria-label={t(locale, 'lang.label')}>
+  {label}
+</a>
+
+<style>
+  .lang-switch {
+    display: inline-grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 var(--space-2xs);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-s);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: var(--step--1);
+    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .lang-switch:hover { color: var(--accent); border-color: var(--accent); }
+</style>

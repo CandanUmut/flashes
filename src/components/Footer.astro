@@ -1,26 +1,26 @@
 ---
-import { withBase } from '@lib/paths';
+import { getLocale, localePath, t } from '@i18n/ui';
+
+const locale = getLocale(Astro.url);
+const erisaleHref = `https://www.erisale.com/?locale=${locale}`;
 ---
 
 <footer class="site-footer" data-pagefind-ignore>
   <hr class="gleam" />
   <div class="wrap footer-inner ui">
     <p class="footer-note muted">
-      This is an independent <strong>companion and study aid</strong>. It is
-      <em>not</em> the book and does not reproduce the Risale-i Nur text or any
-      translation. Read the original on the official source,
-      <a href="https://www.erisale.com/?locale=en" rel="noopener" target="_blank">erisale.com</a>.
+      {t(locale, 'footer.companion')}
+      <a href={erisaleHref} rel="noopener" target="_blank">erisale.com</a>.
     </p>
 
     <nav aria-label="Footer" class="footer-nav">
-      <a href={withBase('/about/')}>About &amp; intention</a>
-      <a href={withBase('/about/#copyright')}>Copyright &amp; disclaimer</a>
-      <a href="https://www.erisale.com/?locale=en" rel="noopener" target="_blank">Official source</a>
+      <a href={localePath('/about/', locale)}>{t(locale, 'footer.aboutIntent')}</a>
+      <a href={`${localePath('/about/', locale)}#copyright`}>{t(locale, 'footer.copyright')}</a>
+      <a href={erisaleHref} rel="noopener" target="_blank">{t(locale, 'footer.officialSource')}</a>
     </nav>
 
     <p class="footer-license muted">
-      Code: MIT · Original companion content: CC BY-SA 4.0. All rights to the
-      Risale-i Nur and its translations belong to their holders.
+      {t(locale, 'footer.license')}
     </p>
   </div>
 </footer>

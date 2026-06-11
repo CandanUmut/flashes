@@ -1,0 +1,74 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ResetData from '@components/ResetData.astro';
+---
+
+<BaseLayout
+  lang="tr"
+  title="Hakkında & niyet"
+  description="Bu rehberin neden var olduğu, sadakat ilkeleri ve telif sorumluluk reddi."
+>
+  <article class="wrap prose">
+    <p class="eyebrow">Hakkında</p>
+    <h1 class="glow-title">Niyet &amp; ilkeler</h1>
+
+    <p>
+      Bu site, Risale-i Nur külliyatından Bediüzzaman Said Nursî’ye ait
+      <em>Lem’alar</em> için bağımsız bir <strong>rehber ve çalışma aracıdır</strong>.
+      Bu yoğun eseri anlamak, içinde gezinmek, aramak ve hatırlamak isteyen
+      okuyucular için hazırlanmıştır.
+    </p>
+
+    <p>
+      Bu site <strong>kitabın kendisi değildir.</strong> Risale-i Nur metnini ya
+      da herhangi bir tercümesini barındırmaz veya çoğaltmaz. Gerçek okuma, resmî
+      kaynak olan <a href="https://www.erisale.com/?locale=tr" rel="noopener" target="_blank">erisale.com</a>
+      üzerinde yapılır; site boyunca oraya bağlantı veririz. Burada bulacağınız
+      şey, aslın etrafındaki haritadır: başlık dökümleri, kendi özetlerimiz, bir
+      sözlük, bir kavram dizini, arama ve cihazınızda kalan özel bir okuma-takip
+      katmanı.
+    </p>
+
+    <hr class="gleam" />
+
+    <h2>Sadakat ilkeleri</h2>
+    <ul>
+      <li><strong>Üslupların kesin ayrımı.</strong> Notlarımız açıkça bir rehber yardımı olarak işaretlenir ve asla Nursî’nin sözleriymiş gibi sunulmaz.</li>
+      <li><strong>“Sadeleştirilmiş Risale” değildir.</strong> Bu, metnin daha kolay ya da güncellenmiş bir sürümü değil, bir çalışma aracıdır.</li>
+      <li><strong>Marifet, hünerden önce gelir.</strong> Özetlerimiz metni tarif eder ve haritalar; yorum katmaz, hüküm vermez, metnin ötesine geçmez.</li>
+      <li><strong>Kendi sözlerimizle.</strong> Özetler, hiçbir tercümenin ifadesini çoğaltmayacak şekilde yazılır. Belirsiz olan her şey gözden geçirme için işaretlenir.</li>
+      <li><strong>Kur’an âyetleri.</strong> Arapça olduğu gibi gösterilir; meal için kaynak açıkça belirtilir.</li>
+    </ul>
+
+    <hr class="gleam" />
+
+    <h2 id="copyright">Telif &amp; sorumluluk reddi</h2>
+    <p>
+      Risale-i Nur metnine sahip değiliz ve onu yeniden yayımlamıyoruz. Özgün
+      Türkçe metnin ve tercümelerinin tüm hakları ilgili sahiplerine aittir.
+      Hiçbir şeyi çoğaltmak yerine resmî kaynağa bağlantı veririz.
+    </p>
+    <p>
+      Sitedeki Kur’an âyeti mealleri, sayfada kaynağı belirtilen, tek tek
+      âyetlere ait sınırlı alıntılardır. Hiçbir tercümeyi bütünüyle çoğaltmayız.
+    </p>
+
+    <h2 id="privacy">Gizlilik</h2>
+    <p>
+      Hesap yok, sunucu yok, analitik yok, üçüncü taraf takibi yok, reklam yok.
+      Kaydettiğiniz her şey — okuma ilerlemesi, yer imleri ve notlar —
+      <strong>yalnızca cihazınızda</strong>, tarayıcınızın yerel depolamasında
+      tutulur ve cihazınızdan asla çıkmaz. Hepsini istediğiniz an
+      silebilirsiniz:
+    </p>
+    <ResetData />
+
+    <h2 id="license">Lisans</h2>
+    <p>
+      Sitenin kodu <strong>MIT Lisansı</strong> ile yayımlanır. Özgün rehber
+      içeriğimiz <strong>CC&nbsp;BY-SA&nbsp;4.0</strong> ile yayımlanır. Bu
+      lisanslar yalnızca bizim çalışmamız için geçerlidir; Risale-i Nur ya da
+      tercümeleri için değil.
+    </p>
+  </article>
+</BaseLayout>

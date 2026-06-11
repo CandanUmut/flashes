@@ -1,1 +1,78 @@
-# flashes
+# The Flashes — A Companion
+
+An independent **companion and study guide** for *Lem'alar* ("The Flashes") by
+Bediüzzaman Said Nursî — one of the books of the Risale-i Nur collection. Built
+for English-speaking readers who want to **understand, navigate, search and
+remember** this dense work.
+
+> **This is not the book.** We do not host or reproduce the Risale-i Nur text or
+> any translation. The actual reading happens on the official source,
+> [erisale.com](https://www.erisale.com/?locale=en), which we deep-link to. This
+> site is the map, outline, summaries, glossary, concept index, search and
+> private reading-progress layer that sits *around* the original.
+
+All companion content is original work, built with adab (reverence) toward a
+scholarly/sacred text. See [`DISCLAIMER.md`](./DISCLAIMER.md).
+
+## Tech stack
+
+- **[Astro](https://astro.build)** (v5) + TypeScript (strict), static output — no SSR, no backend.
+- **Astro Content Collections + Zod** for all content.
+- **[Pagefind](https://pagefind.app)** (via `astro-pagefind`) for static client-side search over companion content only.
+- **GitHub Pages** (project page) via GitHub Actions.
+- Hand-written CSS token system (no CSS framework). Self-hosted fonts via `@fontsource`.
+- Personalization (progress, bookmarks, notes) in `localStorage` only — no accounts, no analytics, no tracking.
+
+## Run locally
+
+```bash
+npm install
+npm run dev      # dev server at http://localhost:4321/flashes/
+npm run build    # production build into dist/ (runs Pagefind indexing)
+npm run preview  # preview the production build
+npm run check    # type-check (astro check)
+```
+
+> The site is served under the **`/flashes/`** base path, so the dev URL is
+> `http://localhost:4321/flashes/`, not the bare root.
+
+## ⚠️ GitHub Pages base-path note (read before adding links)
+
+This deploys as a **project page** at `https://candanumut.github.io/flashes/`,
+so the site lives under the `/flashes/` subpath. This is configured in
+[`astro.config.mjs`](./astro.config.mjs) via `site` and `base`.
+
+**Every internal link must be base-aware.** Do not hand-write `href="/glossary/"`
+— that resolves to the domain root and 404s on Pages. Instead use the helper:
+
+```astro
+---
+import { withBase } from '@lib/paths';
+---
+<a href={withBase('/glossary/')}>Glossary</a>   {/* -> /flashes/glossary/ */}
+```
+
+`import.meta.env.BASE_URL` is also available directly for assets. The build
+output's file paths do **not** include `/flashes/` (GitHub Pages serves `dist/`
+at the subpath); only the *links* carry the prefix.
+
+If you change the deployment target (user page, custom domain), update `site`
+and `base` in `astro.config.mjs` — everything else flows from `withBase()`.
+
+## Adding or correcting content
+
+Content lives in `src/content/` as Markdown/data files validated by Zod schemas.
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the editorial principles (these are
+not optional — faithfulness to the source is the whole point) and how to propose
+a Flash, glossary term, or a corrected official-source link.
+
+## Licensing
+
+- **Code:** MIT — see [`LICENSE`](./LICENSE).
+- **Original companion content:** CC BY-SA 4.0 — see [`CONTENT-LICENSE`](./CONTENT-LICENSE).
+- We do **not** own or redistribute the Risale-i Nur text or its translations;
+  all such rights belong to their holders. See [`DISCLAIMER.md`](./DISCLAIMER.md).
+
+## Official sources
+
+- [erisale.com](https://www.erisale.com/?locale=en) — the official online text.

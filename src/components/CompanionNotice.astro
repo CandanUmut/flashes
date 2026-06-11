@@ -1,0 +1,63 @@
+---
+// Standing voice-separation notice (brief §2: strict separation of voices).
+// Render this on every page that carries our companion text so a reader can
+// never mistake our words for Nursî's, and always has the official source.
+export interface Props {
+  /** Direct erisale link for this Flash, if known. */
+  sourceUrl?: string;
+  variant?: 'banner' | 'inline';
+}
+const { sourceUrl, variant = 'banner' } = Astro.props;
+const href = sourceUrl ?? 'https://www.erisale.com/?locale=en';
+---
+
+<aside class={`companion-notice ${variant}`} role="note" aria-label="About this companion">
+  <span class="cn-mark" aria-hidden="true">✦</span>
+  <p>
+    <strong>Companion notes, in our own words.</strong>
+    This is a study aid — an outline, summary and glossary <em>around</em> the
+    text. It is not Nursî's words and not a substitute for reading the original.
+    <a href={href} rel="noopener" target="_blank">Read the full text on erisale.com&nbsp;→</a>
+  </p>
+</aside>
+
+<style>
+  .companion-notice {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-m);
+    padding: var(--space-s) var(--space-m);
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--muted);
+  }
+  .companion-notice.inline {
+    background: transparent;
+    border-radius: 0;
+    border-inline: 0;
+    border-block: 0;
+    border-left: 3px solid var(--hairline);
+    padding-block: var(--space-2xs);
+  }
+  .companion-notice p {
+    margin: 0;
+    max-width: none;
+  }
+  .companion-notice strong {
+    color: var(--text);
+  }
+  .cn-mark {
+    color: var(--accent);
+    font-size: 1.1rem;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+  .companion-notice a {
+    white-space: nowrap;
+  }
+</style>

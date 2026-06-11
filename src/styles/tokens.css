@@ -1,0 +1,106 @@
+/* ============================================================
+   Design tokens — "The Flashes: A Companion"
+   The "nur / light" motif is the brand. Everything else stays quiet.
+   Dark is the primary mode; light mode is fully first-class.
+   ============================================================ */
+
+:root {
+  /* ---- Type families (self-hosted via @fontsource) ---- */
+  --font-display: 'Cormorant Garamond', 'Spectral', Georgia, serif;
+  --font-body: 'Spectral', Georgia, 'Times New Roman', serif;
+  --font-arabic: 'Amiri', 'Spectral', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ---- Type scale (fluid, clamp-based) ---- */
+  --step--1: clamp(0.83rem, 0.80rem + 0.15vw, 0.92rem);
+  --step-0: clamp(1.05rem, 1.00rem + 0.25vw, 1.18rem);
+  --step-1: clamp(1.30rem, 1.20rem + 0.50vw, 1.62rem);
+  --step-2: clamp(1.62rem, 1.45rem + 0.85vw, 2.20rem);
+  --step-3: clamp(2.05rem, 1.75rem + 1.50vw, 3.05rem);
+  --step-4: clamp(2.55rem, 2.05rem + 2.50vw, 4.20rem);
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-body: 1.7;
+
+  /* ---- Spacing scale ---- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2.25rem;
+  --space-xl: 3.5rem;
+  --space-2xl: 5rem;
+
+  /* ---- Layout ---- */
+  --measure: 42rem;        /* ~672px reading column */
+  --measure-wide: 60rem;   /* index / grid pages */
+  --radius-s: 6px;
+  --radius-m: 12px;
+  --radius-l: 18px;
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-med: 280ms;
+  --dur-slow: 520ms;
+
+  /* ---- Constant gold (mode-independent brand light) ---- */
+  --gold: #E0B458;
+}
+
+/* ---------- Dark mode (default) ---------- */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #15132a;
+  --surface: #1c1939;
+  --surface-2: #232045;
+  --text: #ECE6D8;
+  --muted: #a9a1b8;
+  --accent: #E0B458;
+  --accent-strong: #f0c878;
+  --hairline: rgba(224, 180, 88, 0.2);
+  --hairline-soft: rgba(236, 230, 216, 0.08);
+  --glow: rgba(224, 180, 88, 0.16);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --focus-ring: #f0c878;
+}
+
+/* ---------- Light mode ---------- */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #F7F3EA;
+  --surface: #FFFFFF;
+  --surface-2: #F1EADB;
+  --text: #1E1B2E;
+  --muted: #6b6478;
+  --accent: #9c7322;       /* darkened gold for AA contrast on light */
+  --accent-strong: #7d5c16;
+  --hairline: rgba(28, 25, 57, 0.12);
+  --hairline-soft: rgba(28, 25, 57, 0.06);
+  --glow: rgba(224, 180, 88, 0.22);
+  --shadow: 0 8px 24px rgba(28, 25, 57, 0.08);
+  --focus-ring: #7d5c16;
+}
+
+/* Follow system preference when the user hasn't chosen explicitly.
+   The no-flash head script sets data-theme; this is the fallback. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #F7F3EA;
+    --surface: #FFFFFF;
+    --surface-2: #F1EADB;
+    --text: #1E1B2E;
+    --muted: #6b6478;
+    --accent: #9c7322;
+    --accent-strong: #7d5c16;
+    --hairline: rgba(28, 25, 57, 0.12);
+    --hairline-soft: rgba(28, 25, 57, 0.06);
+    --glow: rgba(224, 180, 88, 0.22);
+    --shadow: 0 8px 24px rgba(28, 25, 57, 0.08);
+    --focus-ring: #7d5c16;
+  }
+}

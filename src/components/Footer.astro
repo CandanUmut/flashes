@@ -1,0 +1,60 @@
+---
+import { withBase } from '@lib/paths';
+---
+
+<footer class="site-footer">
+  <hr class="gleam" />
+  <div class="wrap footer-inner ui">
+    <p class="footer-note muted">
+      This is an independent <strong>companion and study aid</strong>. It is
+      <em>not</em> the book and does not reproduce the Risale-i Nur text or any
+      translation. Read the original on the official source,
+      <a href="https://www.erisale.com/?locale=en" rel="noopener" target="_blank">erisale.com</a>.
+    </p>
+
+    <nav aria-label="Footer" class="footer-nav">
+      <a href={withBase('/about/')}>About &amp; intention</a>
+      <a href={withBase('/about/#copyright')}>Copyright &amp; disclaimer</a>
+      <a href="https://www.erisale.com/?locale=en" rel="noopener" target="_blank">Official source</a>
+    </nav>
+
+    <p class="footer-license muted">
+      Code: MIT · Original companion content: CC BY-SA 4.0. All rights to the
+      Risale-i Nur and its translations belong to their holders.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    flex-shrink: 0;
+    padding-bottom: var(--space-xl);
+  }
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+  }
+  .footer-note {
+    max-width: var(--measure);
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+  .footer-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .footer-nav a:hover {
+    color: var(--text);
+  }
+  .footer-license {
+    font-size: var(--step--1);
+    opacity: 0.85;
+  }
+</style>

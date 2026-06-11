@@ -1,0 +1,15 @@
+---
+export interface Props {
+  title: string;
+  note: string;
+}
+const { title, note } = Astro.props;
+---
+
+<section class="wrap prose">
+  <p class="eyebrow">Coming soon</p>
+  <h1 class="glow-title">{title}</h1>
+  <p class="muted">{note}</p>
+  <hr class="gleam" />
+  <p class="muted ui">This section is being built. The structure is in place; content arrives in a later phase.</p>
+</section>

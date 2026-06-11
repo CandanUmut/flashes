@@ -1,0 +1,23 @@
+/* Self-hosted fonts via @fontsource (v5). Each import bundles all subsets
+   (latin, latin-ext for Turkish ş ğ ı İ ç ö ü, arabic) with unicode-range
+   splitting, so the browser only downloads what a page actually renders.
+   All use font-display: swap by default in @fontsource. */
+
+/* Display — used sparingly for titles */
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/600.css';
+@import '@fontsource/cormorant-garamond/600-italic.css';
+
+/* Body — literary, screen-readable, full Turkish coverage */
+@import '@fontsource/spectral/400.css';
+@import '@fontsource/spectral/400-italic.css';
+@import '@fontsource/spectral/600.css';
+
+/* Arabic */
+@import '@fontsource/amiri/arabic-400.css';
+@import '@fontsource/amiri/arabic-700.css';
+
+/* UI labels */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';

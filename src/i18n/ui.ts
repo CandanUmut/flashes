@@ -27,8 +27,9 @@ const ui: Record<Locale, Dict> = {
     'skip.toContent': 'Skip to content',
     'lang.switch': 'Türkçe',
     'lang.label': 'Language',
-    // One quiet cue shown on Flash pages near the source link (not a banner).
-    'companion.cue': 'Companion notes — read Nursî’s own words at the source →',
+    // One quiet caption shown on Flash pages near the source link (not a banner,
+    // not a link — the source button sits right above it).
+    'companion.cue': 'Companion notes — a map of the Flash, not Nursî’s own words.',
     'footer.companion':
       'An independent companion and study aid — not the Risale-i Nur itself. Read the original on the official source,',
     'footer.aboutIntent': 'About & intention',
@@ -47,7 +48,7 @@ const ui: Record<Locale, Dict> = {
     'skip.toContent': 'İçeriğe geç',
     'lang.switch': 'English',
     'lang.label': 'Dil',
-    'companion.cue': 'Rehber notları — Nursî’nin kendi sözlerini kaynaktan okuyun →',
+    'companion.cue': 'Rehber notları — Lem’a’nın bir haritası, Nursî’nin kendi sözleri değil.',
     'footer.companion':
       'Bağımsız bir rehber ve çalışma aracı — Risale-i Nur’un kendisi değildir. Aslını resmî kaynaktan okuyun:',
     'footer.aboutIntent': 'Hakkında & niyet',

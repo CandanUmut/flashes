@@ -106,7 +106,16 @@ Tracking the A/B/C work from the maintainer's review brief.
   `ThemeToggle`. The no-flash `<head>` init and the `:root[data-theme=...]` CSS
   tokens were already correct; only the click binding was broken. Confirmed the
   built HTML now binds `querySelectorAll('.theme-toggle')`.
-- **A3 — deep links — code is CORRECT; the bug is the data.** `[slug].astro`
+- **A3 — deep links — URL FORMAT was the real bug (now fixed).** erisale
+  **ignores `?pageNo=`** and only honours the hash anchor
+  `#content.<locale>.<bookId>.<page>` (e.g.
+  `…?locale=en&bookId=203#content.en.203.216`). So every link — even the ones
+  with a "confirmed" page — was landing on the book start (= the First Flash).
+  Converted all stored links (frontmatter + bodies + seed script) to the hash
+  form via a one-pass transform; 12 Flashes now deep-link correctly, the rest
+  honestly link to the book landing pending a confirmed page. The link-building
+  code was already correct (uses each Flash's own source, not index 0).
+- *(superseded)* earlier note: `[slug].astro`
   already builds links from the *current* item (`d.source.erisaleUrlEn`), not
   index 0. The "always opens the first Flash" symptom comes from ~20 stub
   Flashes whose `source` URL is the bare `bookId=203` landing (= page 1 = the
@@ -134,6 +143,15 @@ Tracking the A/B/C work from the maintainer's review brief.
   sourced from the i18n dictionary (`companion.cue`, EN+TR) so it's defined once.
   Lightened the Home lede (disclaimer now carried by footer/About, not repeated).
   Deleted the unused `CompanionNotice` component and its dangling print rule.
+- **Redundancy pass (production polish).** A Flash page used to repeat the source
+  link / voice-separation ~5×. Now: one prominent "Read on erisale.com →" button
+  (top) + one quiet "Read this Flash on erisale.com →" link (bottom) + the global
+  footer line; the voice cue is a single non-link caption ("Companion notes — a
+  map of the Flash, not Nursî's own words."). Removed the duplicate cue link, the
+  "not the text itself" outline sub, the stub-body "companion notes in our own
+  words" boilerplate + body source link (32 stubs collapsed to one plain line),
+  the 21st's intro/closing source repetition, and the obsolete first-paragraph
+  styling. Lightened the glossary intro.
 
 #### ⚠️ Source-text access is blocked in this environment
 `erisale.com` and the archive.org / PDF mirrors all return **HTTP 403** via

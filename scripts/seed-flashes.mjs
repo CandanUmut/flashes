@@ -24,10 +24,13 @@ const OUT = join(__dirname, '..', 'src', 'content', 'flashes');
 /** Confirmed erisale (bookId=203) start pages, by Flash number. */
 const erisalePage = { 1: 18, 10: 80, 11: 82, 13: 127, 15: 142, 19: 189, 21: 216, 25: 265, 26: 312 };
 
+// erisale ignores ?pageNo=; the working deep link is the hash anchor
+// #content.<locale>.<bookId>.<page>.
+const BOOK = 203;
 const erisaleUrl = (n) =>
   erisalePage[n]
-    ? `https://www.erisale.com/?locale=en&bookId=203&pageNo=${erisalePage[n]}`
-    : 'https://www.erisale.com/?locale=en&bookId=203';
+    ? `https://www.erisale.com/?locale=en&bookId=${BOOK}#content.en.${BOOK}.${erisalePage[n]}`
+    : `https://www.erisale.com/?locale=en&bookId=${BOOK}`;
 
 const PENDING_NOTE =
   'Exact erisale start page not yet confirmed — links to The Flashes (bookId 203). Help us pin it: see CONTRIBUTING.md.';
@@ -166,11 +169,7 @@ for (const [n, title, essence, themes, concepts, extra = {}] of data) {
   fm += `status: ${status}\n`;
   fm += '---\n\n';
 
-  const body =
-    `These are companion notes in our own words — a map of the Flash, not its text.\n\n` +
-    `A fuller outline and summary for this Flash are in preparation. In the meantime, ` +
-    `read the original on the official source:\n\n` +
-    `**[${title} on erisale.com →](${erisaleUrl(n)})**\n`;
+  const body = `A fuller outline and summary for this Flash are in preparation.\n`;
 
   writeFileSync(file, fm + body, 'utf8');
   written++;

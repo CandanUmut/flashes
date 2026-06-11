@@ -153,30 +153,33 @@ Tracking the A/B/C work from the maintainer's review brief.
   the 21st's intro/closing source repetition, and the obsolete first-paragraph
   styling. Lightened the glossary intro.
 
-#### Search & card page numbers (follow-up pass)
-- **Search verified working** in build/preview/production. Functionally tested
-  the Pagefind index + the custom UI's `data()` usage in Node (23 hits for
-  "sincerity", correct titles, and the `source` deep link present on Flash
-  results). Hardened the loader: `options()`/`init()` are best-effort, and the
-  "unavailable" message now explains that Pagefind indexes at build time — so
-  **search runs in `npm run build && npm run preview` (added as `npm run serve`),
-  not in `npm run dev`.** That dev-only limitation is inherent to Pagefind and
-  was true of the previous default-UI search too.
-- **Card page numbers:** each Flash card (index + theme pages) now shows a quiet
-  `erisale · p. N →` deep link when the start page is confirmed (12 Flashes), and
-  a plain `erisale →` link to the book otherwise (21 Flashes). The remaining
-  start pages can't be confirmed from search snippets and need source access.
+#### ✅ Source-text access is now UNBLOCKED (2026-06-11)
+The earlier 403 wall is gone in the current environment. `erisale.com` returns
+200, and — decisively — the full **Şükran Vahide English translation** (2009
+edition, *The Flashes Collection*, © Sözler Neşriyat) is reachable as a 455-page
+PDF and extractable to clean text. The source is now **read** (not paraphrased
+from the copyrighted wording) before authoring, per the faithfulness rule.
 
-#### ⚠️ Source-text access is blocked in this environment
-`erisale.com`, archive.org, and the `lh4h.org` full-text PDF all return **HTTP
-403** on every fetch path here — including with the sandbox disabled. The proxy
-reports `x-deny-reason: host_not_allowed`, i.e. the environment's **network
-policy allowlist** doesn't include these hosts (only `WebSearch` egress works).
-That's enough to confirm *page numbers* (indexed facts) but **not** to read full
-Flash texts. Per the faithfulness rule, the remaining stub summaries are **not**
-being fabricated — content authoring (§B) and the unconfirmed start pages are
-paused pending either (a) adding these hosts to the network policy allowlist
-(see the Claude-Code-on-the-web docs), or (b) the maintainer pasting the text.
+Also recovered the **authoritative canonical TOC** straight from erisale's own
+`sections/sections.en.cache.js`: all 33 Flashes, their titles, order, and start
+pages (book 203). Confirms 31/32/33 *do* exist as discrete Flashes (each ~1
+page, p456). Per-Flash start pages (erisale TOC `c` value): 1→17, 2→21, 3→30,
+4→35, 5→45, 6→45, 7→46, 8→56, 9→58, 10→70, 11→81, 12→95, 13→104, 14→128,
+15→142, 16→143, 17→157, 18→188, 19→189, 20→200, 21→213, 22→223, 23→232,
+24→254, 25→265, 26→285, 27→336, 28→337, 29→378, 30→392, 31/32/33→456.
+**Anchor offset to confirm:** the working content anchors used so far sit ~+3
+above these TOC pages (21st: TOC 213 → stored 216; 2nd: TOC 21 → stored 24), so
+deep links appear to be `TOC page + 3`. Kept that convention for the pilot;
+flagged for sign-off.
+
+#### 🔬 §10 pilot — Second Flash fully authored (awaiting sign-off)
+Authored **the Second Flash (Job's Prayer in Illness)** to the §7 gold-standard
+bar: own-words ~380-word summary, 7-node outline, opening verse (21:83, own
+plain rendering), `context`, two confident cross-refs (26th & 21st Words, both
+cited in the text itself), 8 key concepts. Added 5 new glossary terms — `sabir`,
+`tevekkul`, `riza`, `kader`, `gaflet` — and tagged `şükür` with Flash 2. Status
+`in-review`. `astro check` 0/0/0; build clean (80 pages). Awaiting review before
+batch authoring (§9).
 
 #### Page numbers to verify
 - **10th Flash:** existing data says `pageNo=80`, but erisale indexes "The Tenth

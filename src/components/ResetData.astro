@@ -1,0 +1,48 @@
+---
+// Reset control for all on-device personalization (brief §7).
+---
+
+<div class="reset" data-reset>
+  <button type="button" class="reset-btn ui" data-reset-btn>Reset my data</button>
+  <span class="reset-status ui" data-reset-status aria-live="polite"></span>
+</div>
+
+<script>
+  import { resetAll } from '@lib/progress';
+
+  const wrap = document.querySelector<HTMLElement>('[data-reset]');
+  const btn = wrap?.querySelector<HTMLButtonElement>('[data-reset-btn]');
+  const status = wrap?.querySelector<HTMLElement>('[data-reset-status]');
+
+  btn?.addEventListener('click', () => {
+    const ok = confirm(
+      'Clear all your reading progress, bookmarks and notes from this device? This cannot be undone.'
+    );
+    if (!ok) return;
+    resetAll();
+    if (status) status.textContent = 'Cleared. Your data has been removed from this device.';
+  });
+</script>
+
+<style>
+  .reset {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s);
+    margin-top: var(--space-s);
+  }
+  .reset-btn {
+    min-height: 44px;
+    padding: var(--space-2xs) var(--space-m);
+    font-size: var(--step--1);
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-s);
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .reset-status { font-size: var(--step--1); color: var(--accent); }
+</style>

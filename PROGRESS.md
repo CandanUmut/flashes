@@ -65,9 +65,18 @@ Toggle the theme (top-right); check Home → About; confirm nav links work.
 - `?q=` query param syncs into the box so searches are linkable; `<noscript>` fallback with base-aware links.
 - 73 fragments indexed at build. **Note:** search only works in `build`/`preview`, not `dev` (Pagefind indexes at build time).
 
-### ⏭ Phase 5 — Personalization  (NEXT)
-- Bookmarks, per-Flash notes, continue-reading on Home, 15-day tracker for the 21st Flash, reset-data control, privacy note. Builds on `progress.ts` localStorage store.
-- Light/dark toggle persistence already shipped (Phase 0).
+### ✅ Phase 5 — Personalization  (DONE)
+- `progress.ts` expanded: read-status, **bookmarks**, **per-Flash notes**, **continue-reading** (`lastRead`), **15-day İhlas tracker** (`ihlasReadAt`), and `resetAll()`. All access guarded.
+- Flash page personal tools: `ReadToggle`, `BookmarkToggle`, `NotePanel` (debounced autosave + "Saved ✓" + flush on unload). Visiting a Flash records continue-reading. Marking the 21st read stamps the İhlas tracker.
+- `IhlasReminder` (gentle, non-gamified): on Home (invitation + "I read it today") and on the 21st Flash page (compact tracker: days since / due / overdue).
+- Home "Continue reading" entry rewrites client-side to the last-read Flash.
+- Flash cards show **read dot + bookmark star**, reflected on the index and theme pages.
+- About → privacy: `ResetData` control (confirm dialog, clears all on-device data, keeps theme) + one-line privacy note.
+- 73 pages build clean; `astro check` 0/0/0.
+
+### ⏭ Phase 6 — i18n  (NEXT)
+- Turkish (`/tr/`) routing scaffold via Astro i18n; EN complete, TR structural/partial.
+- Surface `titleTr`/`definitionTr` where present; a language switch in the header.
 
 ## ⚠️ Needs your attention (faithfulness)
 - **Flashes 31–33:** the Vahide collection's contents run to the 30th Flash; I could not confirm reliable subjects for 31–33, so they are honest stubs with `TODO(review)` notes and neutral essences (no invented subjects). Please advise on their correct subjects/status, or whether the collection should present only 1–30 as discrete Flashes.

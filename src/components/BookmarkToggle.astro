@@ -1,0 +1,55 @@
+---
+export interface Props {
+  number: number;
+}
+const { number } = Astro.props;
+---
+
+<button type="button" class="bm-toggle ui" data-flash={number} aria-pressed="false">
+  <span class="bm-icon" aria-hidden="true">☆</span>
+  <span class="bm-label">Bookmark</span>
+</button>
+
+<script>
+  import { isBookmarked, toggleBookmark } from '@lib/progress';
+
+  const btn = document.currentScript?.previousElementSibling as HTMLButtonElement | null;
+  if (btn) {
+    const n = Number(btn.dataset.flash);
+    const icon = btn.querySelector('.bm-icon') as HTMLElement | null;
+    const label = btn.querySelector('.bm-label') as HTMLElement | null;
+
+    const paint = (on: boolean) => {
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.classList.toggle('is-on', on);
+      if (icon) icon.textContent = on ? '★' : '☆';
+      if (label) label.textContent = on ? 'Bookmarked' : 'Bookmark';
+    };
+
+    paint(isBookmarked(n));
+    btn.addEventListener('click', () => paint(toggleBookmark(n)));
+  }
+</script>
+
+<style>
+  .bm-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: 44px;
+    padding: var(--space-2xs) var(--space-s);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-s);
+    color: var(--text);
+    font-size: var(--step--1);
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  }
+  .bm-toggle:hover { border-color: var(--accent); }
+  .bm-icon { color: var(--accent); font-size: 1.1em; line-height: 1; }
+  .bm-toggle.is-on {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+</style>

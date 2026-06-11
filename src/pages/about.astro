@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import ResetData from '@components/ResetData.astro';
 ---
 
 <BaseLayout title="About & intention" description="Why this companion exists, its faithfulness principles, and the copyright disclaimer.">
@@ -56,7 +57,12 @@ import BaseLayout from '@layouts/BaseLayout.astro';
       No accounts, no backend, no analytics, no third-party tracking, no ads.
       Anything you save — reading progress, bookmarks and notes — is stored
       <strong>only on your device</strong>, in your browser's local storage, and
-      never leaves it. A “reset my data” control will let you clear it at any time.
+      never leaves it. You can clear all of it at any time:
+    </p>
+    <ResetData />
+    <p class="ui muted reset-hint">
+      This removes your read-status, bookmarks, notes, continue-reading and the
+      15-day tracker from this browser. Your light/dark preference is kept.
     </p>
 
     <h2 id="license">Licensing</h2>

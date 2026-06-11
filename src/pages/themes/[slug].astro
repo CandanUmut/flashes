@@ -57,10 +57,13 @@ const flashes = (await getCollection('flashes'))
   </section>
 
   <script>
-    import { getReadFlashes } from '@lib/progress';
+    import { getReadFlashes, getBookmarks } from '@lib/progress';
     const read = getReadFlashes();
+    const bookmarks = getBookmarks();
     document.querySelectorAll<HTMLElement>('.flash-card[data-flash]').forEach((card) => {
-      if (read.has(Number(card.dataset.flash))) card.classList.add('is-read');
+      const n = Number(card.dataset.flash);
+      if (read.has(n)) card.classList.add('is-read');
+      if (bookmarks.has(n)) card.classList.add('is-bookmarked');
     });
   </script>
 </BaseLayout>

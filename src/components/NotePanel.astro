@@ -1,0 +1,89 @@
+---
+export interface Props {
+  number: number;
+}
+const { number } = Astro.props;
+const fieldId = `note-${number}`;
+---
+
+<section class="note-panel" aria-label="Your private note">
+  <div class="note-head">
+    <label class="note-label ui" for={fieldId}>Your note</label>
+    <span class="note-status ui" data-note-status aria-live="polite"></span>
+  </div>
+  <textarea
+    id={fieldId}
+    class="note-field"
+    data-flash={number}
+    rows="3"
+    placeholder="A private note on this Flash — stored only on this device."
+  ></textarea>
+  <p class="note-privacy ui muted">Saved automatically to this device only. Never uploaded.</p>
+</section>
+
+<script>
+  import { getNote, setNote } from '@lib/progress';
+
+  const field = document.currentScript?.parentElement?.querySelector<HTMLTextAreaElement>('.note-field');
+  if (field) {
+    const n = Number(field.dataset.flash);
+    const status = field
+      .closest('.note-panel')
+      ?.querySelector<HTMLElement>('[data-note-status]');
+
+    field.value = getNote(n);
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let clearTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const flash = (msg: string) => {
+      if (!status) return;
+      status.textContent = msg;
+      clearTimeout(clearTimer);
+      clearTimer = setTimeout(() => (status.textContent = ''), 1800);
+    };
+
+    field.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setNote(n, field.value);
+        flash('Saved ✓');
+      }, 400);
+    });
+
+    // Flush on leaving the page so the last keystrokes aren't lost.
+    window.addEventListener('beforeunload', () => setNote(n, field.value));
+  }
+</script>
+
+<style>
+  .note-panel { margin-block: var(--space-l); }
+  .note-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-bottom: var(--space-2xs);
+  }
+  .note-label {
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--text);
+  }
+  .note-status { font-size: var(--step--1); color: var(--accent); }
+  .note-field {
+    width: 100%;
+    padding: var(--space-s);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: var(--leading-snug);
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    resize: vertical;
+    min-height: 4.5rem;
+  }
+  .note-field:focus-visible { border-color: var(--accent); }
+  .note-privacy { font-size: 0.75rem; margin: var(--space-3xs) 0 0; }
+</style>

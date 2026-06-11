@@ -70,12 +70,15 @@ const filterThemes = themes
 </BaseLayout>
 
 <script>
-  import { getReadFlashes } from '@lib/progress';
+  import { getReadFlashes, getBookmarks } from '@lib/progress';
 
-  // Mark read flashes (read-only display; toggling happens on the Flash page).
+  // Reflect read + bookmark state (display only; toggling happens on the Flash page).
   const read = getReadFlashes();
+  const bookmarks = getBookmarks();
   document.querySelectorAll<HTMLElement>('.flash-card[data-flash]').forEach((card) => {
-    if (read.has(Number(card.dataset.flash))) card.classList.add('is-read');
+    const n = Number(card.dataset.flash);
+    if (read.has(n)) card.classList.add('is-read');
+    if (bookmarks.has(n)) card.classList.add('is-bookmarked');
   });
 
   // Theme filter.

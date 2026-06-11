@@ -4,6 +4,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CompanionNotice from '@components/CompanionNotice.astro';
 import OpeningVerses from '@components/OpeningVerses.astro';
 import ReadToggle from '@components/ReadToggle.astro';
+import BookmarkToggle from '@components/BookmarkToggle.astro';
+import NotePanel from '@components/NotePanel.astro';
+import IhlasReminder from '@components/IhlasReminder.astro';
 import TermPopover from '@components/TermPopover.astro';
 import { withBase } from '@lib/paths';
 
@@ -37,7 +40,12 @@ const sourceUrl = d.source.erisaleUrlEn;
 ---
 
 <BaseLayout title={d.title} description={d.essence}>
-  <article class="wrap flash">
+  <article
+    class="wrap flash"
+    data-flash-number={d.number}
+    data-flash-slug={flash.id}
+    data-flash-title={d.title}
+  >
     {/* ---- Header ---- */}
     <header class="flash-head glow-title">
       <p class="eyebrow">
@@ -66,9 +74,14 @@ const sourceUrl = d.source.erisaleUrlEn;
           Read the full text on erisale.com →
         </a>
         <ReadToggle number={d.number} />
+        <BookmarkToggle number={d.number} />
       </div>
 
       {d.context?.note && <p class="context-note ui muted">{d.context.note}</p>}
+
+      {d.number === 21 && (
+        <div class="ihlas-slot"><IhlasReminder variant="flash" /></div>
+      )}
     </header>
 
     <CompanionNotice sourceUrl={sourceUrl} />
@@ -143,6 +156,9 @@ const sourceUrl = d.source.erisaleUrlEn;
       </section>
     )}
 
+    {/* ---- Personal note ---- */}
+    <NotePanel number={d.number} />
+
     {/* ---- Themes ---- */}
     {d.themes.length > 0 && (
       <section class="flash-themes ui" aria-label="Themes">
@@ -175,6 +191,19 @@ const sourceUrl = d.source.erisaleUrlEn;
       </nav>
     </footer>
   </article>
+
+  <script>
+    import { setLastRead } from '@lib/progress';
+    const art = document.querySelector<HTMLElement>('.flash');
+    if (art?.dataset.flashSlug) {
+      setLastRead({
+        number: Number(art.dataset.flashNumber),
+        slug: art.dataset.flashSlug,
+        title: art.dataset.flashTitle ?? '',
+        at: new Date().toISOString(),
+      });
+    }
+  </script>
 </BaseLayout>
 
 <style>

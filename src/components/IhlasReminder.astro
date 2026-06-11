@@ -1,0 +1,100 @@
+---
+import { withBase } from '@lib/paths';
+
+export interface Props {
+  /** 'home' shows the framing copy; 'flash' is the compact tracker on the 21st Flash page. */
+  variant?: 'home' | 'flash';
+}
+const { variant = 'home' } = Astro.props;
+const href = withBase('/flashes/21/');
+---
+
+<aside class={`ihlas ihlas-${variant}`} data-ihlas hidden aria-label="Twenty-first Flash reading tracker">
+  <span class="ihlas-mark" aria-hidden="true">✦</span>
+  <div class="ihlas-body">
+    <p class="ihlas-status ui" data-ihlas-status></p>
+    <p class="ihlas-sub ui muted">
+      Nursî asked that the 21st Flash (on sincerity) be read at least once every
+      fifteen days. This gentle tracker stays on your device.
+    </p>
+    <div class="ihlas-actions ui">
+      {variant === 'home' && <a class="ihlas-link" href={href}>Open the 21st Flash →</a>}
+      <button type="button" class="ihlas-btn" data-ihlas-mark>I read it today</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  import { daysSinceIhlas, ihlasDaysRemaining, markIhlasReadToday } from '@lib/progress';
+
+  document.querySelectorAll<HTMLElement>('[data-ihlas]').forEach((el) => {
+    const statusEl = el.querySelector<HTMLElement>('[data-ihlas-status]');
+    const markBtn = el.querySelector<HTMLButtonElement>('[data-ihlas-mark]');
+
+    const render = () => {
+      const since = daysSinceIhlas();
+      const remaining = ihlasDaysRemaining();
+      el.classList.remove('is-due', 'is-fresh');
+      if (since === null) {
+        if (statusEl) statusEl.textContent = 'You haven’t marked the 21st Flash as read yet.';
+      } else if (remaining !== null && remaining <= 0) {
+        el.classList.add('is-due');
+        const over = Math.abs(remaining);
+        if (statusEl)
+          statusEl.textContent =
+            remaining === 0
+              ? 'Today is the day — fifteen days since your last reading.'
+              : `It has been ${since} days — your fifteen-day reading is ${over} day${over === 1 ? '' : 's'} overdue.`;
+      } else {
+        el.classList.add('is-fresh');
+        if (statusEl)
+          statusEl.textContent = `Last read ${since} day${since === 1 ? '' : 's'} ago · next reading in ${remaining} day${remaining === 1 ? '' : 's'}.`;
+      }
+      el.hidden = false;
+    };
+
+    markBtn?.addEventListener('click', () => {
+      markIhlasReadToday();
+      render();
+    });
+
+    render();
+  });
+</script>
+
+<style>
+  .ihlas {
+    display: flex;
+    gap: var(--space-s);
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-m);
+    padding: var(--space-m);
+  }
+  .ihlas.is-due {
+    background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+    border-left-color: var(--accent-strong);
+  }
+  .ihlas-mark { color: var(--accent); font-size: 1.3rem; line-height: 1.2; flex-shrink: 0; }
+  .ihlas-body { flex: 1; }
+  .ihlas-status { font-size: var(--step-0); color: var(--text); margin: 0 0 var(--space-3xs); font-weight: 600; }
+  .ihlas-sub { font-size: var(--step--1); margin: 0 0 var(--space-2xs); }
+  .ihlas-actions { display: flex; flex-wrap: wrap; gap: var(--space-2xs); align-items: center; }
+  .ihlas-link { color: var(--accent); text-decoration: none; font-weight: 600; font-size: var(--step--1); }
+  .ihlas-link:hover { text-decoration: underline; }
+  .ihlas-btn {
+    min-height: 38px;
+    padding: var(--space-3xs) var(--space-s);
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-s);
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .ihlas-btn:hover { border-color: var(--accent); }
+</style>

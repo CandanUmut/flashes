@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import IhlasReminder from '@components/IhlasReminder.astro';
 import { withBase } from '@lib/paths';
 
 const siteName = 'The Flashes — A Companion';
@@ -24,10 +25,11 @@ const entries = [
     mark: '⌕',
   },
   {
-    href: withBase('/about/'),
+    href: withBase('/flashes/'),
     title: 'Continue reading',
-    desc: 'Pick up where you left off. (Coming soon.)',
+    desc: 'Pick up where you left off.',
     mark: '↳',
+    isContinue: true,
   },
 ];
 ---
@@ -52,12 +54,20 @@ const entries = [
 
   <hr class="gleam" />
 
+  <section class="wrap ihlas-home">
+    <IhlasReminder variant="home" />
+  </section>
+
   <section class="wrap">
     <ul class="entry-grid">
       {
         entries.map((e) => (
           <li>
-            <a class="entry-card" href={e.href}>
+            <a
+              class="entry-card"
+              href={e.href}
+              id={e.isContinue ? 'continue-entry' : undefined}
+            >
               <span class="entry-mark" aria-hidden="true">{e.mark}</span>
               <span class="entry-title">{e.title}</span>
               <span class="entry-desc muted">{e.desc}</span>
@@ -68,6 +78,21 @@ const entries = [
     </ul>
   </section>
 </BaseLayout>
+
+<script>
+  import { getLastRead } from '@lib/progress';
+  import { withBase } from '@lib/paths';
+
+  const last = getLastRead();
+  const card = document.getElementById('continue-entry');
+  if (last && card) {
+    card.setAttribute('href', withBase(`/flashes/${last.slug}/`));
+    const title = card.querySelector('.entry-title');
+    const desc = card.querySelector('.entry-desc');
+    if (title) title.textContent = 'Continue reading';
+    if (desc) desc.textContent = last.title;
+  }
+</script>
 
 <style>
   .hero {
@@ -89,6 +114,7 @@ const entries = [
     border-bottom: 1px solid var(--accent);
     padding-bottom: 2px;
   }
+  .ihlas-home { margin-bottom: var(--space-l); }
   .entry-grid {
     list-style: none;
     margin: 0;

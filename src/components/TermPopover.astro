@@ -37,9 +37,40 @@ const popId = `pop-${slug}`;
     const trigger = open.querySelector<HTMLButtonElement>('.term-trigger');
     const panel = open.querySelector<HTMLElement>('.term-panel');
     trigger?.setAttribute('aria-expanded', 'false');
-    if (panel) panel.hidden = true;
+    if (panel) {
+      panel.hidden = true;
+      // Clear JS positioning so the CSS fallback applies next time.
+      panel.style.position = '';
+      panel.style.left = '';
+      panel.style.top = '';
+    }
     open.classList.remove('is-open');
     open = null;
+  }
+
+  // Place the panel just below the trigger, clamped inside the viewport so it
+  // never spills off-screen (the original absolute placement could overflow the
+  // right edge for terms near the page margin). Flips above if it would clip
+  // the bottom.
+  function position(wrap: HTMLElement) {
+    const trigger = wrap.querySelector<HTMLElement>('.term-trigger');
+    const panel = wrap.querySelector<HTMLElement>('.term-panel');
+    if (!trigger || !panel) return;
+    const margin = 8;
+    panel.style.position = 'fixed';
+    panel.style.left = '0px';
+    panel.style.top = '0px';
+    const tr = trigger.getBoundingClientRect();
+    const pw = panel.offsetWidth;
+    const ph = panel.offsetHeight;
+    let left = Math.min(tr.left, window.innerWidth - pw - margin);
+    left = Math.max(margin, left);
+    let top = tr.bottom + margin;
+    if (top + ph > window.innerHeight - margin && tr.top - margin - ph > margin) {
+      top = tr.top - margin - ph;
+    }
+    panel.style.left = `${Math.round(left)}px`;
+    panel.style.top = `${Math.round(top)}px`;
   }
 
   function openPop(wrap: HTMLElement) {
@@ -50,7 +81,12 @@ const popId = `pop-${slug}`;
     if (panel) panel.hidden = false;
     wrap.classList.add('is-open');
     open = wrap;
+    position(wrap);
   }
+
+  // Keep the open panel anchored while the page scrolls or resizes.
+  window.addEventListener('scroll', () => { if (open) position(open); }, { passive: true });
+  window.addEventListener('resize', () => { if (open) position(open); });
 
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
@@ -123,7 +159,7 @@ const popId = `pop-${slug}`;
     top: calc(100% + 8px);
     z-index: 30;
     width: max-content;
-    max-width: min(20rem, 80vw);
+    max-width: min(20rem, calc(100vw - 16px));
     display: flex;
     flex-direction: column;
     gap: var(--space-3xs);

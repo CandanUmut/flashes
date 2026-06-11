@@ -167,29 +167,42 @@ page, p456). Per-Flash start pages (erisale TOC `c` value): 1→17, 2→21, 3→
 4→35, 5→45, 6→45, 7→46, 8→56, 9→58, 10→70, 11→81, 12→95, 13→104, 14→128,
 15→142, 16→143, 17→157, 18→188, 19→189, 20→200, 21→213, 22→223, 23→232,
 24→254, 25→265, 26→285, 27→336, 28→337, 29→378, 30→392, 31/32/33→456.
-**Anchor offset to confirm:** the working content anchors used so far sit ~+3
-above these TOC pages (21st: TOC 213 → stored 216; 2nd: TOC 21 → stored 24), so
-deep links appear to be `TOC page + 3`. Kept that convention for the pilot;
-flagged for sign-off.
+**Anchor convention RESOLVED (per maintainer):** deep links must open the
+**first page** of each Flash = the erisale TOC `c` value (no +3 offset; the old
+2→24 / 21→216 anchors landed several pages *into* the Flash). All 33 Flashes'
+`source.erisaleUrlEn` rewritten to `#content.en.203.<c>` and stale "start page
+not confirmed / folded / not included" notes corrected from the authoritative
+TOC. (Also confirmed from the PDF: the **Fifth Flash's place was left
+unoccupied** — its treatise became the Eleventh — so it carries only a brief
+note; the 8th & 18th *do* appear in erisale's Flashes at pp. 56 / 188, some
+editions placing them in Sikke-i Tasdîk-i Gayb.)
 
-#### 🔬 §10 pilot — Second Flash fully authored (awaiting sign-off)
+#### 🔬 §10 pilot — Second Flash authored + first review pass applied
 Authored **the Second Flash (Job's Prayer in Illness)** to the §7 gold-standard
-bar: own-words ~380-word summary, 7-node outline, opening verse (21:83, own
-plain rendering), `context`, two confident cross-refs (26th & 21st Words, both
-cited in the text itself), 8 key concepts. Added 5 new glossary terms — `sabir`,
-`tevekkul`, `riza`, `kader`, `gaflet` — and tagged `şükür` with Flash 2. Status
-`in-review`. `astro check` 0/0/0; build clean (80 pages). Awaiting review before
-batch authoring (§9).
+bar: own-words ~380-word summary, 7-node outline, opening verse (21:83),
+`context`, two confident cross-refs (26th & 21st Words, both cited in the text
+itself), 8 key concepts. Added 5 new glossary terms — `sabir`, `tevekkul`,
+`riza`, `kader`, `gaflet` — and tagged `şükür` with Flash 2.
 
-#### Page numbers to verify
-- **10th Flash:** existing data says `pageNo=80`, but erisale indexes "The Tenth
-  Flash" at s:71, s:79 and s:80 — 80 may be mid-Flash. Needs confirmation of the
-  true start; left unchanged for now.
-- **1st Flash:** existing `pageNo=18`; indexed title shows "The First Flash
-  (s:19)". Harmless (Flash 1 is the book start either way); left unchanged.
-- **Unconfirmed starts** (still linking to the landing + flagged): 3, 4, 5, 6,
-  7, 8, 9, 12, 14, 16, 17, 18, 22, 23, 27, 28, 29, 30. (6 folds into the 29th;
-  8 & 18 are published in *Sikke-i Tasdîk-i Gayb* — may not have own pages here.)
+Maintainer review applied (these become standing rules for the rest):
+- **Verses use Sahih International** (`translationSource`), and every Qur'anic
+  Arabic is verified against the Uthmani mushaf (api.alquran.cloud). Fixed a real
+  error in the 21st Flash: 91:9–10 `زَكّٰيهَا/دَسّٰيهَا` → `زَكَّاهَا/دَسَّاهَا`.
+- **Outline no longer auto-numbers** (`[slug].astro`): the CSS counter clashed
+  with the source's own "First Point / Second Point" headings ("2. First Point").
+  Headings now name themselves.
+- **Key-concept popovers no longer spill off-screen** (`TermPopover.astro`):
+  replaced absolute placement with viewport-clamped `position: fixed`, computed
+  from the trigger rect, flipping above when it would clip the bottom; repositions
+  on scroll/resize.
+
+Status `in-review`. `astro check` 0/0/0; build clean (80 pages). Awaiting review
+before batch authoring (§9).
+
+#### Page numbers — RESOLVED
+All 33 start pages now come from erisale's authoritative TOC (`c` values, listed
+above) and link to each Flash's first page. The earlier "unconfirmed starts"
+list and the 10th/1st-Flash page questions are closed (10→70, 1→17).
 
 ---
 

@@ -1,0 +1,145 @@
+---
+import { withBase } from '@lib/paths';
+
+export interface Props {
+  slug: string;
+  term: string;
+  arabic?: string;
+  definition: string;
+}
+const { slug, term, arabic, definition } = Astro.props;
+const href = withBase(`/glossary/${slug}/`);
+const popId = `pop-${slug}`;
+---
+
+<span class="term-pop" data-term-pop>
+  <button
+    type="button"
+    class="term-trigger"
+    aria-expanded="false"
+    aria-controls={popId}
+  >
+    {term}
+  </button>
+  <span class="term-panel" id={popId} role="dialog" aria-label={`Definition: ${term}`} hidden>
+    {arabic && <span class="term-panel-ar arabic" lang="ar" dir="rtl">{arabic}</span>}
+    <span class="term-panel-def">{definition}</span>
+    <a class="term-panel-link" href={href}>Full definition →</a>
+  </span>
+</span>
+
+<script>
+  // One delegated controller for all term popovers on the page.
+  let open: HTMLElement | null = null;
+
+  function close() {
+    if (!open) return;
+    const trigger = open.querySelector<HTMLButtonElement>('.term-trigger');
+    const panel = open.querySelector<HTMLElement>('.term-panel');
+    trigger?.setAttribute('aria-expanded', 'false');
+    if (panel) panel.hidden = true;
+    open.classList.remove('is-open');
+    open = null;
+  }
+
+  function openPop(wrap: HTMLElement) {
+    if (open && open !== wrap) close();
+    const trigger = wrap.querySelector<HTMLButtonElement>('.term-trigger');
+    const panel = wrap.querySelector<HTMLElement>('.term-panel');
+    trigger?.setAttribute('aria-expanded', 'true');
+    if (panel) panel.hidden = false;
+    wrap.classList.add('is-open');
+    open = wrap;
+  }
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const trigger = target.closest<HTMLElement>('.term-trigger');
+    if (trigger) {
+      const wrap = trigger.closest<HTMLElement>('[data-term-pop]');
+      if (!wrap) return;
+      if (open === wrap) close();
+      else openPop(wrap);
+      return;
+    }
+    // Clicking outside any popover closes it (but not when following the link).
+    if (open && !target.closest('[data-term-pop]')) close();
+  });
+
+  // Hover (pointer) reveal — purely additive to the click/focus behaviour.
+  document.querySelectorAll<HTMLElement>('[data-term-pop]').forEach((wrap) => {
+    wrap.addEventListener('mouseenter', () => openPop(wrap));
+    wrap.addEventListener('mouseleave', () => {
+      if (open === wrap) close();
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && open) {
+      const trigger = open.querySelector<HTMLButtonElement>('.term-trigger');
+      close();
+      trigger?.focus();
+    }
+  });
+</script>
+
+<style>
+  .term-pop {
+    position: relative;
+    display: inline-block;
+  }
+  .term-trigger {
+    font: inherit;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    padding: var(--space-3xs) var(--space-s);
+    cursor: pointer;
+    border-bottom-style: dotted;
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .term-trigger:hover,
+  .term-pop.is-open .term-trigger {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .term-panel {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 8px);
+    z-index: 30;
+    width: max-content;
+    max-width: min(20rem, 80vw);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-s);
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow);
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    text-align: left;
+  }
+  .term-panel::before {
+    /* little gleam accent on the popover edge */
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    border-radius: var(--radius-m) 0 0 var(--radius-m);
+    background: var(--accent);
+  }
+  .term-panel-ar { font-size: 1.3em; color: var(--accent); }
+  .term-panel-def { color: var(--text); }
+  .term-panel-link { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .term-panel-link:hover { text-decoration: underline; }
+
+  @media (max-width: 30rem) {
+    .term-panel { left: auto; right: 0; }
+  }
+</style>

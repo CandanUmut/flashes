@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import FlashCard from '@components/FlashCard.astro';
+import { withBase } from '@lib/paths';
+
+export async function getStaticPaths() {
+  const themes = await getCollection('themes');
+  return themes.map((theme) => ({ params: { slug: theme.id }, props: { theme } }));
+}
+
+const { theme } = Astro.props;
+
+const themes = await getCollection('themes');
+const themeNames: Record<string, string> = Object.fromEntries(
+  themes.map((t) => [t.id, t.data.name])
+);
+
+const flashes = (await getCollection('flashes'))
+  .filter((f) => f.data.themes.includes(theme.id))
+  .sort((a, b) => a.data.number - b.data.number);
+---
+
+<BaseLayout title={`${theme.data.name} — Themes`} description={theme.data.description}>
+  <section class="wrap">
+    <header class="theme-head glow-title">
+      <p class="eyebrow">
+        <a href={withBase('/themes/')}>Themes</a> · theme
+      </p>
+      <h1>{theme.data.name}</h1>
+      <p class="prose muted theme-desc">{theme.data.description}</p>
+      <p class="count ui muted">{flashes.length} {flashes.length === 1 ? 'Flash' : 'Flashes'}</p>
+    </header>
+
+    {flashes.length > 0 ? (
+      <ul class="flash-grid">
+        {flashes.map((f) => (
+          <li>
+            <FlashCard
+              number={f.data.number}
+              slug={f.id}
+              title={f.data.title}
+              essence={f.data.essence}
+              themes={f.data.themes}
+              themeNames={themeNames}
+              status={f.data.status}
+              fifteenDay={f.data.special?.fifteenDayReminder}
+            />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="ui muted">No Flashes are tagged with this theme yet.</p>
+    )}
+
+    <p class="back ui"><a href={withBase('/themes/')}>← All themes</a></p>
+  </section>
+
+  <script>
+    import { getReadFlashes } from '@lib/progress';
+    const read = getReadFlashes();
+    document.querySelectorAll<HTMLElement>('.flash-card[data-flash]').forEach((card) => {
+      if (read.has(Number(card.dataset.flash))) card.classList.add('is-read');
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  .theme-head { padding-block: var(--space-l) var(--space-m); text-align: center; }
+  .theme-desc { margin-inline: auto; font-size: var(--step-0); }
+  .count { margin-top: var(--space-2xs); }
+  .flash-grid {
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  }
+  .flash-grid > li { display: flex; }
+  .back { margin-top: var(--space-l); }
+</style>

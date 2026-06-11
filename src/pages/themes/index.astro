@@ -1,11 +1,89 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import ComingSoon from '@components/ComingSoon.astro';
+import { withBase } from '@lib/paths';
+
+const themes = await getCollection('themes');
+const flashes = await getCollection('flashes');
+
+const counts: Record<string, number> = {};
+for (const f of flashes) {
+  for (const t of f.data.themes) counts[t] = (counts[t] ?? 0) + 1;
+}
+
+// Show themes that group at least one Flash first, then the rest.
+const sorted = [...themes].sort(
+  (a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0) || a.data.name.localeCompare(b.data.name)
+);
 ---
 
-<BaseLayout title="Themes">
-  <ComingSoon
-    title="Themes"
-    note="Navigate across the Flashes by theme — sincerity, brotherhood, the self, death and the hereafter, knowledge of God, and the Qur'an."
-  />
+<BaseLayout title="Themes" description="Navigate the Flashes by theme — sincerity, brotherhood, knowledge of God, death and the hereafter, and more.">
+  <section class="wrap">
+    <header class="themes-head glow-title">
+      <p class="eyebrow">Cross-Flash navigation</p>
+      <h1>Themes</h1>
+      <p class="prose muted">
+        Our own editorial groupings for moving across the Flashes by subject —
+        not headings from the text.
+      </p>
+    </header>
+
+    <ul class="theme-grid">
+      {
+        sorted.map((t) => (
+          <li class="theme-item" id={t.id}>
+            <a class="theme-card" href={withBase(`/themes/${t.id}/`)}>
+              <div class="theme-top">
+                <h2 class="theme-name">{t.data.name}</h2>
+                <span class="theme-count ui">{counts[t.id] ?? 0}</span>
+              </div>
+              <p class="theme-desc muted">{t.data.description}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </BaseLayout>
+
+<style>
+  .themes-head { padding-block: var(--space-l) var(--space-m); text-align: center; }
+  .themes-head .prose { margin-inline: auto; }
+  .theme-grid {
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  }
+  .theme-item { display: flex; scroll-margin-top: 6rem; }
+  .theme-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    width: 100%;
+    padding: var(--space-m);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-l);
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transition: transform var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-card:hover { border-color: var(--accent); }
+  }
+  .theme-top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-s); }
+  .theme-name { font-size: var(--step-1); margin: 0; }
+  .theme-count {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    color: var(--accent);
+  }
+  .theme-desc { margin: 0; font-size: var(--step--1); line-height: var(--leading-snug); max-width: none; }
+</style>

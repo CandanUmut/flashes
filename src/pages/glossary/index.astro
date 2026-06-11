@@ -1,11 +1,135 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import ComingSoon from '@components/ComingSoon.astro';
+import { withBase } from '@lib/paths';
+
+const glossary = (await getCollection('glossary')).sort((a, b) =>
+  a.data.term.localeCompare(b.data.term, 'en', { sensitivity: 'base' })
+);
 ---
 
-<BaseLayout title="Glossary">
-  <ComingSoon
-    title="Glossary"
-    note="Plain-English definitions of recurring Risale-i Nur terms, with Arabic roots, related terms, and the Flashes each appears in."
-  />
+<BaseLayout title="Glossary" description="Plain-English definitions of recurring Risale-i Nur terms, with Arabic and links to the Flashes they appear in.">
+  <section class="wrap">
+    <header class="glossary-head glow-title">
+      <p class="eyebrow">Companion glossary</p>
+      <h1>Glossary</h1>
+      <p class="prose muted">
+        Plain-English definitions of recurring terms — companion aids in our own
+        words, not translations of the text.
+      </p>
+    </header>
+
+    <div class="search-row ui">
+      <label class="sr-only" for="term-filter">Filter terms</label>
+      <input
+        type="search"
+        id="term-filter"
+        placeholder="Filter terms…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    <p class="empty-msg ui muted" hidden>No terms match.</p>
+
+    <ul class="term-grid" id="term-grid">
+      {
+        glossary.map((g) => (
+          <li class="term-item" id={g.id} data-term={`${g.data.term} ${g.id} ${g.data.definitionEn}`.toLowerCase()}>
+            <a class="term-card" href={withBase(`/glossary/${g.id}/`)}>
+              <div class="term-top">
+                <h2 class="term-name">{g.data.term}</h2>
+                {g.data.arabic && <span class="term-ar arabic" lang="ar" dir="rtl">{g.data.arabic}</span>}
+              </div>
+              <p class="term-def muted">{g.data.definitionEn}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </BaseLayout>
+
+<script>
+  const input = document.getElementById('term-filter') as HTMLInputElement | null;
+  const items = Array.from(document.querySelectorAll<HTMLLIElement>('.term-item'));
+  const emptyMsg = document.querySelector<HTMLElement>('.empty-msg');
+
+  input?.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    let visible = 0;
+    items.forEach((li) => {
+      const show = q === '' || (li.dataset.term ?? '').includes(q);
+      li.hidden = !show;
+      if (show) visible++;
+    });
+    if (emptyMsg) emptyMsg.hidden = visible !== 0;
+  });
+</script>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0;
+  }
+  .glossary-head { padding-block: var(--space-l) var(--space-m); text-align: center; }
+  .glossary-head .prose { margin-inline: auto; }
+
+  .search-row { margin-block: var(--space-m); display: flex; justify-content: center; }
+  #term-filter {
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--space-2xs) var(--space-s);
+    font-family: var(--font-ui);
+    font-size: var(--step-0);
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-s);
+  }
+  #term-filter:focus-visible { border-color: var(--accent); }
+
+  .empty-msg { text-align: center; padding-block: var(--space-l); }
+
+  .term-grid {
+    list-style: none;
+    margin: var(--space-m) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  }
+  .term-item { display: flex; scroll-margin-top: 6rem; }
+  .term-item[hidden] { display: none; }
+  .term-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    width: 100%;
+    padding: var(--space-s) var(--space-m);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .term-card:hover { border-color: var(--accent); }
+  .term-top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-s); }
+  .term-name { font-size: var(--step-1); margin: 0; }
+  .term-ar { font-size: 1.4em; color: var(--accent); }
+  .term-def {
+    margin: 0;
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    max-width: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

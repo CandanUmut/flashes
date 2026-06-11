@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { withBase } from '@lib/paths';
+
+export async function getStaticPaths() {
+  const glossary = await getCollection('glossary');
+  return glossary.map((term) => ({ params: { slug: term.id }, props: { term } }));
+}
+
+const { term } = Astro.props;
+const d = term.data;
+
+const glossary = await getCollection('glossary');
+const termNames: Record<string, string> = Object.fromEntries(
+  glossary.map((g) => [g.id, g.data.term])
+);
+
+const flashes = await getCollection('flashes');
+const flashByNumber = new Map(flashes.map((f) => [f.data.number, f]));
+
+// Terms that list THIS term as related (incoming links), for a fuller graph.
+const alsoRelated = glossary
+  .filter((g) => g.id !== term.id && g.data.relatedTerms.includes(term.id))
+  .map((g) => g.id);
+const related = [...new Set([...d.relatedTerms, ...alsoRelated])].filter(
+  (slug) => termNames[slug]
+);
+
+const appearsIn = d.appearsIn
+  .map((n) => flashByNumber.get(n))
+  .filter((f): f is NonNullable<typeof f> => Boolean(f));
+---
+
+<BaseLayout title={`${d.term} — Glossary`} description={d.definitionEn}>
+  <article class="wrap prose term-page">
+    <p class="eyebrow">
+      <a href={withBase('/glossary/')}>Glossary</a> · term
+    </p>
+    <h1 class="glow-title">{d.term}</h1>
+    {d.arabic && <p class="arabic term-arabic" lang="ar" dir="rtl">{d.arabic}</p>}
+
+    <p class="definition">{d.definitionEn}</p>
+    {d.definitionTr && <p class="definition-tr muted" lang="tr">{d.definitionTr}</p>}
+
+    <hr class="gleam" />
+
+    {related.length > 0 && (
+      <section class="related ui">
+        <h2 class="section-head">Related terms</h2>
+        <ul class="term-chips">
+          {related.map((slug) => (
+            <li>
+              <a class="chip" href={withBase(`/glossary/${slug}/`)}>{termNames[slug]}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {appearsIn.length > 0 && (
+      <section class="appears ui">
+        <h2 class="section-head">Appears in</h2>
+        <ul class="appears-list">
+          {appearsIn.map((f) => (
+            <li>
+              <a href={withBase(`/flashes/${f.id}/`)}>
+                <span class="num">{f.data.number}</span>
+                {f.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <p class="back ui">
+      <a href={withBase('/glossary/')}>← All terms</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .term-page { max-width: var(--measure); }
+  .term-arabic { font-size: 2.2em; margin: 0 0 var(--space-s); }
+  .definition { font-size: var(--step-1); }
+  .definition-tr { font-size: var(--step-0); }
+  .section-head { font-size: var(--step-1); margin-bottom: var(--space-2xs); }
+  .term-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .chip {
+    display: inline-block;
+    padding: var(--space-3xs) var(--space-s);
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: var(--step--1);
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .appears-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .appears-list a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    padding: var(--space-2xs) var(--space-s);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    text-decoration: none;
+    color: var(--text);
+  }
+  .appears-list a:hover { border-color: var(--accent); }
+  .appears-list .num {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    color: var(--accent);
+    min-width: 1.5em;
+  }
+  .back { margin-top: var(--space-l); }
+</style>

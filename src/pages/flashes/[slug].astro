@@ -4,6 +4,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import CompanionNotice from '@components/CompanionNotice.astro';
 import OpeningVerses from '@components/OpeningVerses.astro';
 import ReadToggle from '@components/ReadToggle.astro';
+import TermPopover from '@components/TermPopover.astro';
 import { withBase } from '@lib/paths';
 
 export async function getStaticPaths() {
@@ -30,9 +31,7 @@ const themeNames: Record<string, string> = Object.fromEntries(
 );
 
 const glossary = await getCollection('glossary');
-const termNames: Record<string, string> = Object.fromEntries(
-  glossary.map((g) => [g.id, g.data.term])
-);
+const termMap = new Map(glossary.map((g) => [g.id, g.data]));
 
 const sourceUrl = d.source.erisaleUrlEn;
 ---
@@ -111,19 +110,21 @@ const sourceUrl = d.source.erisaleUrlEn;
       </div>
     </section>
 
-    {/* ---- Key concepts ---- */}
+    {/* ---- Key concepts (inline popovers -> glossary) ---- */}
     {d.keyConcepts.length > 0 && (
       <section class="concepts" aria-label="Key concepts">
         <h2 class="section-head">Key concepts</h2>
-        <ul class="concept-list ui">
-          {d.keyConcepts.map((slug) => (
-            <li>
-              <a class="concept" href={`${withBase('/glossary/')}#${slug}`}>
-                {termNames[slug] ?? slug}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <p class="section-sub ui muted">Hover, tap or focus a term for a short definition.</p>
+        <div class="concept-list">
+          {d.keyConcepts.map((slug) => {
+            const t = termMap.get(slug);
+            return t ? (
+              <TermPopover slug={slug} term={t.term} arabic={t.arabic} definition={t.definitionEn} />
+            ) : (
+              <a class="concept-fallback ui" href={withBase('/glossary/')}>{slug}</a>
+            );
+          })}
+        </div>
       </section>
     )}
 
@@ -146,7 +147,7 @@ const sourceUrl = d.source.erisaleUrlEn;
     {d.themes.length > 0 && (
       <section class="flash-themes ui" aria-label="Themes">
         {d.themes.map((t) => (
-          <a class="chip" href={`${withBase('/themes/')}#${t}`}>{themeNames[t] ?? t}</a>
+          <a class="chip" href={withBase(`/themes/${t}/`)}>{themeNames[t] ?? t}</a>
         ))}
       </section>
     )}
@@ -310,17 +311,17 @@ const sourceUrl = d.source.erisaleUrlEn;
     flex-wrap: wrap;
     gap: var(--space-2xs);
   }
-  .concept {
+  .concept-list { align-items: flex-start; }
+  .concept-fallback {
     display: inline-block;
     padding: var(--space-3xs) var(--space-s);
-    border: 1px solid var(--hairline);
+    border: 1px dashed var(--hairline);
     border-radius: 100px;
     text-decoration: none;
-    color: var(--text);
+    color: var(--muted);
     font-size: var(--step--1);
-    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
   }
-  .concept:hover { border-color: var(--accent); color: var(--accent); }
+  .concept-fallback:hover { border-color: var(--accent); color: var(--accent); }
 
   .crossrefs ul { list-style: none; padding: 0; margin: var(--space-s) 0 0; }
   .crossrefs li { margin-bottom: var(--space-2xs); font-size: var(--step--1); }

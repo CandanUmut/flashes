@@ -50,11 +50,19 @@ Toggle the theme (top-right); check Home → About; confirm nav links work.
 - 39 pages build clean; Pagefind indexed 39; all internal links base-aware (verified `/flashes/flashes/21/`, concept/theme deep links). `astro check`: 0/0/0.
 - Note: concept/theme links currently point to `/glossary/#slug` and `/themes/#slug` (index anchors). Phase 3 upgrades these to dedicated term/theme pages.
 
-### ⏭ Phase 3 — Glossary & themes  (NEXT)
-- Glossary list page + `/glossary/[slug]/` term pages (definition, Arabic, related terms, "appears in" Flash links).
-- Theme index + `/themes/[slug]/` pages (cross-Flash navigation).
-- Inline term **popovers** on Flash pages (keyboard-accessible, dismissible).
-- Upgrade concept/theme links from index-anchors to dedicated pages.
+### ✅ Phase 3 — Glossary & themes  (DONE)
+- **Glossary index** (`/glossary/`): alphabetised term cards with a live filter box (term/slug/definition), id anchors, line-clamped previews.
+- **Term pages** (`/glossary/[slug]/`): term, Arabic, definition (+TR), **related terms** (bidirectional — includes incoming links), **"appears in"** Flash links.
+- **Themes index** (`/themes/`): theme cards with per-theme Flash counts (sorted by count), id anchors.
+- **Theme pages** (`/themes/[slug]/`): description, count, FlashCard grid of member Flashes (with read-status).
+- **Inline term popovers** on Flash pages (`TermPopover`): hover/tap/focus reveals a short definition + link to the full term page. Single delegated controller; click-outside and **Escape** close (Escape returns focus to trigger); `aria-expanded`/`aria-controls`/`role="dialog"`.
+- Upgraded Flash-page concept links → glossary term pages, theme chips → theme pages.
+- 73 pages build clean (6 + 33 + 22 + 12); Pagefind indexed 73; `astro check` 0/0/0. Verified 10 popovers on the 21st Flash and all cross-links resolve.
+
+### ⏭ Phase 4 — Search  (NEXT)
+- Pagefind UI on `/search/` over companion content only (already indexing in build).
+- Clean results page; header search affordance.
+- Ensure source text is never indexed (we only host companion content anyway).
 
 ## ⚠️ Needs your attention (faithfulness)
 - **Flashes 31–33:** the Vahide collection's contents run to the 30th Flash; I could not confirm reliable subjects for 31–33, so they are honest stubs with `TODO(review)` notes and neutral essences (no invented subjects). Please advise on their correct subjects/status, or whether the collection should present only 1–30 as discrete Flashes.

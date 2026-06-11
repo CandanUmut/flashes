@@ -227,7 +227,39 @@ International verses, all Arabic verified against the Uthmani mushaf):
 - **Descriptive titles** added throughout ("The Nth Flash — Subject"); flag if
   you'd rather keep bare titles.
 
-**Remaining stubs:** 8, 9, 10, 12, 14, 16, 17, 18, 22, 23, 27, 28, 29, 30, 31–33.
+**Remaining stubs (after batch 1):** 8, 9, 10, 12, 14, 16, 17, 18, 22, 23, 27,
+28, 29, 30, 31–33.
+
+#### 🛠 Popover fix + 📦 Batch 2 — Flashes 8, 9, 10, 12, 14 (authored, in-review)
+- **Key-concept popover bug fixed:** a `<button>` fires `focusin` (and on touch
+  `mouseenter`) *before* `click`, so the auto-open handlers opened the panel and
+  the click handler then toggled it closed — tapping a term did nothing. Made it
+  **click/tap-only** (keyboard-accessible via the button's click; Escape /
+  outside-click still close).
+- **8 — published elsewhere:** honest one-line note (it lives in *Sikke-i
+  Tasdîk-i Gaybî*, not reproduced in full here); no content invented.
+- **9 — Unity of Existence:** respectful critique of vahdetü'l-vücud
+  (Ibn al-ʿArabi); mirror-and-sun; "all from Him, not all Him"; the sober Unity
+  of Witnessing. **Flagged sensitive** (contested Sufi doctrine).
+- **10 — Compassionate Slaps:** autobiographical; the "şefkat tokadı" pattern and
+  why friends are corrected here while opponents' reckoning is deferred.
+- **12 — Provision & cosmology:** guaranteed rızık (inverse to power/will); the
+  seven heavens/earths as layered universal meaning (argued in the science of his
+  day — noted as such).
+- **14 — Mysteries of "In the Name of God":** First Station (the Bull-and-Fish
+  Hadith; the People of the Cloak) + the beloved Bismillah treatise (six
+  mysteries, divine mercy, ehadiyet within vahidiyet). First Station again
+  touches the early-Caliphate question — described, not adjudicated.
+- **New glossary terms (7):** `vahdet-i-vucud`, `vahdet-i-suhud`, `tecelli`,
+  `keramet`, `rizik`, `rahmet`, `ehadiyet`; `appearsIn` updated across reused
+  terms. All verses Sahih International, Arabic verified.
+- `astro check` 0/0/0; build clean (93 pages); all popovers resolve.
+
+**Flags:** 9 and 14's First Station touch contested theological/sectarian ground
+— handled descriptively, attributed to Nursî, flagged `TODO(review)`. 12's
+cosmology rests on period science (ether), framed as such.
+
+**Remaining stubs:** 16, 17, 18, 22, 23, 27, 28, 29, 30, 31–33.
 
 #### Page numbers — RESOLVED
 All 33 start pages now come from erisale's authoritative TOC (`c` values, listed

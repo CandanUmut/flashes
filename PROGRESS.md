@@ -114,9 +114,26 @@ Tracking the A/B/C work from the maintainer's review brief.
   applied: **2→24, 20→208, 24→257** (added to the already-correct
   1, 10, 11, 13, 15, 19, 21, 25, 26). Remaining Flashes still link to the
   landing with a flag — see "Needs your attention" below.
-- **A4 — search → official source link:** pending (depends on A3 data).
-- **B — content authoring:** BLOCKED — see network note below.
-- **C — disclaimer copy consolidation:** pending.
+- **A4 — search → official source link — DONE.** Replaced the default Pagefind
+  UI with a custom results list built on the Pagefind JS API
+  (`/flashes/pagefind/pagefind.js`). Each Flash page now exposes its source deep
+  link to the index via `data-pagefind-meta="source[href]"`; every search result
+  shows the companion-page link **and**, for Flash results, a prominent
+  "Read on the official source →" link to the correct deep link. Keeps `?q=`
+  sync, themed styling, AA contrast, and the `<noscript>` fallback. (Search runs
+  in `build`/`preview` only — Pagefind indexes at build time.) Verified: page +
+  bundle serve 200, metadata captured with correct per-Flash links, dual-link
+  markup renders. Note: not browser-click-tested (no headless browser in this
+  env) — recommend a quick manual smoke test in `npm run preview`.
+- **B — content authoring:** BLOCKED — see network note below. (Maintainer chose
+  to pause §B and keep 31–33 as flagged stubs.)
+- **C — disclaimer copy consolidation — DONE.** Full disclaimer stays in one
+  place (About); a single short footer line is site-wide (`footer.companion`).
+  The heavy per-Flash `CompanionNotice` banner is replaced by one quiet cue near
+  the source link ("Companion notes — read Nursî's own words at the source →"),
+  sourced from the i18n dictionary (`companion.cue`, EN+TR) so it's defined once.
+  Lightened the Home lede (disclaimer now carried by footer/About, not repeated).
+  Deleted the unused `CompanionNotice` component and its dangling print rule.
 
 #### ⚠️ Source-text access is blocked in this environment
 `erisale.com` and the archive.org / PDF mirrors all return **HTTP 403** via

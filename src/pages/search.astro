@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import Search from 'astro-pagefind/components/Search';
 import { withBase } from '@lib/paths';
+import '@pagefind/default-ui/css/ui.css';
 ---
 
 <BaseLayout title="Search" description="Search the companion notes, outlines and glossary — runs entirely in your browser.">
@@ -12,83 +12,230 @@ import { withBase } from '@lib/paths';
       <p class="prose muted">
         Search across the companion notes, outlines, glossary and themes. This
         runs entirely in your browser — nothing is sent anywhere. It does not
-        search the original text; for that, read on
-        <a href="https://www.erisale.com/?locale=en" rel="noopener" target="_blank">erisale.com</a>.
+        search the original text; each Flash result links straight to the
+        official source so you can read Nursî's own words.
       </p>
     </header>
 
-    <div class="search-shell">
-      <Search id="search" className="companion-search" uiOptions={{ showImages: false, excerptLength: 18 }} />
-    </div>
+    <form class="search-form" role="search" autocomplete="off">
+      <label class="visually-hidden" for="search-input">Search the companion</label>
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="Search Flashes, glossary, themes…"
+        enterkeyhint="search"
+        aria-controls="search-results"
+      />
+    </form>
+
+    <p class="search-status ui muted" data-search-status aria-live="polite"></p>
+    <div id="search-results" class="search-results" aria-live="polite"></div>
 
     <noscript>
       <p class="ui muted">Search needs JavaScript. You can still browse the
-        <a href={withBase('/flashes/')}>Flashes</a> and <a href={withBase('/glossary/')}>glossary</a> directly.</p>
+        <a href={withBase('/flashes/')}>Flashes</a> and <a href={withBase('/glossary/')}>glossary</a> directly,
+        or read the original on
+        <a href="https://www.erisale.com/?locale=en" rel="noopener" target="_blank">erisale.com</a>.</p>
     </noscript>
   </section>
 </BaseLayout>
 
 <script>
-  // Sync a ?q= query param into the search box so searches are linkable.
-  function applyQueryParam() {
-    const q = new URLSearchParams(location.search).get('q');
-    if (!q) return;
-    const input = document.querySelector<HTMLInputElement>('.companion-search input[type="text"]');
-    if (input) {
-      input.value = q;
-      input.dispatchEvent(new Event('input', { bubbles: true }));
+  // Custom search UI on the Pagefind JS API, so each result can carry BOTH a
+  // link to our companion page and a direct "Read on the official source" link
+  // for Flash results. Pagefind only indexes at build time, so this works in
+  // `build`/`preview`, not `dev`.
+  const BASE = import.meta.env.BASE_URL; // e.g. "/flashes/"
+  const SOURCE_FALLBACK = 'https://www.erisale.com/?locale=en';
+
+  // Pagefind records dist-root-relative URLs ("/glossary/ihlas/"); prefix the
+  // deploy base so links resolve on the GitHub Pages subpath.
+  const linkWithBase = (u: string) =>
+    `${BASE.replace(/\/$/, '')}${u.startsWith('/') ? u : `/${u}`}`;
+
+  const input = document.querySelector<HTMLInputElement>('#search-input');
+  const resultsEl = document.querySelector<HTMLElement>('#search-results');
+  const statusEl = document.querySelector<HTMLElement>('[data-search-status]');
+
+  type PagefindResultData = {
+    url: string;
+    excerpt: string;
+    meta: Record<string, string> & { title?: string; source?: string };
+  };
+  type Pagefind = {
+    search: (q: string) => Promise<{ results: { data: () => Promise<PagefindResultData> }[] }>;
+    options?: (o: Record<string, unknown>) => Promise<void>;
+  };
+
+  let pagefind: Pagefind | null = null;
+  let loadError = false;
+
+  async function getPagefind(): Promise<Pagefind | null> {
+    if (pagefind || loadError) return pagefind;
+    try {
+      // Runtime path; Vite must not try to bundle it.
+      pagefind = (await import(/* @vite-ignore */ `${BASE}pagefind/pagefind.js`)) as Pagefind;
+      await pagefind.options?.({ excerptLength: 24 });
+      return pagefind;
+    } catch {
+      loadError = true;
+      if (statusEl)
+        statusEl.textContent =
+          'Search index unavailable. Run a production build (it indexes at build time).';
+      return null;
     }
   }
-  // The Pagefind UI mounts asynchronously; retry briefly until the input exists.
-  let tries = 0;
-  const timer = setInterval(() => {
-    const ready = document.querySelector('.companion-search input[type="text"]');
-    if (ready || tries++ > 40) {
-      clearInterval(timer);
-      if (ready) applyQueryParam();
+
+  const escapeAttr = (s: string) =>
+    s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  function render(items: PagefindResultData[]) {
+    if (!resultsEl) return;
+    resultsEl.innerHTML = '';
+    for (const r of items) {
+      const card = document.createElement('article');
+      card.className = 'result';
+
+      const title = document.createElement('h2');
+      title.className = 'result-title';
+      const a = document.createElement('a');
+      a.href = linkWithBase(r.url);
+      a.textContent = r.meta?.title || r.url;
+      title.appendChild(a);
+
+      const excerpt = document.createElement('p');
+      excerpt.className = 'result-excerpt';
+      excerpt.innerHTML = r.excerpt; // Pagefind-provided, includes <mark>
+
+      const actions = document.createElement('p');
+      actions.className = 'result-actions ui';
+      actions.innerHTML = `<a class="result-companion" href="${escapeAttr(linkWithBase(r.url))}">Companion notes</a>`;
+      // Only Flash pages expose a per-Flash source deep link.
+      if (r.meta?.source) {
+        actions.innerHTML += ` <a class="result-source" href="${escapeAttr(r.meta.source)}" rel="noopener" target="_blank">Read on the official source →</a>`;
+      }
+
+      card.append(title, excerpt, actions);
+      resultsEl.appendChild(card);
     }
-  }, 100);
+  }
+
+  let lastQuery = '';
+  async function run(query: string) {
+    const q = query.trim();
+    lastQuery = q;
+    if (!q) {
+      if (resultsEl) resultsEl.innerHTML = '';
+      if (statusEl) statusEl.textContent = '';
+      return;
+    }
+    if (statusEl) statusEl.textContent = 'Searching…';
+    const pf = await getPagefind();
+    if (!pf) return;
+    const search = await pf.search(q);
+    if (q !== lastQuery) return; // a newer query superseded this one
+    const items = await Promise.all(search.results.slice(0, 20).map((r) => r.data()));
+    if (q !== lastQuery) return;
+    render(items);
+    if (statusEl) {
+      const n = items.length;
+      statusEl.textContent = n === 0 ? `No results for “${q}”.` : `${n} result${n === 1 ? '' : 's'} for “${q}”.`;
+    }
+  }
+
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  input?.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => run(input.value), 200);
+  });
+  // Don't reload the page on Enter.
+  input?.closest('form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    clearTimeout(timer);
+    run(input?.value ?? '');
+  });
+
+  // Sync ?q= so searches are linkable; warm the index on first focus.
+  const initial = new URLSearchParams(location.search).get('q');
+  if (initial && input) {
+    input.value = initial;
+    run(initial);
+  }
+  input?.addEventListener('focus', () => void getPagefind(), { once: true });
+
+  void SOURCE_FALLBACK; // reserved for future section-level fallbacks
 </script>
 
 <style>
   .search-head { padding-block: var(--space-l) var(--space-m); text-align: center; }
   .search-head .prose { margin-inline: auto; }
-  .search-shell { margin-top: var(--space-m); }
-</style>
 
-{/* Theme the Pagefind default UI with our design tokens. */}
-<style is:global>
-  .companion-search {
-    --pagefind-ui-scale: 1;
-    --pagefind-ui-primary: var(--accent);
-    --pagefind-ui-text: var(--text);
-    --pagefind-ui-background: var(--surface);
-    --pagefind-ui-border: var(--hairline);
-    --pagefind-ui-tag: var(--surface-2);
-    --pagefind-ui-border-width: 1px;
-    --pagefind-ui-border-radius: var(--radius-m);
-    --pagefind-ui-font: var(--font-ui);
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0;
   }
-  .companion-search .pagefind-ui__search-input {
-    background: var(--surface);
-    color: var(--text);
+
+  .search-form { margin-top: var(--space-m); }
+  .search-input {
+    width: 100%;
+    min-height: 48px;
+    padding: var(--space-s) var(--space-m);
+    font-family: var(--font-ui);
     font-size: var(--step-0);
-  }
-  .companion-search .pagefind-ui__result {
-    border-top: 1px solid var(--hairline);
-  }
-  .companion-search .pagefind-ui__result-title a {
     color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
   }
-  .companion-search .pagefind-ui__result-title a:hover {
-    color: var(--accent);
+  .search-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
+
+  .search-status { margin-block: var(--space-s) 0; text-align: center; }
+
+  .search-results {
+    margin-top: var(--space-m);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
   }
-  .companion-search .pagefind-ui__result-excerpt {
+  .result {
+    padding: var(--space-m);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+  }
+  .result-title { font-size: var(--step-1); margin: 0 0 var(--space-3xs); }
+  .result-title a { color: var(--text); text-decoration: none; }
+  .result-title a:hover { color: var(--accent); }
+  .result-excerpt {
+    margin: 0 0 var(--space-s);
     color: var(--muted);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
   }
-  .companion-search mark {
+  .result-excerpt :global(mark) {
     background: color-mix(in srgb, var(--accent) 30%, transparent);
     color: var(--text);
     border-radius: 3px;
   }
+  .result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    align-items: center;
+    margin: 0;
+    font-size: var(--step--1);
+  }
+  .result-companion { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  .result-companion:hover { color: var(--text); border-color: var(--accent); }
+  .result-source {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+  .result-source:hover { color: var(--accent-strong); }
 </style>

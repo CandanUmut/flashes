@@ -1,7 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import CompanionNotice from '@components/CompanionNotice.astro';
 import OpeningVerses from '@components/OpeningVerses.astro';
 import ReadToggle from '@components/ReadToggle.astro';
 import BookmarkToggle from '@components/BookmarkToggle.astro';
@@ -9,6 +8,9 @@ import NotePanel from '@components/NotePanel.astro';
 import IhlasReminder from '@components/IhlasReminder.astro';
 import TermPopover from '@components/TermPopover.astro';
 import { withBase } from '@lib/paths';
+import { getLocale, t } from '@i18n/ui';
+
+const locale = getLocale(Astro.url);
 
 export async function getStaticPaths() {
   const flashes = (await getCollection('flashes')).sort(
@@ -70,12 +72,16 @@ const sourceUrl = d.source.erisaleUrlEn;
       </div>
 
       <div class="head-actions">
-        <a class="source-btn ui" href={sourceUrl} rel="noopener" target="_blank">
+        <a class="source-btn ui" href={sourceUrl} rel="noopener" target="_blank" data-pagefind-meta="source[href]">
           Read the full text on erisale.com →
         </a>
         <ReadToggle number={d.number} />
         <BookmarkToggle number={d.number} />
       </div>
+
+      <p class="companion-cue ui">
+        <a href={sourceUrl} rel="noopener" target="_blank">{t(locale, 'companion.cue')}</a>
+      </p>
 
       {d.context?.note && <p class="context-note ui muted">{d.context.note}</p>}
 
@@ -83,8 +89,6 @@ const sourceUrl = d.source.erisaleUrlEn;
         <div class="ihlas-slot"><IhlasReminder variant="flash" /></div>
       )}
     </header>
-
-    <CompanionNotice sourceUrl={sourceUrl} />
 
     {/* ---- Opening verses ---- */}
     {d.openingVerses && d.openingVerses.length > 0 && (
@@ -274,6 +278,20 @@ const sourceUrl = d.source.erisaleUrlEn;
     .source-btn:hover { transform: translateY(-1px); }
   }
   .context-note { font-size: var(--step--1); margin-top: var(--space-2xs); }
+
+  /* A single quiet voice-separation cue near the source link (replaces the old
+     repeated companion banner). */
+  .companion-cue {
+    margin: var(--space-2xs) 0 0;
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .companion-cue a {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .companion-cue a:hover { color: var(--accent); border-color: var(--accent); }
 
   .section-head {
     font-size: var(--step-1);

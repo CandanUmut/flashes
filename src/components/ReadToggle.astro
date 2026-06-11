@@ -13,8 +13,9 @@ const { number } = Astro.props;
 <script>
   import { isRead, toggleRead } from '@lib/progress';
 
-  const btn = document.currentScript?.previousElementSibling as HTMLButtonElement | null;
-  if (btn) {
+  // Astro bundles this as an ES module, so `document.currentScript` is null.
+  // Bind every instance on the page by selector instead.
+  document.querySelectorAll<HTMLButtonElement>('.read-toggle[data-flash]').forEach((btn) => {
     const n = Number(btn.dataset.flash);
     const label = btn.querySelector('.rt-label') as HTMLElement | null;
 
@@ -26,7 +27,7 @@ const { number } = Astro.props;
 
     paint(isRead(n));
     btn.addEventListener('click', () => paint(toggleRead(n)));
-  }
+  });
 </script>
 
 <style>

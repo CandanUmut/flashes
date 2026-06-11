@@ -90,6 +90,52 @@ Toggle the theme (top-right); check Home → About; confirm nav links work.
 - Smoke-tested the production build via `preview`: all key routes + the Pagefind bundle return 200.
 - 75 pages, `astro check` 0/0/0, clean build with Pagefind + sitemap.
 
+### 🔧 Phase 8 — Bug fixes & content pass  (IN PROGRESS)
+Tracking the A/B/C work from the maintainer's review brief.
+
+- **A1 — "Mark as read" did nothing — FIXED.** Root cause: `ReadToggle`,
+  `ThemeToggle`, `BookmarkToggle` and `NotePanel` each bound their handler via
+  `document.currentScript?.previousElementSibling`. Astro bundles these
+  `<script>`s as ES modules, where `document.currentScript` is **always `null`**,
+  so the element was never found and no handler ever bound. Rebound every
+  instance by selector (`querySelectorAll('.read-toggle[data-flash]')` etc.).
+  Verified in the built output. The localStorage key scheme was already
+  consistent (`flashes:read` via `src/lib/progress.ts`); the index already
+  reflects saved state, so it now works end-to-end.
+- **A2 — Theme toggle did nothing — FIXED.** Same `currentScript` root cause in
+  `ThemeToggle`. The no-flash `<head>` init and the `:root[data-theme=...]` CSS
+  tokens were already correct; only the click binding was broken. Confirmed the
+  built HTML now binds `querySelectorAll('.theme-toggle')`.
+- **A3 — deep links — code is CORRECT; the bug is the data.** `[slug].astro`
+  already builds links from the *current* item (`d.source.erisaleUrlEn`), not
+  index 0. The "always opens the first Flash" symptom comes from ~20 stub
+  Flashes whose `source` URL is the bare `bookId=203` landing (= page 1 = the
+  First Flash). Confirmed start pages via erisale's indexed page titles and
+  applied: **2→24, 20→208, 24→257** (added to the already-correct
+  1, 10, 11, 13, 15, 19, 21, 25, 26). Remaining Flashes still link to the
+  landing with a flag — see "Needs your attention" below.
+- **A4 — search → official source link:** pending (depends on A3 data).
+- **B — content authoring:** BLOCKED — see network note below.
+- **C — disclaimer copy consolidation:** pending.
+
+#### ⚠️ Source-text access is blocked in this environment
+`erisale.com` and the archive.org / PDF mirrors all return **HTTP 403** via
+every fetch path available here (curl, WebFetch). Only `WebSearch` works, which
+is enough to confirm *page numbers* (indexed facts) but **not** enough to read
+full Flash texts. Per the faithfulness rule, the remaining stub summaries are
+**not** being fabricated — content authoring (§B) is paused pending a way to
+reach the source text.
+
+#### Page numbers to verify
+- **10th Flash:** existing data says `pageNo=80`, but erisale indexes "The Tenth
+  Flash" at s:71, s:79 and s:80 — 80 may be mid-Flash. Needs confirmation of the
+  true start; left unchanged for now.
+- **1st Flash:** existing `pageNo=18`; indexed title shows "The First Flash
+  (s:19)". Harmless (Flash 1 is the book start either way); left unchanged.
+- **Unconfirmed starts** (still linking to the landing + flagged): 3, 4, 5, 6,
+  7, 8, 9, 12, 14, 16, 17, 18, 22, 23, 27, 28, 29, 30. (6 folds into the 29th;
+  8 & 18 are published in *Sikke-i Tasdîk-i Gayb* — may not have own pages here.)
+
 ---
 
 ## 🎉 All phases complete

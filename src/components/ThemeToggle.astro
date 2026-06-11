@@ -15,7 +15,6 @@
 
 <script>
   const KEY = 'flashes:theme';
-  const btn = document.currentScript?.previousElementSibling as HTMLButtonElement | null;
 
   function current(): 'light' | 'dark' {
     const set = document.documentElement.getAttribute('data-theme');
@@ -32,8 +31,12 @@
     }
   }
 
-  btn?.addEventListener('click', () => {
-    apply(current() === 'dark' ? 'light' : 'dark');
+  // Astro bundles this as an ES module, so `document.currentScript` is null.
+  // Bind the toggle by selector instead.
+  document.querySelectorAll<HTMLButtonElement>('.theme-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      apply(current() === 'dark' ? 'light' : 'dark');
+    });
   });
 </script>
 

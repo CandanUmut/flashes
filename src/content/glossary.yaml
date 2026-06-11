@@ -29,7 +29,7 @@
     Brotherhood: the bond of faith that unites those who serve it, requiring
     that one set aside rivalry and envy and support one's companions.
   relatedTerms: [tefani, sahs-i-manevi]
-  appearsIn: [21]
+  appearsIn: [4, 21]
 
 - id: tefani
   term: tefânî
@@ -49,7 +49,7 @@
     when individuals unite in sincere common purpose, stronger and more
     enduring than any one person.
   relatedTerms: [uhuvvet, istirak-i-amal]
-  appearsIn: [21]
+  appearsIn: [4, 21]
 
 - id: istirak-i-amal
   term: iştirâk-i a'mâl
@@ -105,7 +105,7 @@
     The lower self or soul that inclines toward ego, appetite and heedlessness;
     its purification (tazkiya) is a recurring concern.
   relatedTerms: [enaniyet, ihlas]
-  appearsIn: [21]
+  appearsIn: [1, 21]
 
 - id: iman
   term: îmân
@@ -114,7 +114,7 @@
     Belief or faith — affirmation of God, His messengers and the hereafter;
     strengthening and saving belief is the overarching aim of the Risale-i Nur.
   relatedTerms: [tevhid, marifetullah]
-  appearsIn: [23, 30]
+  appearsIn: [1, 23, 30]
 
 - id: tevhid
   term: tevhîd
@@ -123,7 +123,7 @@
     Divine oneness: affirming that God is one and that all things point to a
     single Creator — the truth defended against naturalism in the 23rd Flash.
   relatedTerms: [iman, marifetullah, divine-names]
-  appearsIn: [23, 30]
+  appearsIn: [1, 3, 6, 23, 30]
 
 - id: marifetullah
   term: mârifetullah
@@ -132,7 +132,7 @@
     Knowledge of God: coming to know the Creator through reflection on His
     works and names, the fruit toward which much of the work is directed.
   relatedTerms: [tefekkur, tevhid, divine-names]
-  appearsIn: [29, 30]
+  appearsIn: [3, 29, 30]
 
 - id: tefekkur
   term: tefekkür
@@ -151,7 +151,7 @@
     especially those bearing the Greatest Name — are a major theme of the
     30th Flash.
   relatedTerms: [marifetullah, tevhid]
-  appearsIn: [30]
+  appearsIn: [3, 30]
 
 - id: sunnet
   term: sünnet
@@ -160,7 +160,7 @@
     The Sunna: the practice and example of the Prophet Muhammad (peace be
     upon him), following which is presented as a path of guidance and light.
   relatedTerms: [bidat]
-  appearsIn: [11]
+  appearsIn: [4, 5, 11]
 
 - id: bidat
   term: bid'at
@@ -228,7 +228,7 @@
     keeps a hardship from taking root: meet misfortune trusting its Sender and
     it loosens its grip.
   relatedTerms: [riza, sabir, kader]
-  appearsIn: [2]
+  appearsIn: [1, 2, 4, 5, 6]
 
 - id: riza
   term: rızâ
@@ -260,4 +260,66 @@
     neglect," in which an illness that turns a young person back toward the
     eternal can be a hidden mercy.
   relatedTerms: [nefis, tul-i-emel]
-  appearsIn: [2]
+  appearsIn: [2, 3]
+
+- id: esbab
+  term: esbâb (secondary causes)
+  arabic: أسباب
+  definitionEn: >-
+    The chain of apparent, "natural" causes through which God acts. A recurring
+    theme in Nursî: causes are only a veil and have no creative power of their
+    own, so the First Flash urges turning past them to the Causer of Causes
+    (Müsebbibü'l-Esbâb) — God Himself.
+  relatedTerms: [tevhid, tevekkul]
+  appearsIn: [1]
+
+- id: beka
+  term: bekâ
+  arabic: بقاء
+  definitionEn: >-
+    Permanence, undying continuance — the opposite of fenâ (passing away). God
+    alone is el-Bâkî, the Truly Enduring; the Third Flash teaches that whatever
+    is loved and spent for His sake takes on a reflection of that permanence.
+  relatedTerms: [divine-names, marifetullah]
+  appearsIn: [3]
+
+- id: al-i-beyt
+  term: Âl-i Beyt (the Prophet's Family)
+  arabic: آل البيت
+  definitionEn: >-
+    The Prophet Muhammad's household and lineage — above all Ali, Fatima, Hasan,
+    Husayn and their descendants. The Fourth Flash dwells on the love the Qur'an
+    asks for them and on their role as guardians of his Sunna.
+  relatedTerms: [sunnet, sahs-i-manevi]
+  appearsIn: [4]
+
+- id: icaz
+  term: i'câz (miraculous inimitability)
+  arabic: إعجاز
+  definitionEn: >-
+    The Qur'an's miraculous inimitability — the quality by which it cannot be
+    matched. Nursî counts ten "aspects" of it; the Seventh Flash treats one of
+    them, its tidings of the Unseen.
+  relatedTerms: [ihbar-i-gaybi]
+  appearsIn: [7]
+
+- id: ihbar-i-gaybi
+  term: ihbâr-ı gaybî (tidings of the Unseen)
+  arabic: إخبار غيبي
+  definitionEn: >-
+    The Qur'an's foretelling of things hidden at the time of revelation — past,
+    future or unseen. The Seventh Flash draws seven such fulfilled predictions
+    from the closing verses of Sūrat al-Fath.
+  relatedTerms: [icaz, sahabe]
+  appearsIn: [7]
+
+- id: sahabe
+  term: Sahâbe (the Companions)
+  arabic: صحابة
+  definitionEn: >-
+    The Companions of the Prophet — those who knew and followed him in his
+    lifetime. Nursî regards them as the most elevated of humankind after the
+    prophets; they are central to the Seventh Flash's account of Qur'anic
+    prophecy.
+  relatedTerms: [al-i-beyt]
+  appearsIn: [7]

@@ -199,6 +199,36 @@ Maintainer review applied (these become standing rules for the rest):
 Status `in-review`. `astro check` 0/0/0; build clean (80 pages). Awaiting review
 before batch authoring (§9).
 
+#### 📦 Batch 1 — Flashes 1, 3, 4, 5–6, 7 (authored, in-review)
+All read in full from the source PDF and authored to the §7 bar (Sahih
+International verses, all Arabic verified against the Uthmani mushaf):
+- **1 — Jonah's Prayer / Refuge in God Alone:** when causes fail, turn to the
+  Causer of Causes; the prayer's three clauses over future, world, soul.
+- **3 — "O Eternal One, You Alone Are Eternal":** the cut and the salve; love of
+  immortality; the expansion of time. (Carries Nursî's own "not for the scales of
+  logic" caveat.)
+- **4 — Love for the Prophet's Family:** compassion, the Âl-i Beyt, the
+  Sunni–Shi'a Caliphate dispute (described, not adjudicated), and the plea for
+  Sunni–Alevi unity. **Flagged sensitive** (`TODO(review)` on framing).
+- **5 & 6 — placeholder author's notes:** corrected from the earlier "folded into
+  the 29th" claim. The Fifth's treatise became the Eleventh; the Sixth was
+  deferred to the end of the Flashes. Short companion notes, no invented content.
+- **7 — The Qur'an's News of the Unseen:** seven fulfilled predictions from the
+  close of Sūrat al-Fath; the Torah/Gospel likenesses; the 4:68–69 postscript.
+- **New glossary terms (6):** `esbab`, `beka`, `al-i-beyt`, `icaz`,
+  `ihbar-i-gaybi`, `sahabe`; `appearsIn` updated across reused terms.
+- `astro check` 0/0/0; build clean (86 pages); all key-concept popovers resolve.
+
+**Lowest-confidence / flags for review:**
+- **Flash 4** sectarian framing — the most delicate piece in the batch; please
+  check the neutrality of the Caliphate-dispute summary.
+- **Reading-time estimates** are rough (1–12 min); normalise to your preferred
+  scale if wanted.
+- **Descriptive titles** added throughout ("The Nth Flash — Subject"); flag if
+  you'd rather keep bare titles.
+
+**Remaining stubs:** 8, 9, 10, 12, 14, 16, 17, 18, 22, 23, 27, 28, 29, 30, 31–33.
+
 #### Page numbers — RESOLVED
 All 33 start pages now come from erisale's authoritative TOC (`c` values, listed
 above) and link to each Flash's first page. The earlier "unconfirmed starts"

@@ -153,13 +153,30 @@ Tracking the A/B/C work from the maintainer's review brief.
   the 21st's intro/closing source repetition, and the obsolete first-paragraph
   styling. Lightened the glossary intro.
 
+#### Search & card page numbers (follow-up pass)
+- **Search verified working** in build/preview/production. Functionally tested
+  the Pagefind index + the custom UI's `data()` usage in Node (23 hits for
+  "sincerity", correct titles, and the `source` deep link present on Flash
+  results). Hardened the loader: `options()`/`init()` are best-effort, and the
+  "unavailable" message now explains that Pagefind indexes at build time — so
+  **search runs in `npm run build && npm run preview` (added as `npm run serve`),
+  not in `npm run dev`.** That dev-only limitation is inherent to Pagefind and
+  was true of the previous default-UI search too.
+- **Card page numbers:** each Flash card (index + theme pages) now shows a quiet
+  `erisale · p. N →` deep link when the start page is confirmed (12 Flashes), and
+  a plain `erisale →` link to the book otherwise (21 Flashes). The remaining
+  start pages can't be confirmed from search snippets and need source access.
+
 #### ⚠️ Source-text access is blocked in this environment
-`erisale.com` and the archive.org / PDF mirrors all return **HTTP 403** via
-every fetch path available here (curl, WebFetch). Only `WebSearch` works, which
-is enough to confirm *page numbers* (indexed facts) but **not** enough to read
-full Flash texts. Per the faithfulness rule, the remaining stub summaries are
-**not** being fabricated — content authoring (§B) is paused pending a way to
-reach the source text.
+`erisale.com`, archive.org, and the `lh4h.org` full-text PDF all return **HTTP
+403** on every fetch path here — including with the sandbox disabled. The proxy
+reports `x-deny-reason: host_not_allowed`, i.e. the environment's **network
+policy allowlist** doesn't include these hosts (only `WebSearch` egress works).
+That's enough to confirm *page numbers* (indexed facts) but **not** to read full
+Flash texts. Per the faithfulness rule, the remaining stub summaries are **not**
+being fabricated — content authoring (§B) and the unconfirmed start pages are
+paused pending either (a) adding these hosts to the network policy allowlist
+(see the Claude-Code-on-the-web docs), or (b) the maintainer pasting the text.
 
 #### Page numbers to verify
 - **10th Flash:** existing data says `pageNo=80`, but erisale indexes "The Tenth

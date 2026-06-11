@@ -12,6 +12,12 @@ const themeNames: Record<string, string> = Object.fromEntries(
   themes.map((t) => [t.id, t.data.name])
 );
 
+// Pull the erisale page number out of a deep link (#content.<locale>.<book>.<page>).
+const pageOf = (url: string): number | undefined => {
+  const m = url.match(/#content\.\w+\.\d+\.(\d+)\b/);
+  return m ? Number(m[1]) : undefined;
+};
+
 // Only offer filters for themes actually used by at least one Flash.
 const usedThemeSlugs = new Set(flashes.flatMap((f) => f.data.themes));
 const filterThemes = themes
@@ -61,6 +67,8 @@ const filterThemes = themes
               themeNames={themeNames}
               status={f.data.status}
               fifteenDay={f.data.special?.fifteenDayReminder}
+              sourceUrl={f.data.source.erisaleUrlEn}
+              page={pageOf(f.data.source.erisaleUrlEn)}
             />
           </li>
         ))

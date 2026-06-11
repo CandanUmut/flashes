@@ -32,12 +32,27 @@ Living state for "The Flashes — A Companion". Updated at the end of each phase
 **Preview locally:** `npm install && npm run dev` → open `http://localhost:4321/flashes/`.
 Toggle the theme (top-right); check Home → About; confirm nav links work.
 
-### ⏭ Phase 1 — Content architecture  (NEXT)
-- Content Collections + Zod schemas (flashes, glossary, themes) per §5.
-- All 33 Flash stubs + fully-authored 21st Flash (İhlas Risalesi).
-- Core glossary (~15–20 terms, incl. the 10 seed terms) + starter themes.
-- Base-aware data plumbing for source deep links.
+### ✅ Phase 1 — Content architecture  (DONE)
+- `src/content.config.ts`: Zod schemas + loaders for **flashes** (glob markdown; body = companion summary), **glossary** (`file()` YAML), **themes** (`file()` YAML).
+- All **33 Flash entries** created. 21st Flash (İhlâs Risâlesi) fully authored (`status: complete`) — opening verses (Sahih International), 5-node outline, ~380-word companion summary, fifteen-day reminder flag. Remaining 32 generated as stubs via `scripts/seed-flashes.mjs` (idempotent, never overwrites).
+- Subjects/titles for Flashes 1–30 taken from the Vahide TOC; essences written in our own words. 5/6 noted as folded into the 29th; 8/18 noted as published in Sikke-i Tasdîk-i Gayb.
+- Confirmed erisale (bookId=203) start pages baked in: 1→18, 10→80, 11→82, 13→127, 15→142, 19→189, 21→216, 25→265, 26→312. Unconfirmed ones link to the book landing with a `source.note` flag.
+- Core **glossary**: 22 terms (the 10 seed terms + iman, tevhid, marifetullah, tefekkür, esmâ-i hüsnâ, sünnet, bid'at, iktisâd, şükür, şefkat, besmele, nefis) with Arabic, plain definitions, related terms, `appearsIn`.
+- **Themes**: 12 starter themes.
+- `astro check`: 0/0/0. `astro build`: clean, content syncs.
+
+**Preview:** content isn't surfaced in pages yet (that's Phase 2). To inspect, open the `.md`/`.yaml` files under `src/content/`. `npm run check` validates all of it against the schemas.
+
+### ⏭ Phase 2 — Reading/companion pages  (NEXT)
+- Flashes index (`/flashes/`): card grid (number, title, essence, theme tags, read-status placeholder), theme filter, 15-day badge on the 21st.
+- Single Flash page (`/flashes/[slug]/`): header (number, title, essence, context, est. time, prominent erisale link), clickable outline with deep links, companion summary (rendered), key concepts, opening verses (Arabic + translation + source), cross-refs, `CompanionNotice`.
+- Fully responsive + accessible; quality floor (§11) per page.
+
+## ⚠️ Needs your attention (faithfulness)
+- **Flashes 31–33:** the Vahide collection's contents run to the 30th Flash; I could not confirm reliable subjects for 31–33, so they are honest stubs with `TODO(review)` notes and neutral essences (no invented subjects). Please advise on their correct subjects/status, or whether the collection should present only 1–30 as discrete Flashes.
+- **Flashes 24 (veiling):** authored as a neutral, descriptive stub essence given the sensitivity; flag if you want different framing.
 
 ## Open decisions / to-confirm later
-- Exact erisale English `bookId` + per-section `pageNo` for each Flash (store as data; flag unknowns in `source.note`).
-- Whether to enable per-deploy a custom domain later (would change `site`/`base`).
+- Remaining exact erisale `pageNo` values for Flashes without a confirmed start page (currently flagged in `source.note`); these are a clean contribution task.
+- Whether to enable a custom domain later (would change `site`/`base`).
+- Slugs are numeric (`/flashes/21/`); revisit if descriptive slugs are wanted.

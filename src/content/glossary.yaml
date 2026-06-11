@@ -1,0 +1,209 @@
+# Glossary — recurring Risale-i Nur terms in plain English (our own wording).
+# Definitions are companion aids, not translations of the text.
+# `appearsIn` lists Flash numbers where the term is especially relevant.
+
+- id: ihlas
+  term: ihlâs
+  arabic: إخلاص
+  definitionEn: >-
+    Sincerity: doing an act purely for God's pleasure, free of any wish for
+    show, praise, status or worldly gain. The central theme of the 20th and
+    21st Flashes.
+  relatedTerms: [riya, hubb-u-cah, enaniyet]
+  appearsIn: [20, 21]
+
+- id: riya
+  term: riyâ
+  arabic: رياء
+  definitionEn: >-
+    Showing off in worship or good works — performing them to be seen and
+    praised by people rather than for God. Nursî treats the love of fame
+    behind it as a hidden form of associating partners with God.
+  relatedTerms: [ihlas, hubb-u-cah]
+  appearsIn: [21]
+
+- id: uhuvvet
+  term: uhuvvet
+  arabic: أخوّة
+  definitionEn: >-
+    Brotherhood: the bond of faith that unites those who serve it, requiring
+    that one set aside rivalry and envy and support one's companions.
+  relatedTerms: [tefani, sahs-i-manevi]
+  appearsIn: [21]
+
+- id: tefani
+  term: tefânî
+  arabic: تفانٍ
+  definitionEn: >-
+    Self-effacement among brothers: so dissolving one's ego in the
+    fellowship that one takes grateful pride in a companion's merits and
+    virtues as if they were one's own.
+  relatedTerms: [uhuvvet, enaniyet, sahs-i-manevi]
+  appearsIn: [21]
+
+- id: sahs-i-manevi
+  term: şahs-ı mânevî
+  arabic: شخص معنوي
+  definitionEn: >-
+    The "collective personality" — the single moral/spiritual body formed
+    when individuals unite in sincere common purpose, stronger and more
+    enduring than any one person.
+  relatedTerms: [uhuvvet, istirak-i-amal]
+  appearsIn: [21]
+
+- id: istirak-i-amal
+  term: iştirâk-i a'mâl
+  arabic: اشتراك الأعمال
+  definitionEn: >-
+    Sharing in one another's deeds: through sincere unity, the reward of the
+    group's collective worship is reflected, by God's grace, in each
+    member's account — illustrated by the lamp and the needle analogies.
+  relatedTerms: [sahs-i-manevi, uhuvvet, ihlas]
+  appearsIn: [21]
+
+- id: hubb-u-cah
+  term: hubb-u câh
+  arabic: حبّ الجاه
+  definitionEn: >-
+    Love of status and fame — the craving for position and renown that Nursî
+    identifies as a chief enemy of sincerity and a root of showing off.
+  relatedTerms: [riya, ihlas, enaniyet]
+  appearsIn: [21]
+
+- id: tul-i-emel
+  term: tûl-i emel
+  arabic: طول الأمل
+  definitionEn: >-
+    "Long-stretched hope": living as though one will not die soon, an
+    attachment to the world that dulls sincerity and the readiness for the
+    hereafter.
+  relatedTerms: [rabita-i-mevt]
+  appearsIn: [21]
+
+- id: enaniyet
+  term: enâniyet
+  arabic: أنانية
+  definitionEn: >-
+    The ego or "I-ness": the self's tendency to claim ownership, importance
+    and independence, which obstructs sincerity and the recognition of God.
+  relatedTerms: [nefis, tefani, ihlas]
+  appearsIn: [17, 21, 30]
+
+- id: rabita-i-mevt
+  term: râbıta-i mevt
+  arabic: رابطة الموت
+  definitionEn: >-
+    The contemplation of death: keeping one's mortality consciously in view
+    as a means of protecting sincerity and loosening attachment to the world.
+  relatedTerms: [tul-i-emel]
+  appearsIn: [21, 26]
+
+- id: nefis
+  term: nefis
+  arabic: نفس
+  definitionEn: >-
+    The lower self or soul that inclines toward ego, appetite and heedlessness;
+    its purification (tazkiya) is a recurring concern.
+  relatedTerms: [enaniyet, ihlas]
+  appearsIn: [21]
+
+- id: iman
+  term: îmân
+  arabic: إيمان
+  definitionEn: >-
+    Belief or faith — affirmation of God, His messengers and the hereafter;
+    strengthening and saving belief is the overarching aim of the Risale-i Nur.
+  relatedTerms: [tevhid, marifetullah]
+  appearsIn: [23, 30]
+
+- id: tevhid
+  term: tevhîd
+  arabic: توحيد
+  definitionEn: >-
+    Divine oneness: affirming that God is one and that all things point to a
+    single Creator — the truth defended against naturalism in the 23rd Flash.
+  relatedTerms: [iman, marifetullah, divine-names]
+  appearsIn: [23, 30]
+
+- id: marifetullah
+  term: mârifetullah
+  arabic: معرفة الله
+  definitionEn: >-
+    Knowledge of God: coming to know the Creator through reflection on His
+    works and names, the fruit toward which much of the work is directed.
+  relatedTerms: [tefekkur, tevhid, divine-names]
+  appearsIn: [29, 30]
+
+- id: tefekkur
+  term: tefekkür
+  arabic: تفكّر
+  definitionEn: >-
+    Reflective thought: contemplating the signs in the universe to arrive at
+    knowledge of God — described by Nursî as the way of the Risale-i Nur.
+  relatedTerms: [marifetullah]
+  appearsIn: [29]
+
+- id: divine-names
+  term: esmâ-i hüsnâ
+  arabic: الأسماء الحسنى
+  definitionEn: >-
+    The "most beautiful names" of God. Their manifestations in creation —
+    especially those bearing the Greatest Name — are a major theme of the
+    30th Flash.
+  relatedTerms: [marifetullah, tevhid]
+  appearsIn: [30]
+
+- id: sunnet
+  term: sünnet
+  arabic: سنّة
+  definitionEn: >-
+    The Sunna: the practice and example of the Prophet Muhammad (peace be
+    upon him), following which is presented as a path of guidance and light.
+  relatedTerms: [bidat]
+  appearsIn: [11]
+
+- id: bidat
+  term: bid'at
+  arabic: بدعة
+  definitionEn: >-
+    Innovation: introducing into religion practices with no basis in its
+    sources — contrasted with the Sunna in the 11th Flash.
+  relatedTerms: [sunnet]
+  appearsIn: [11]
+
+- id: iktisat
+  term: iktisâd
+  arabic: اقتصاد
+  definitionEn: >-
+    Frugality and economy: moderate, grateful use of provision as a form of
+    worship, against waste and extravagance — the theme of the 19th Flash.
+  relatedTerms: [sukur]
+  appearsIn: [19]
+
+- id: sukur
+  term: şükür
+  arabic: شكر
+  definitionEn: >-
+    Gratitude: recognising every blessing as a gift and responding with
+    thankfulness, treated as a fundamental duty of the servant.
+  relatedTerms: [iktisat]
+  appearsIn: [19]
+
+- id: sefkat
+  term: şefkat
+  arabic: شفقة
+  definitionEn: >-
+    Compassion and tender mercy — a quality Nursî foregrounds as a swift,
+    pure path to God, and a lens for consoling the sick and the elderly.
+  relatedTerms: []
+  appearsIn: [10, 25, 26]
+
+- id: besmele
+  term: besmele
+  arabic: بسملة
+  definitionEn: >-
+    The phrase "In the name of God, the Most Merciful, the Most
+    Compassionate" — its mysteries are expounded in the Second Station of the
+    14th Flash.
+  relatedTerms: [divine-names]
+  appearsIn: [14]

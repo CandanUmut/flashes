@@ -1,0 +1,74 @@
+# Themes — thematic groupings used to cross-link the Flashes.
+# These are our own editorial groupings, not headings from the text.
+
+- id: sincerity
+  name: Sincerity
+  description: >-
+    Doing every act purely for God's pleasure — purified of show, ego and
+    worldly reward. The central concern of the 20th and 21st Flashes.
+
+- id: brotherhood
+  name: Brotherhood & unity
+  description: >-
+    Solidarity among those who serve faith: avoiding rivalry and envy, taking
+    pride in one another's merits, and acting as a single collective body.
+
+- id: the-self
+  name: The self & the ego
+  description: >-
+    The "I" (enaniyet) — how the ego claims ownership and obstructs sincerity,
+    and how it is dissolved through self-effacement and humility.
+
+- id: death-and-the-hereafter
+  name: Death & the hereafter
+  description: >-
+    Remembering mortality (the contemplation of death) and orienting one's
+    work toward the everlasting life rather than the passing world.
+
+- id: knowledge-of-god
+  name: Knowledge of God
+  description: >-
+    Coming to know the Creator through reflection on creation and on the
+    divine names — the reflective thought (tefekkür) at the heart of the work.
+
+- id: divine-names
+  name: The divine names
+  description: >-
+    The manifestations of God's names in creation, especially the names
+    bearing the Greatest Name, as windows onto knowledge of God.
+
+- id: the-quran
+  name: The Qur'an
+  description: >-
+    Expositions of Qur'anic verses and phrases, and aspects of the Qur'an's
+    inimitability (i'jaz).
+
+- id: prophetic-sunna
+  name: The Prophetic Sunna
+  description: >-
+    Following the practices of the Prophet (peace be upon him) as a path of
+    guidance, and the dangers of innovation.
+
+- id: belief
+  name: Belief & divine unity
+  description: >-
+    Affirming the existence and oneness of God (tawhid) and refuting the
+    denial of the Creator, as in the treatise on nature.
+
+- id: transience
+  name: Transience & the Eternal
+  description: >-
+    "Everything will perish save His countenance" — the passing nature of the
+    world set against the One who remains.
+
+- id: trials-and-illness
+  name: Trials, illness & old age
+  description: >-
+    Consolation and perspective for the sick, the elderly and the
+    disaster-struck, reframing hardship within divine wisdom and mercy.
+
+- id: gratitude-and-frugality
+  name: Gratitude & frugality
+  description: >-
+    Contentment, thankfulness and economy as forms of worship, against waste
+    and heedless consumption.

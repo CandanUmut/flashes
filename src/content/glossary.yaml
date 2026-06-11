@@ -186,8 +186,8 @@
   definitionEn: >-
     Gratitude: recognising every blessing as a gift and responding with
     thankfulness, treated as a fundamental duty of the servant.
-  relatedTerms: [iktisat]
-  appearsIn: [19]
+  relatedTerms: [iktisat, sabir, riza]
+  appearsIn: [2, 19]
 
 - id: sefkat
   term: şefkat
@@ -207,3 +207,57 @@
     14th Flash.
   relatedTerms: [divine-names]
   appearsIn: [14]
+
+- id: sabir
+  term: sabır
+  arabic: صبر
+  definitionEn: >-
+    Patience — steadfast endurance under hardship. In the Second Flash Nursî
+    treats it as a God-given strength rationed for the present: enough for any
+    single day's trial, but wasted when spent grieving the past or dreading the
+    future.
+  relatedTerms: [sukur, riza, tevekkul]
+  appearsIn: [2]
+
+- id: tevekkul
+  term: tevekkül
+  arabic: توكّل
+  definitionEn: >-
+    Reliance on God — entrusting the outcome to Him after doing one's own part.
+    In the Second Flash it is the inner posture that, paired with contentment,
+    keeps a hardship from taking root: meet misfortune trusting its Sender and
+    it loosens its grip.
+  relatedTerms: [riza, sabir, kader]
+  appearsIn: [2]
+
+- id: riza
+  term: rızâ
+  arabic: رضا
+  definitionEn: >-
+    Contentment with God's decree — accepting what He sends without resentment
+    or protest. The Second Flash sets it against the anxious complaint that, it
+    argues, drives an ailment from the body into the heart.
+  relatedTerms: [tevekkul, kader, sabir]
+  appearsIn: [2]
+
+- id: kader
+  term: kader
+  arabic: قدر
+  definitionEn: >-
+    Divine determining — that all things unfold within God's knowledge and
+    measure (with kazâ, its enactment in events). The Second Flash leans on the
+    fuller treatment in the Twenty-Sixth Word to argue that one has no standing
+    to complain of an illness the All-Wise has ordained.
+  relatedTerms: [riza, tevekkul]
+  appearsIn: [2]
+
+- id: gaflet
+  term: gaflet
+  arabic: غفلة
+  definitionEn: >-
+    Heedlessness — the forgetful inattention to God and the hereafter that lets
+    the passing world seem solid and lasting. Nursî calls his era an "age of
+    neglect," in which an illness that turns a young person back toward the
+    eternal can be a hidden mercy.
+  relatedTerms: [nefis, tul-i-emel]
+  appearsIn: [2]

@@ -73,15 +73,13 @@ const sourceUrl = d.source.erisaleUrlEn;
 
       <div class="head-actions">
         <a class="source-btn ui" href={sourceUrl} rel="noopener" target="_blank" data-pagefind-meta="source[href]">
-          Read the full text on erisale.com →
+          Read on erisale.com →
         </a>
         <ReadToggle number={d.number} />
         <BookmarkToggle number={d.number} />
       </div>
 
-      <p class="companion-cue ui">
-        <a href={sourceUrl} rel="noopener" target="_blank">{t(locale, 'companion.cue')}</a>
-      </p>
+      <p class="companion-cue ui">{t(locale, 'companion.cue')}</p>
 
       {d.context?.note && <p class="context-note ui muted">{d.context.note}</p>}
 
@@ -99,7 +97,7 @@ const sourceUrl = d.source.erisaleUrlEn;
     {d.outline.length > 0 && (
       <section class="outline" aria-label="Structural outline">
         <h2 class="section-head">Outline</h2>
-        <p class="section-sub ui muted">Our structural map of the Flash — not the text itself.</p>
+        <p class="section-sub ui muted">Our structural map of the Flash.</p>
         <ol class="outline-list">
           {d.outline.map((node) => (
             <li class="outline-node" id={node.id}>
@@ -176,8 +174,8 @@ const sourceUrl = d.source.erisaleUrlEn;
 
     {/* ---- Footer source link + prev/next ---- */}
     <footer class="flash-foot ui">
-      <a class="source-btn" href={sourceUrl} rel="noopener" target="_blank">
-        Read the full text on erisale.com →
+      <a class="foot-source" href={sourceUrl} rel="noopener" target="_blank">
+        Read this Flash on erisale.com →
       </a>
       <nav class="flash-nav" aria-label="Flash navigation">
         {prev ? (
@@ -279,19 +277,13 @@ const sourceUrl = d.source.erisaleUrlEn;
   }
   .context-note { font-size: var(--step--1); margin-top: var(--space-2xs); }
 
-  /* A single quiet voice-separation cue near the source link (replaces the old
-     repeated companion banner). */
+  /* A single quiet voice-separation caption near the source link (the one place
+     we state what this is — no extra link; the button above is the source). */
   .companion-cue {
     margin: var(--space-2xs) 0 0;
     font-size: var(--step--1);
     color: var(--muted);
   }
-  .companion-cue a {
-    color: var(--muted);
-    text-decoration: none;
-    border-bottom: 1px solid var(--hairline);
-  }
-  .companion-cue a:hover { color: var(--accent); border-color: var(--accent); }
 
   .section-head {
     font-size: var(--step-1);
@@ -340,15 +332,6 @@ const sourceUrl = d.source.erisaleUrlEn;
     line-height: var(--leading-snug);
   }
 
-  /* Summary */
-  .summary-body :global(p:first-child) {
-    font-size: var(--step--1);
-    color: var(--muted);
-    font-family: var(--font-ui);
-    border-left: 2px solid var(--hairline);
-    padding-left: var(--space-s);
-  }
-
   /* Concepts */
   .concept-list {
     list-style: none;
@@ -390,6 +373,14 @@ const sourceUrl = d.source.erisaleUrlEn;
   .flash-themes .chip:hover { color: var(--accent); border-color: var(--accent); }
 
   .flash-foot { display: flex; flex-direction: column; gap: var(--space-l); }
+  .foot-source {
+    align-self: flex-start;
+    color: var(--accent);
+    font-size: var(--step--1);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+  .foot-source:hover { color: var(--accent-strong); }
   .flash-nav {
     display: grid;
     grid-template-columns: 1fr 1fr;

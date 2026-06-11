@@ -24,8 +24,9 @@ const fieldId = `note-${number}`;
 <script>
   import { getNote, setNote } from '@lib/progress';
 
-  const field = document.currentScript?.parentElement?.querySelector<HTMLTextAreaElement>('.note-field');
-  if (field) {
+  // Astro bundles this as an ES module, so `document.currentScript` is null.
+  // Bind every note field on the page by selector instead.
+  document.querySelectorAll<HTMLTextAreaElement>('.note-field[data-flash]').forEach((field) => {
     const n = Number(field.dataset.flash);
     const status = field
       .closest('.note-panel')
@@ -53,7 +54,7 @@ const fieldId = `note-${number}`;
 
     // Flush on leaving the page so the last keystrokes aren't lost.
     window.addEventListener('beforeunload', () => setNote(n, field.value));
-  }
+  });
 </script>
 
 <style>

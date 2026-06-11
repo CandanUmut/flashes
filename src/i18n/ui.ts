@@ -27,8 +27,10 @@ const ui: Record<Locale, Dict> = {
     'skip.toContent': 'Skip to content',
     'lang.switch': 'Türkçe',
     'lang.label': 'Language',
+    // One quiet cue shown on Flash pages near the source link (not a banner).
+    'companion.cue': 'Companion notes — read Nursî’s own words at the source →',
     'footer.companion':
-      'This is an independent companion and study aid. It is not the book and does not reproduce the Risale-i Nur text or any translation. Read the original on the official source,',
+      'An independent companion and study aid — not the Risale-i Nur itself. Read the original on the official source,',
     'footer.aboutIntent': 'About & intention',
     'footer.copyright': 'Copyright & disclaimer',
     'footer.officialSource': 'Official source',
@@ -45,8 +47,9 @@ const ui: Record<Locale, Dict> = {
     'skip.toContent': 'İçeriğe geç',
     'lang.switch': 'English',
     'lang.label': 'Dil',
+    'companion.cue': 'Rehber notları — Nursî’nin kendi sözlerini kaynaktan okuyun →',
     'footer.companion':
-      'Bu, bağımsız bir rehber ve çalışma aracıdır. Kitabın kendisi değildir ve Risale-i Nur metnini veya herhangi bir tercümesini çoğaltmaz. Aslını resmî kaynaktan okuyun:',
+      'Bağımsız bir rehber ve çalışma aracı — Risale-i Nur’un kendisi değildir. Aslını resmî kaynaktan okuyun:',
     'footer.aboutIntent': 'Hakkında & niyet',
     'footer.copyright': 'Telif & sorumluluk reddi',
     'footer.officialSource': 'Resmî kaynak',

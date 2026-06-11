@@ -13,8 +13,9 @@ const { number } = Astro.props;
 <script>
   import { isBookmarked, toggleBookmark } from '@lib/progress';
 
-  const btn = document.currentScript?.previousElementSibling as HTMLButtonElement | null;
-  if (btn) {
+  // Astro bundles this as an ES module, so `document.currentScript` is null.
+  // Bind every instance on the page by selector instead.
+  document.querySelectorAll<HTMLButtonElement>('.bm-toggle[data-flash]').forEach((btn) => {
     const n = Number(btn.dataset.flash);
     const icon = btn.querySelector('.bm-icon') as HTMLElement | null;
     const label = btn.querySelector('.bm-label') as HTMLElement | null;
@@ -28,7 +29,7 @@ const { number } = Astro.props;
 
     paint(isBookmarked(n));
     btn.addEventListener('click', () => paint(toggleBookmark(n)));
-  }
+  });
 </script>
 
 <style>

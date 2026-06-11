@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import pagefind from 'astro-pagefind';
+import sitemap from '@astrojs/sitemap';
 
 // Project-page deployment on GitHub Pages.
 // site + base must be correct for every internal link to resolve on the subpath.
@@ -10,7 +11,15 @@ export default defineConfig({
   base: '/flashes/',
   output: 'static',
   trailingSlash: 'always',
-  integrations: [pagefind()],
+  integrations: [
+    pagefind(),
+    sitemap({
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en', tr: 'tr' },
+      },
+    }),
+  ],
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'tr'],

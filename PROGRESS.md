@@ -82,8 +82,27 @@ Toggle the theme (top-right); check Home → About; confirm nav links work.
 - 75 pages build clean; `astro check` 0/0/0. Verified `lang="tr"`, localized nav, and switch targets both directions.
 - **Partial by design** (per brief): TR translations of the Flash/glossary/theme content routes are future work; chrome + Home + About demonstrate the routing.
 
-### ⏭ Phase 7 — Production hardening  (NEXT)
-- A11y audit (focus, landmarks, contrast, popover/toggle semantics), print stylesheet for Flash pages, SEO (canonical, hreflang, sitemap, OG), performance pass, final content/contribution review.
+### ✅ Phase 7 — Production hardening  (DONE)
+- **SEO**: `@astrojs/sitemap` (i18n-aware, base-correct `sitemap-index.xml`); per-page **canonical** + **OG/Twitter** tags; **hreflang** alternates (en/tr/x-default) on twinned pages (`localeAlternates`).
+- **Print stylesheet** (`print.css`): drops chrome/toggles/notes/search, near-black on white, prints the official-source **URL** after the link, keeps outline/verses/cards from breaking across pages, full-width reading measure.
+- **A11y audit**: landmarks (banner/main/contentinfo) + labelled nav; visible focus ring; semantic heading order; popover gains **focus open + focus-out close** (plus click/hover/Escape); buttons use `aria-pressed`; search/notes labelled.
+- **Contrast (AA)**: measured the palette; light-mode gold `#9c7322` was ~3.87:1 as text/button — **darkened to `#8a6410`** (~4.8:1) to clear AA §11 (dark mode ~9.5:1). Deliberate, brief-aligned (§8 marked it "darkened for contrast"); trivially revertible in `tokens.css`.
+- Smoke-tested the production build via `preview`: all key routes + the Pagefind bundle return 200.
+- 75 pages, `astro check` 0/0/0, clean build with Pagefind + sitemap.
+
+---
+
+## 🎉 All phases complete
+The companion is production-ready and deployable. To ship: push `main` →
+GitHub Actions builds (Astro + Pagefind + sitemap) and deploys to
+`https://candanumut.github.io/flashes/`. Enable Pages → "GitHub Actions" as the
+source in the repo settings once.
+
+### Remaining content work (not blockers — documented for follow-up)
+- Confirm erisale `pageNo` for Flashes without a verified start page (flagged in each `source.note`).
+- Decide subject/status for **Flashes 31–33** (currently honest `TODO(review)` stubs).
+- Author full companion summaries for the remaining stubs (the 21st sets the bar).
+- Optional: extend Turkish from chrome+Home+About to the content routes.
 
 ## ⚠️ Needs your attention (faithfulness)
 - **Flashes 31–33:** the Vahide collection's contents run to the 30th Flash; I could not confirm reliable subjects for 31–33, so they are honest stubs with `TODO(review)` notes and neutral essences (no invented subjects). Please advise on their correct subjects/status, or whether the collection should present only 1–30 as discrete Flashes.

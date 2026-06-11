@@ -76,8 +76,10 @@
   --surface-2: #F1EADB;
   --text: #1E1B2E;
   --muted: #6b6478;
-  --accent: #9c7322;       /* darkened gold for AA contrast on light */
-  --accent-strong: #7d5c16;
+  /* Gold darkened to clear WCAG AA (>=4.5:1) as link/button text on the light
+     bg; the brief's #9c7322 measured ~3.87:1. Used for fills, borders, links. */
+  --accent: #8a6410;
+  --accent-strong: #6f5012;
   --hairline: rgba(28, 25, 57, 0.12);
   --hairline-soft: rgba(28, 25, 57, 0.06);
   --glow: rgba(224, 180, 88, 0.22);
@@ -95,8 +97,8 @@
     --surface-2: #F1EADB;
     --text: #1E1B2E;
     --muted: #6b6478;
-    --accent: #9c7322;
-    --accent-strong: #7d5c16;
+    --accent: #8a6410;
+    --accent-strong: #6f5012;
     --hairline: rgba(28, 25, 57, 0.12);
     --hairline-soft: rgba(28, 25, 57, 0.06);
     --glow: rgba(224, 180, 88, 0.22);

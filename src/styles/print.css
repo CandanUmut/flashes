@@ -1,0 +1,113 @@
+/* ============================================================
+   Print stylesheet — clean, ink-saving. Tuned for Flash pages but
+   safe everywhere. Drops interactive chrome; keeps the companion
+   content, its outline, verses, and the official-source URL.
+   ============================================================ */
+
+@media print {
+  :root,
+  :root[data-theme='dark'],
+  :root[data-theme='light'] {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --text: #111111;
+    --muted: #444444;
+    --accent: #000000;
+    --accent-strong: #000000;
+    --hairline: #cccccc;
+    --hairline-soft: #e2e2e2;
+    --glow: transparent;
+    --shadow: none;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Drop interactive / navigational chrome */
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .header-controls,
+  .theme-toggle,
+  .lang-switch,
+  .read-toggle,
+  .bm-toggle,
+  .note-panel,
+  .ihlas,
+  .ihlas-slot,
+  .toolbar,
+  .filters,
+  .companion-search,
+  .search-shell,
+  .term-panel,
+  .flash-nav {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  /* Quiet the decorative glow/gradients */
+  .glow-title::before,
+  .entry-mark,
+  .brand-mark {
+    display: none !important;
+  }
+  .gleam {
+    background: #000 !important;
+    opacity: 0.25;
+  }
+
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  /* Make the official-source link useful on paper */
+  .source-btn {
+    background: transparent !important;
+    color: #000 !important;
+    border: 1px solid #000;
+    font-weight: 600;
+  }
+  .source-btn[href^='http']::after {
+    content: ' — ' attr(href);
+    font-weight: 400;
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  .companion-notice {
+    border: 1px solid #000;
+    background: #fff;
+  }
+  .term-trigger {
+    border: 0;
+    padding: 0;
+    color: #000;
+    text-decoration: underline dotted;
+  }
+
+  /* Keep logical blocks together across page breaks */
+  .outline-node,
+  .verse,
+  .flash-card,
+  h1, h2, h3 {
+    break-inside: avoid;
+  }
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  /* Use full reading width on paper */
+  .wrap,
+  .flash,
+  .prose {
+    max-width: none !important;
+  }
+}

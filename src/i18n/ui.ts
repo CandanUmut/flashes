@@ -87,6 +87,20 @@ export function localePath(path: string, locale: Locale): string {
   return withBase(locale === 'en' ? clean : `/tr${clean}`);
 }
 
+/**
+ * hreflang alternates for the current page. Returns links only for pages that
+ * exist in both locales (Home, About); other pages get just their canonical.
+ */
+export function localeAlternates(url: URL): { hreflang: string; path: string }[] {
+  const logical = logicalPath(url);
+  if (!TR_TWINS.has(logical)) return [];
+  return [
+    { hreflang: 'en', path: localePath(logical, 'en') },
+    { hreflang: 'tr', path: localePath(logical, 'tr') },
+    { hreflang: 'x-default', path: localePath(logical, 'en') },
+  ];
+}
+
 /** Where the language switch should point for the current page. */
 export function languageSwitchTarget(url: URL): { locale: Locale; href: string } {
   const current = getLocale(url);

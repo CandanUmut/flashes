@@ -30,37 +30,25 @@ const popId = `pop-${slug}`;
 
 <script>
   // One delegated controller for all term popovers on the page.
+  // While open, the panel is *portaled* to <body>. This is deliberate: the page
+  // animates `transform` on an ancestor (`main.fade-in`), and any ancestor with
+  // a transform/filter makes `position: fixed` resolve against that ancestor
+  // instead of the viewport — which made the panel land near the top of the page
+  // instead of beside the term. As a direct child of <body> there is no such
+  // ancestor, so fixed positioning is reliable.
   let open: HTMLElement | null = null;
+  let openTrigger: HTMLElement | null = null;
+  let openPanel: HTMLElement | null = null;
+  let home: { parent: Node; next: Node | null } | null = null;
 
-  function close() {
-    if (!open) return;
-    const trigger = open.querySelector<HTMLButtonElement>('.term-trigger');
-    const panel = open.querySelector<HTMLElement>('.term-panel');
-    trigger?.setAttribute('aria-expanded', 'false');
-    if (panel) {
-      panel.hidden = true;
-      // Clear JS positioning so the CSS fallback applies next time.
-      panel.style.position = '';
-      panel.style.left = '';
-      panel.style.top = '';
-    }
-    open.classList.remove('is-open');
-    open = null;
-  }
-
-  // Place the panel just below the trigger, clamped inside the viewport so it
-  // never spills off-screen (the original absolute placement could overflow the
-  // right edge for terms near the page margin). Flips above if it would clip
-  // the bottom.
-  function position(wrap: HTMLElement) {
-    const trigger = wrap.querySelector<HTMLElement>('.term-trigger');
-    const panel = wrap.querySelector<HTMLElement>('.term-panel');
-    if (!trigger || !panel) return;
+  function place() {
+    if (!openTrigger || !openPanel) return;
     const margin = 8;
+    const panel = openPanel;
     panel.style.position = 'fixed';
     panel.style.left = '0px';
     panel.style.top = '0px';
-    const tr = trigger.getBoundingClientRect();
+    const tr = openTrigger.getBoundingClientRect();
     const pw = panel.offsetWidth;
     const ph = panel.offsetHeight;
     let left = Math.min(tr.left, window.innerWidth - pw - margin);
@@ -73,20 +61,40 @@ const popId = `pop-${slug}`;
     panel.style.top = `${Math.round(top)}px`;
   }
 
+  function close() {
+    if (!open) return;
+    openTrigger?.setAttribute('aria-expanded', 'false');
+    if (openPanel) {
+      openPanel.hidden = true;
+      openPanel.style.position = '';
+      openPanel.style.left = '';
+      openPanel.style.top = '';
+      // Return the panel to where it came from in the DOM.
+      if (home) home.parent.insertBefore(openPanel, home.next);
+    }
+    open.classList.remove('is-open');
+    open = openTrigger = openPanel = home = null;
+  }
+
   function openPop(wrap: HTMLElement) {
     if (open && open !== wrap) close();
     const trigger = wrap.querySelector<HTMLButtonElement>('.term-trigger');
     const panel = wrap.querySelector<HTMLElement>('.term-panel');
-    trigger?.setAttribute('aria-expanded', 'true');
-    if (panel) panel.hidden = false;
+    if (!trigger || !panel) return;
+    trigger.setAttribute('aria-expanded', 'true');
+    panel.hidden = false;
     wrap.classList.add('is-open');
     open = wrap;
-    position(wrap);
+    openTrigger = trigger;
+    openPanel = panel;
+    home = { parent: panel.parentNode as Node, next: panel.nextSibling };
+    document.body.appendChild(panel); // portal out of any transformed ancestor
+    place();
   }
 
   // Keep the open panel anchored while the page scrolls or resizes.
-  window.addEventListener('scroll', () => { if (open) position(open); }, { passive: true });
-  window.addEventListener('resize', () => { if (open) position(open); });
+  window.addEventListener('scroll', () => { if (open) place(); }, { passive: true });
+  window.addEventListener('resize', () => { if (open) place(); });
 
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
@@ -98,8 +106,8 @@ const popId = `pop-${slug}`;
       else openPop(wrap);
       return;
     }
-    // Clicking outside any popover closes it (but not when following the link).
-    if (open && !target.closest('[data-term-pop]')) close();
+    // A click anywhere outside the open panel (and not on a trigger) closes it.
+    if (open && !target.closest('.term-panel')) close();
   });
 
   // Interaction is click/tap-only, on purpose. Earlier this component also
@@ -112,7 +120,7 @@ const popId = `pop-${slug}`;
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && open) {
-      const trigger = open.querySelector<HTMLButtonElement>('.term-trigger');
+      const trigger = openTrigger;
       close();
       trigger?.focus();
     }

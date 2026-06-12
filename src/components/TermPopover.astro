@@ -102,19 +102,13 @@ const popId = `pop-${slug}`;
     if (open && !target.closest('[data-term-pop]')) close();
   });
 
-  // Hover (pointer) + focus (keyboard) reveal — additive to click toggling.
-  document.querySelectorAll<HTMLElement>('[data-term-pop]').forEach((wrap) => {
-    wrap.addEventListener('mouseenter', () => openPop(wrap));
-    wrap.addEventListener('mouseleave', () => {
-      if (open === wrap) close();
-    });
-    wrap.addEventListener('focusin', () => openPop(wrap));
-    wrap.addEventListener('focusout', (e) => {
-      // Close only when focus leaves the whole wrapper (e.g. tabbing past it).
-      const next = e.relatedTarget as Node | null;
-      if (open === wrap && (!next || !wrap.contains(next))) close();
-    });
-  });
+  // Interaction is click/tap-only, on purpose. Earlier this component also
+  // auto-opened on `focusin` and `mouseenter`, but a <button> fires `focusin`
+  // *before* `click`, so the click handler then saw the panel as already open
+  // and toggled it straight back closed — which is why tapping a term appeared
+  // to do nothing. A <button> emits a real `click` on Enter/Space, so keyboard
+  // users still get the toggle; dropping hover also avoids the trigger→panel
+  // gap closing the panel before its "Full definition" link can be reached.
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && open) {

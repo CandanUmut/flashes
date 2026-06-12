@@ -1,0 +1,21 @@
+{
+  "name": "The Flashes — A Companion",
+  "short_name": "Flashes",
+  "description": "A companion to Bediüzzaman Said Nursî's The Flashes (Lem'alar): plain-English orientations, outlines, a glossary and search — always pointing to the original.",
+  "id": "/flashes/",
+  "start_url": "/flashes/",
+  "scope": "/flashes/",
+  "display": "standalone",
+  "background_color": "#15132a",
+  "theme_color": "#15132a",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "books", "reference"],
+  "icons": [
+    { "src": "/flashes/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/flashes/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/flashes/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/flashes/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/flashes/icons/icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" }
+  ]
+}

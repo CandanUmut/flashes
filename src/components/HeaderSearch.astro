@@ -1,0 +1,212 @@
+---
+import { withBase } from '@lib/paths';
+import { getLocale } from '@i18n/ui';
+
+const locale = getLocale(Astro.url);
+const placeholder = locale === 'tr' ? 'Ara…' : 'Search…';
+const label = locale === 'tr' ? 'Sitede ara' : 'Search the companion';
+const searchUrl = withBase('/search/');
+---
+
+<div class="hsearch" data-pagefind-ignore>
+  <form class="hsearch-form" role="search" action={searchUrl} method="get" autocomplete="off">
+    <svg class="hsearch-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+      <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+    </svg>
+    <input
+      type="search"
+      name="q"
+      class="hsearch-input"
+      placeholder={placeholder}
+      aria-label={label}
+      enterkeyhint="search"
+      autocomplete="off"
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="hsearch-panel"
+    />
+  </form>
+  <div class="hsearch-panel" id="hsearch-panel" role="listbox" hidden></div>
+</div>
+
+<script>
+  import { loadIndex, searchDocs, linkWithBase, type Hit } from '@lib/search';
+
+  const BASE = import.meta.env.BASE_URL;
+  const kindLabel: Record<Hit['type'], string> = { flash: 'Flash', term: 'Glossary', theme: 'Theme' };
+  const escAttr = (s: string) =>
+    s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  document.querySelectorAll<HTMLElement>('.hsearch').forEach((root) => {
+    const inputEl = root.querySelector<HTMLInputElement>('.hsearch-input');
+    const panelEl = root.querySelector<HTMLElement>('.hsearch-panel');
+    const formEl = root.querySelector<HTMLFormElement>('.hsearch-form');
+    if (!inputEl || !panelEl || !formEl) return;
+    const input = inputEl;
+    const panel = panelEl;
+    const form = formEl;
+
+    const searchHref = form.getAttribute('action') || `${BASE}search/`;
+
+    function openPanel() {
+      panel.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+    }
+    function closePanel() {
+      panel.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+    }
+
+    function render(items: Hit[], q: string) {
+      if (!items.length) {
+        panel.innerHTML = `<p class="hsearch-empty ui">No matches. <a href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">Open full search →</a></p>`;
+        openPanel();
+        return;
+      }
+      const rows = items
+        .map(
+          (r) =>
+            `<a class="hsearch-row" role="option" href="${escAttr(linkWithBase(BASE, r.url))}">` +
+            `<span class="hsearch-row-title">${escAttr(r.title)}</span>` +
+            `<span class="hsearch-row-kind ui">${kindLabel[r.type]}</span>` +
+            `</a>`
+        )
+        .join('');
+      panel.innerHTML =
+        rows +
+        `<a class="hsearch-all ui" href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">All results for “${escAttr(q)}” →</a>`;
+      openPanel();
+    }
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    async function run() {
+      const q = input.value.trim();
+      if (!q) {
+        closePanel();
+        return;
+      }
+      const docs = await loadIndex(BASE);
+      if (input.value.trim() !== q) return;
+      render(searchDocs(docs, q, 6), q);
+    }
+
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(run, 150);
+    });
+    input.addEventListener('focus', () => {
+      void loadIndex(BASE);
+      if (input.value.trim()) run();
+    });
+    // Native submit (Enter) navigates to the full /search/ page with ?q= — works
+    // even without JS; no preventDefault needed.
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePanel();
+        input.blur();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!root.contains(e.target as Node)) closePanel();
+    });
+  });
+</script>
+
+<style>
+  .hsearch {
+    position: relative;
+    display: inline-flex;
+  }
+  .hsearch-form {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    padding: 0 var(--space-2xs) 0 var(--space-s);
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .hsearch-form:focus-within {
+    border-color: var(--accent);
+  }
+  .hsearch-icon {
+    color: var(--muted);
+    flex: none;
+  }
+  .hsearch-input {
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    padding: 0.45rem 0;
+    width: clamp(7rem, 18vw, 12rem);
+    min-width: 0;
+  }
+  .hsearch-input::placeholder { color: var(--muted); }
+  .hsearch-input:focus { outline: none; }
+  /* Hide the native search clear/cancel widgets for a consistent look. */
+  .hsearch-input::-webkit-search-decoration,
+  .hsearch-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  .hsearch-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 30;
+    width: min(22rem, calc(100vw - 2 * var(--space-m)));
+    max-height: min(60vh, 28rem);
+    overflow-y: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow);
+    padding: var(--space-3xs);
+  }
+  .hsearch-panel[hidden] { display: none; }
+
+  .hsearch-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding: var(--space-2xs) var(--space-s);
+    border-radius: var(--radius-s);
+    text-decoration: none;
+    color: var(--text);
+  }
+  .hsearch-row:hover,
+  .hsearch-row:focus-visible {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    outline: none;
+  }
+  .hsearch-row-title { font-size: var(--step--1); }
+  .hsearch-row-kind {
+    flex: none;
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+  }
+  .hsearch-all,
+  .hsearch-empty {
+    display: block;
+    padding: var(--space-2xs) var(--space-s);
+    margin: var(--space-3xs) 0 0;
+    font-size: var(--step--1);
+    color: var(--accent);
+    text-decoration: none;
+    border-top: 1px solid var(--hairline);
+  }
+  .hsearch-empty { color: var(--muted); }
+  .hsearch-empty a { color: var(--accent); }
+  .hsearch-all:hover { text-decoration: underline; }
+
+  /* Tighten on small screens; the box still fits in the header row. */
+  @media (max-width: 30rem) {
+    .hsearch-input { width: clamp(5rem, 34vw, 9rem); }
+  }
+</style>

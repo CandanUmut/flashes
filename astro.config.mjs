@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import pagefind from 'astro-pagefind';
 import sitemap from '@astrojs/sitemap';
 
 // Project-page deployment on GitHub Pages.
@@ -12,7 +11,6 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   integrations: [
-    pagefind(),
     sitemap({
       i18n: {
         defaultLocale: 'en',

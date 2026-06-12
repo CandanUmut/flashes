@@ -261,6 +261,29 @@ cosmology rests on period science (ether), framed as such.
 
 **Remaining stubs:** 16, 17, 18, 22, 23, 27, 28, 29, 30, 31–33.
 
+#### 📱 PWA + logo (installable to the home screen)
+- **Logo:** an original golden "flash" (a four-point gleam with a luminous core,
+  plus two small sparks) on the brand's deep indigo (`#15132a` / gold `#E0B458`).
+  Master SVGs in `public/icons/`; PNGs rendered with PyMuPDF (the only rasteriser
+  in this env — note: MuPDF doesn't render SVG gradients, so the glow is built
+  from stacked translucent circles). Icons: 192/512 (`any`), 192/512
+  (`maskable`, full-bleed), 180 `apple-touch-icon`, 32, plus `icon.svg` /
+  `favicon.svg`. The header `✦` glyph is now the real logo badge.
+- **PWA:** `public/manifest.webmanifest` (standalone, scoped to `/flashes/`,
+  theme/background `#15132a`, 5 icons incl. maskable) + `public/sw.js` (a
+  stale-while-revalidate service worker that derives its base from its own
+  location, precaches the start page, and falls back to it offline for
+  navigations). `BaseLayout` head wired up: manifest link, `theme-color`,
+  `apple-touch-icon`, apple/mobile web-app metas, SW registration (base-aware via
+  `define:vars`), absolute OG image.
+- Verified in `preview`: manifest serves as `application/manifest+json` (valid
+  JSON, start_url `/flashes/`), `sw.js` and all icons return 200. `astro check`
+  0/0/0; build clean (93 pages). Installable on Android/Chrome and iOS
+  "Add to Home Screen."
+- Note: the manifest hardcodes the `/flashes/` base (the project's locked base);
+  if the base ever changes, update `manifest.webmanifest` too (the SW and head
+  tags derive it automatically).
+
 #### Page numbers — RESOLVED
 All 33 start pages now come from erisale's authoritative TOC (`c` values, listed
 above) and link to each Flash's first page. The earlier "unconfirmed starts"

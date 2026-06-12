@@ -36,6 +36,23 @@ npm run check    # type-check (astro check)
 > The site is served under the **`/flashes/`** base path, so the dev URL is
 > `http://localhost:4321/flashes/`, not the bare root.
 
+## Install as an app (PWA)
+
+The site is a Progressive Web App, so it can be added to a phone or desktop home
+screen and opened like a native app (it also works offline for pages you've
+visited).
+
+- **iPhone/iPad (Safari):** Share → **Add to Home Screen**.
+- **Android (Chrome):** menu (⋮) → **Install app** / **Add to Home screen**.
+- **Desktop (Chrome/Edge):** the **install** icon in the address bar.
+
+The manifest lives at `public/manifest.webmanifest`, the service worker at
+`public/sw.js`, and the icons (generated from `public/icons/*.svg`) under
+`public/icons/`. The service worker derives its scope from its own location; the
+manifest hardcodes the `/flashes/` base — update it too if that base ever
+changes. PWA install requires the built/deployed site over HTTPS (or
+`npm run preview`), not the dev server.
+
 ## ⚠️ GitHub Pages base-path note (read before adding links)
 
 This deploys as a **project page** at `https://candanumut.github.io/flashes/`,

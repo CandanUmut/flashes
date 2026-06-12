@@ -49,13 +49,42 @@ const searchUrl = withBase('/search/');
 
     const searchHref = form.getAttribute('action') || `${BASE}search/`;
 
+    // The panel is portaled to <body> and positioned `fixed`, clamped to the
+    // viewport. The header is right-aligned but wraps on small screens, so a
+    // CSS-anchored dropdown (right: 0) spilled off the left edge; and the
+    // header's backdrop-filter would otherwise capture `position: fixed`.
+    let home: { parent: Node; next: Node | null } | null = null;
+
+    function place() {
+      const r = input.getBoundingClientRect();
+      const margin = 8;
+      const maxW = Math.min(window.innerWidth - margin * 2, 22 * 16);
+      panel.style.position = 'fixed';
+      panel.style.width = `${Math.round(maxW)}px`;
+      let left = r.right - maxW; // align to the input's right edge…
+      left = Math.max(margin, Math.min(left, window.innerWidth - maxW - margin)); // …but stay on-screen
+      panel.style.left = `${Math.round(left)}px`;
+      panel.style.top = `${Math.round(r.bottom + 6)}px`;
+    }
+
     function openPanel() {
+      if (panel.hidden) {
+        home = { parent: panel.parentNode as Node, next: panel.nextSibling };
+        document.body.appendChild(panel);
+      }
       panel.hidden = false;
       input.setAttribute('aria-expanded', 'true');
+      place();
     }
     function closePanel() {
+      if (panel.hidden) return;
       panel.hidden = true;
       input.setAttribute('aria-expanded', 'false');
+      panel.style.position = panel.style.left = panel.style.top = panel.style.width = '';
+      if (home) {
+        home.parent.insertBefore(panel, home.next);
+        home = null;
+      }
     }
 
     function render(items: Hit[], q: string) {
@@ -109,8 +138,12 @@ const searchUrl = withBase('/search/');
       }
     });
     document.addEventListener('click', (e) => {
-      if (!root.contains(e.target as Node)) closePanel();
+      const t = e.target as Node;
+      if (!root.contains(t) && !panel.contains(t)) closePanel();
     });
+    // Keep the panel anchored to the (sticky) input as the page scrolls/resizes.
+    window.addEventListener('scroll', () => { if (!panel.hidden) place(); }, { passive: true });
+    window.addEventListener('resize', () => { if (!panel.hidden) place(); });
   });
 </script>
 

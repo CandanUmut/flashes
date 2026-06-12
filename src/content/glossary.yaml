@@ -10,7 +10,7 @@
     show, praise, status or worldly gain. The central theme of the 20th and
     21st Flashes.
   relatedTerms: [riya, hubb-u-cah, enaniyet]
-  appearsIn: [10, 20, 21]
+  appearsIn: [10, 20, 21, 22]
 
 - id: riya
   term: riyâ
@@ -87,7 +87,7 @@
     The ego or "I-ness": the self's tendency to claim ownership, importance
     and independence, which obstructs sincerity and the recognition of God.
   relatedTerms: [nefis, tefani, ihlas]
-  appearsIn: [17, 21, 30]
+  appearsIn: [17, 21, 22, 30]
 
 - id: rabita-i-mevt
   term: râbıta-i mevt
@@ -114,7 +114,7 @@
     Belief or faith — affirmation of God, His messengers and the hereafter;
     strengthening and saving belief is the overarching aim of the Risale-i Nur.
   relatedTerms: [tevhid, marifetullah]
-  appearsIn: [1, 23, 30]
+  appearsIn: [1, 17, 23, 30]
 
 - id: tevhid
   term: tevhîd
@@ -132,7 +132,7 @@
     Knowledge of God: coming to know the Creator through reflection on His
     works and names, the fruit toward which much of the work is directed.
   relatedTerms: [tefekkur, tevhid, divine-names]
-  appearsIn: [3, 9, 29, 30]
+  appearsIn: [3, 9, 17, 23, 29, 30]
 
 - id: tefekkur
   term: tefekkür
@@ -228,7 +228,7 @@
     keeps a hardship from taking root: meet misfortune trusting its Sender and
     it loosens its grip.
   relatedTerms: [riza, sabir, kader]
-  appearsIn: [1, 2, 4, 5, 6, 12]
+  appearsIn: [1, 2, 4, 5, 6, 12, 22]
 
 - id: riza
   term: rızâ
@@ -249,7 +249,7 @@
     fuller treatment in the Twenty-Sixth Word to argue that one has no standing
     to complain of an illness the All-Wise has ordained.
   relatedTerms: [riza, tevekkul]
-  appearsIn: [2]
+  appearsIn: [2, 16, 22]
 
 - id: gaflet
   term: gaflet
@@ -260,7 +260,7 @@
     neglect," in which an illness that turns a young person back toward the
     eternal can be a hidden mercy.
   relatedTerms: [nefis, tul-i-emel]
-  appearsIn: [2, 3, 10]
+  appearsIn: [2, 3, 10, 16, 17]
 
 - id: esbab
   term: esbâb (secondary causes)
@@ -271,7 +271,7 @@
     own, so the First Flash urges turning past them to the Causer of Causes
     (Müsebbibü'l-Esbâb) — God Himself.
   relatedTerms: [tevhid, tevekkul]
-  appearsIn: [1]
+  appearsIn: [1, 23]
 
 - id: beka
   term: bekâ
@@ -385,7 +385,7 @@
     presents as the force that turns the whole universe toward needy man. The
     Bismillah is the way to take hold of it.
   relatedTerms: [besmele, divine-names]
-  appearsIn: [14]
+  appearsIn: [14, 16]
 
 - id: ehadiyet
   term: ehadiyet (divine oneness)
@@ -396,4 +396,47 @@
     unity" so the mind, faced with vast multiplicity, can still meet the One
     directly.
   relatedTerms: [tevhid, divine-names, tecelli]
-  appearsIn: [14]
+  appearsIn: [14, 23]
+
+- id: mana-yi-harfi
+  term: mânâ-yı harfî (other-indicating meaning)
+  arabic: معنى حرفي
+  definitionEn: >-
+    Reading a thing "as a letter" — for the meaning it points to beyond itself,
+    namely its Maker — as opposed to mânâ-yı ismî, reading it for itself. The
+    Sixteenth Flash's mirror image: look at the glass and you miss the
+    reflection. Materialist science, reading creation only "for itself," loses
+    its way.
+  relatedTerms: [tevhid, marifetullah]
+  appearsIn: [16]
+
+- id: nubuvvet
+  term: nübüvvet (prophethood)
+  arabic: نبوّة
+  definitionEn: >-
+    Prophethood — God's guidance of humanity through chosen messengers, which
+    Nursî calls the foundation of human good and the index of true happiness
+    (Seventeenth Flash, Ninth Note).
+  relatedTerms: [sunnet, iman]
+  appearsIn: [17]
+
+- id: hasir
+  term: haşir (bodily resurrection)
+  arabic: حشر
+  definitionEn: >-
+    The gathering and bodily resurrection of all people for the Last Judgement.
+    Nursî argues for it from nature's habit of renewal — the way each spring
+    returns life in similar form (Seventeenth Flash, Fourth Note).
+  relatedTerms: [iman]
+  appearsIn: [17]
+
+- id: tabiat
+  term: tabiat (nature)
+  arabic: طبيعة
+  definitionEn: >-
+    "Nature" — which materialism treats as a self-sufficient creative force. The
+    Twenty-Third Flash argues it is at most God's artwork, decree and law — "a
+    body of the laws of creation, not the Lawgiver" — a passive screen, never an
+    agent.
+  relatedTerms: [esbab, tevhid]
+  appearsIn: [23]

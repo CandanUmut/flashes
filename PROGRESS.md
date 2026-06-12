@@ -301,6 +301,36 @@ cosmology rests on period science (ether), framed as such.
   README/workflow. `astro check` 0/0/0; build clean (93 pages). Verified the
   index serves 200 in **both** `dev` and `preview`.
 
+#### 🛠 Header dropdown fix + simpler one-line header
+- **Header search dropdown** was CSS-anchored (`right:0`) to a box that sits on
+  the left when the header wraps, so its fixed width spilled off-screen. Now it
+  portals to `<body>` and is positioned `fixed`, clamped to the viewport (same
+  pattern as the term popover); repositions on scroll/resize.
+- **Header simplified to one line** (was wrapping at the 960px `.wrap` cap):
+  dropped the redundant "Search" nav link (the box covers it → 4 nav items),
+  brand + nav set `white-space: nowrap` and don't shrink, controls grouped to the
+  right, and the search box flexes/shrinks to absorb tight space instead of
+  forcing a wrap. Stacks cleanly only below 40rem (phones).
+
+#### 📦 Batch 3 — Flashes 16, 17, 18, 22, 23 (authored, in-review)
+Read each in full from the source; Sahih verses, Arabic verified:
+- **16 — Answers to several questions:** conditional destiny; "light, not the
+  club"; Qur'anic metaphor (the sun's "muddy spring," Dhū'l-Qarnayn); the five
+  hidden things; and mânâ-yı harfî (reading creation as a sign of its Maker).
+- **17 — Fifteen Notes:** self-addressed meditations from his early jottings; a
+  15-node outline maps them.
+- **18 — published elsewhere:** honest pointer (Sikke-i Tasdîk-i Gaybî).
+- **22 — Three Indications:** confidential Barla self-defence; equality vs. the
+  virtue of belief; injustice turned to sincerity.
+- **23 — On Nature (Tabiat Risâlesi):** the major refutation of naturalism — four
+  explanations, three demolished by "impossibilities," nature as artwork not
+  Artist.
+- **New glossary terms (4):** `mana-yi-harfi`, `nubuvvet`, `hasir`, `tabiat`;
+  `appearsIn` updated across reused terms.
+- `astro check` 0/0/0; build clean (97 pages); all key-concept popovers resolve.
+
+**Remaining stubs:** 27, 28, 29, 30, 31–33.
+
 #### Page numbers — RESOLVED
 All 33 start pages now come from erisale's authoritative TOC (`c` values, listed
 above) and link to each Flash's first page. The earlier "unconfirmed starts"

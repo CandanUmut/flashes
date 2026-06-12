@@ -41,83 +41,44 @@ import { withBase } from '@lib/paths';
 </BaseLayout>
 
 <script>
-  // Custom search UI on the Pagefind JS API, so each result can carry BOTH a
-  // link to our companion page and a direct "Read on the official source" link
-  // for Flash results. Pagefind only indexes at build time, so this works in
-  // `build`/`preview`, not `dev`.
+  // Client search over the JSON index emitted by /search-index.json. Works in
+  // dev and production alike. Each Flash result carries both a companion link
+  // and a direct "Read on the official source" deep link.
+  import { loadIndex, searchDocs, linkWithBase, type Hit } from '@lib/search';
+
   const BASE = import.meta.env.BASE_URL; // e.g. "/flashes/"
-  const SOURCE_FALLBACK = 'https://www.erisale.com/?locale=en';
-
-  // Pagefind records dist-root-relative URLs ("/glossary/ihlas/"); prefix the
-  // deploy base so links resolve on the GitHub Pages subpath.
-  const linkWithBase = (u: string) =>
-    `${BASE.replace(/\/$/, '')}${u.startsWith('/') ? u : `/${u}`}`;
-
   const input = document.querySelector<HTMLInputElement>('#search-input');
   const resultsEl = document.querySelector<HTMLElement>('#search-results');
   const statusEl = document.querySelector<HTMLElement>('[data-search-status]');
 
-  type PagefindResultData = {
-    url: string;
-    excerpt: string;
-    meta: Record<string, string> & { title?: string; source?: string };
-  };
-  type Pagefind = {
-    search: (q: string) => Promise<{ results: { data: () => Promise<PagefindResultData> }[] }>;
-    options?: (o: Record<string, unknown>) => Promise<void>;
-    init?: () => Promise<void>;
-  };
-
-  let pagefind: Pagefind | null = null;
-  let loadError = false;
-
-  async function getPagefind(): Promise<Pagefind | null> {
-    if (pagefind || loadError) return pagefind;
-    try {
-      // Runtime path; Vite must not try to bundle it. Pagefind builds this file
-      // at `astro build`, so search runs in build/preview/production — not dev.
-      const mod = (await import(/* @vite-ignore */ `${BASE}pagefind/pagefind.js`)) as Pagefind;
-      // options()/init() are best-effort: never let them break search.
-      try { await mod.options?.({ excerptLength: 24 }); } catch { /* ignore */ }
-      try { await mod.init?.(); } catch { /* ignore */ }
-      pagefind = mod;
-      return pagefind;
-    } catch {
-      loadError = true;
-      if (statusEl)
-        statusEl.textContent =
-          'Search isn’t available here. It’s built at compile time, so use a production build (npm run build && npm run preview) rather than the dev server.';
-      return null;
-    }
-  }
-
   const escapeAttr = (s: string) =>
     s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-  function render(items: PagefindResultData[]) {
+  const kindLabel: Record<Hit['type'], string> = { flash: 'Flash', term: 'Glossary', theme: 'Theme' };
+
+  function render(items: Hit[]) {
     if (!resultsEl) return;
     resultsEl.innerHTML = '';
     for (const r of items) {
+      const href = linkWithBase(BASE, r.url);
       const card = document.createElement('article');
       card.className = 'result';
 
       const title = document.createElement('h2');
       title.className = 'result-title';
-      const a = document.createElement('a');
-      a.href = linkWithBase(r.url);
-      a.textContent = r.meta?.title || r.url;
-      title.appendChild(a);
+      title.innerHTML =
+        `<a href="${escapeAttr(href)}">${escapeAttr(r.title)}</a>` +
+        ` <span class="result-kind ui">${kindLabel[r.type]}</span>`;
 
       const excerpt = document.createElement('p');
       excerpt.className = 'result-excerpt';
-      excerpt.innerHTML = r.excerpt; // Pagefind-provided, includes <mark>
+      excerpt.innerHTML = r.excerptHtml; // already escaped, with <mark>
 
       const actions = document.createElement('p');
       actions.className = 'result-actions ui';
-      actions.innerHTML = `<a class="result-companion" href="${escapeAttr(linkWithBase(r.url))}">Companion notes</a>`;
-      // Only Flash pages expose a per-Flash source deep link.
-      if (r.meta?.source) {
-        actions.innerHTML += ` <a class="result-source" href="${escapeAttr(r.meta.source)}" rel="noopener" target="_blank">Read on the official source →</a>`;
+      actions.innerHTML = `<a class="result-companion" href="${escapeAttr(href)}">Companion notes</a>`;
+      if (r.type === 'flash' && r.source) {
+        actions.innerHTML += ` <a class="result-source" href="${escapeAttr(r.source)}" rel="noopener" target="_blank">Read on the official source →</a>`;
       }
 
       card.append(title, excerpt, actions);
@@ -135,12 +96,9 @@ import { withBase } from '@lib/paths';
       return;
     }
     if (statusEl) statusEl.textContent = 'Searching…';
-    const pf = await getPagefind();
-    if (!pf) return;
-    const search = await pf.search(q);
+    const docs = await loadIndex(BASE);
     if (q !== lastQuery) return; // a newer query superseded this one
-    const items = await Promise.all(search.results.slice(0, 20).map((r) => r.data()));
-    if (q !== lastQuery) return;
+    const items = searchDocs(docs, q, 30);
     render(items);
     if (statusEl) {
       const n = items.length;
@@ -151,9 +109,8 @@ import { withBase } from '@lib/paths';
   let timer: ReturnType<typeof setTimeout> | undefined;
   input?.addEventListener('input', () => {
     clearTimeout(timer);
-    timer = setTimeout(() => run(input.value), 200);
+    timer = setTimeout(() => run(input.value), 150);
   });
-  // Don't reload the page on Enter.
   input?.closest('form')?.addEventListener('submit', (e) => {
     e.preventDefault();
     clearTimeout(timer);
@@ -166,9 +123,7 @@ import { withBase } from '@lib/paths';
     input.value = initial;
     run(initial);
   }
-  input?.addEventListener('focus', () => void getPagefind(), { once: true });
-
-  void SOURCE_FALLBACK; // reserved for future section-level fallbacks
+  input?.addEventListener('focus', () => void loadIndex(BASE), { once: true });
 </script>
 
 <style>
@@ -214,6 +169,16 @@ import { withBase } from '@lib/paths';
   .result-title { font-size: var(--step-1); margin: 0 0 var(--space-3xs); }
   .result-title a { color: var(--text); text-decoration: none; }
   .result-title a:hover { color: var(--accent); }
+  .result-kind {
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    padding: 0.05rem 0.5rem;
+    vertical-align: middle;
+  }
   .result-excerpt {
     margin: 0 0 var(--space-s);
     color: var(--muted);

@@ -284,6 +284,23 @@ cosmology rests on period science (ether), framed as such.
   if the base ever changes, update `manifest.webmanifest` too (the SW and head
   tags derive it automatically).
 
+#### 🔎 Search rewrite (works in dev + prod) + header search box
+- **Replaced Pagefind** (which only indexed at `build`, so search read "not
+  available" on the dev server) with a tiny JSON index Astro generates from the
+  content collections: `src/pages/search-index.json.ts` → `/search-index.json`
+  (85 docs: 33 flashes + 40 terms + 12 themes, ~64 KB). Served live in `dev` and
+  emitted statically for production — search now works everywhere.
+- `src/lib/search.ts`: shared client search (token AND-match, title/phrase
+  weighting, highlighted excerpts). The `/search/` page uses it; results keep the
+  companion link + per-Flash "Read on the official source" deep link.
+- **New header search box** (`HeaderSearch.astro`, right side of every page): a
+  live dropdown of the top 6 matches as you type, "All results →" to the full
+  page, native Enter→`/search/?q=` (works without JS). Click-outside / Escape
+  close.
+- Removed the `astro-pagefind`/`pagefind` deps and integration; updated
+  README/workflow. `astro check` 0/0/0; build clean (93 pages). Verified the
+  index serves 200 in **both** `dev` and `preview`.
+
 #### Page numbers — RESOLVED
 All 33 start pages now come from erisale's authoritative TOC (`c` values, listed
 above) and link to each Flash's first page. The earlier "unconfirmed starts"

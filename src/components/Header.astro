@@ -3,6 +3,7 @@ import { isActive } from '@lib/paths';
 import { getLocale, localePath, t } from '@i18n/ui';
 import ThemeToggle from '@components/ThemeToggle.astro';
 import LanguageSwitch from '@components/LanguageSwitch.astro';
+import HeaderSearch from '@components/HeaderSearch.astro';
 
 const current = Astro.url.pathname;
 const locale = getLocale(Astro.url);
@@ -47,6 +48,7 @@ const nav = [
     </nav>
 
     <div class="header-controls">
+      <HeaderSearch />
       <LanguageSwitch />
       <ThemeToggle />
     </div>

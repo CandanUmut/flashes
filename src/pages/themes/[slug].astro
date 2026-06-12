@@ -19,6 +19,11 @@ const themeNames: Record<string, string> = Object.fromEntries(
 const flashes = (await getCollection('flashes'))
   .filter((f) => f.data.themes.includes(theme.id))
   .sort((a, b) => a.data.number - b.data.number);
+
+const pageOf = (url: string): number | undefined => {
+  const m = url.match(/#content\.\w+\.\d+\.(\d+)\b/);
+  return m ? Number(m[1]) : undefined;
+};
 ---
 
 <BaseLayout title={`${theme.data.name} — Themes`} description={theme.data.description}>
@@ -45,6 +50,8 @@ const flashes = (await getCollection('flashes'))
               themeNames={themeNames}
               status={f.data.status}
               fifteenDay={f.data.special?.fifteenDayReminder}
+              sourceUrl={f.data.source.erisaleUrlEn}
+              page={pageOf(f.data.source.erisaleUrlEn)}
             />
           </li>
         ))}

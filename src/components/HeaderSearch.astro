@@ -150,10 +150,14 @@ const searchUrl = withBase('/search/');
 <style>
   .hsearch {
     position: relative;
-    display: inline-flex;
+    display: flex;
+    flex: 0 1 auto; /* let the search box absorb tight space, not wrap the nav */
+    min-width: 0;
   }
   .hsearch-form {
-    display: inline-flex;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
     align-items: center;
     gap: var(--space-3xs);
     background: var(--surface);
@@ -176,8 +180,9 @@ const searchUrl = withBase('/search/');
     font-family: var(--font-ui);
     font-size: var(--step--1);
     padding: 0.45rem 0;
-    width: clamp(7rem, 18vw, 12rem);
-    min-width: 0;
+    width: 100%;
+    min-width: 2.5rem; /* shrinks gracefully; never collapses to nothing */
+    flex: 1 1 auto;
   }
   .hsearch-input::placeholder { color: var(--muted); }
   .hsearch-input:focus { outline: none; }
@@ -238,8 +243,8 @@ const searchUrl = withBase('/search/');
   .hsearch-empty a { color: var(--accent); }
   .hsearch-all:hover { text-decoration: underline; }
 
-  /* Tighten on small screens; the box still fits in the header row. */
-  @media (max-width: 30rem) {
-    .hsearch-input { width: clamp(5rem, 34vw, 9rem); }
+  /* When the header stacks, let the search box grow to fill its row. */
+  @media (max-width: 40rem) {
+    .hsearch { flex: 1 1 auto; }
   }
 </style>

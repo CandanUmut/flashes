@@ -9,13 +9,12 @@ const current = Astro.url.pathname;
 const locale = getLocale(Astro.url);
 const base = import.meta.env.BASE_URL;
 
-// Content sections (Flashes/Glossary/Themes/Search) are English for now, so they
-// link to the English routes regardless of locale; About has a Turkish twin.
+// Content sections are English for now, so they link to the English routes
+// regardless of locale; About has a Turkish twin. (Search has its own box.)
 const nav = [
   { href: localePath('/flashes/', 'en'), label: t(locale, 'nav.flashes') },
   { href: localePath('/glossary/', 'en'), label: t(locale, 'nav.glossary') },
   { href: localePath('/themes/', 'en'), label: t(locale, 'nav.themes') },
-  { href: localePath('/search/', 'en'), label: t(locale, 'nav.search') },
   { href: localePath('/about/', locale), label: t(locale, 'nav.about') },
 ];
 ---
@@ -67,14 +66,17 @@ const nav = [
   .header-inner {
     display: flex;
     align-items: center;
-    gap: var(--space-m);
+    gap: var(--space-s);
     min-height: 4rem;
     padding-block: var(--space-2xs);
   }
   .header-controls {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: var(--space-2xs);
+    flex: 1 1 auto; /* take the space between nav and the right edge… */
+    min-width: 0;
+    justify-content: flex-end; /* …and keep the toggles pinned right */
   }
   .brand {
     display: inline-flex;
@@ -82,7 +84,7 @@ const nav = [
     gap: var(--space-2xs);
     text-decoration: none;
     color: var(--text);
-    margin-right: auto;
+    flex: none; /* keep the brand on one line; don't let it shrink/wrap */
   }
   .brand-mark {
     display: block;
@@ -100,6 +102,7 @@ const nav = [
     font-family: var(--font-display);
     font-size: var(--step-1);
     font-weight: 600;
+    white-space: nowrap;
   }
   .brand-sub {
     font-size: var(--step--1);
@@ -109,7 +112,7 @@ const nav = [
   }
   .primary-nav ul {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--space-s);
     list-style: none;
     margin: 0;
@@ -122,6 +125,7 @@ const nav = [
     text-decoration: none;
     font-size: var(--step--1);
     letter-spacing: 0.02em;
+    white-space: nowrap;
     border-bottom: 1px solid transparent;
     transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
   }
@@ -141,6 +145,7 @@ const nav = [
       width: 100%;
     }
     .primary-nav ul {
+      flex-wrap: wrap; /* allow wrapping only when stacked on small screens */
       justify-content: flex-start;
       gap: var(--space-xs);
     }

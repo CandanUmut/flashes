@@ -329,7 +329,25 @@ Read each in full from the source; Sahih verses, Arabic verified:
   `appearsIn` updated across reused terms.
 - `astro check` 0/0/0; build clean (97 pages); all key-concept popovers resolve.
 
-**Remaining stubs:** 27, 28, 29, 30, 31–33.
+#### ✅ Final batch — collection complete (all 33 Flashes authored, in-review)
+Authored every remaining Flash from the source (Sahih verses, Arabic verified):
+- **Treatises:** 11 (Sunna), 13 (refuge from Satan), 19 (frugality), 20
+  (sincerity), 24 (the veil — **flagged sensitive**), 25 (for the sick), 26 (for
+  the elderly), 28 (Eskişehir prison pieces), 29 (degrees of "God is Most Great"),
+  30 (six greatest names — the longest Flash).
+- **Pointer notes** (places that hold only a notice, pointing elsewhere): 15
+  (indexes), 27 (Eskişehir defence), 31 (The Rays), 32 (Lemeât / The Words), 33
+  (early Arabic works / Mesnevi-i Nûriye). No content invented for these.
+- **New glossary terms:** `mana-yi-harfi`, `nubuvvet`, `hasir`, `tabiat`,
+  `vesvese`, `tesettur`; glossary now 46 terms, with `appearsIn` reconciled
+  across all Flashes.
+- **Status: all 33 Flashes authored** (`in-review`, except the 21st which stays
+  `complete`). `astro check` 0/0/0; build clean (99 pages); every key-concept
+  popover resolves.
+
+**Sensitive items flagged for review** (`TODO(review)` in-file): 4 & 14
+(early-Caliphate question), 9 (Unity of Existence), 24 (the veil). Handled
+descriptively, attributed to Nursî, never adjudicated.
 
 #### Page numbers — RESOLVED
 All 33 start pages now come from erisale's authoritative TOC (`c` values, listed

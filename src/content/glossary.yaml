@@ -20,7 +20,7 @@
     praised by people rather than for God. Nursî treats the love of fame
     behind it as a hidden form of associating partners with God.
   relatedTerms: [ihlas, hubb-u-cah]
-  appearsIn: [21]
+  appearsIn: [20, 21]
 
 - id: uhuvvet
   term: uhuvvet
@@ -29,7 +29,7 @@
     Brotherhood: the bond of faith that unites those who serve it, requiring
     that one set aside rivalry and envy and support one's companions.
   relatedTerms: [tefani, sahs-i-manevi]
-  appearsIn: [4, 21]
+  appearsIn: [4, 20, 21]
 
 - id: tefani
   term: tefânî
@@ -68,7 +68,7 @@
     Love of status and fame — the craving for position and renown that Nursî
     identifies as a chief enemy of sincerity and a root of showing off.
   relatedTerms: [riya, ihlas, enaniyet]
-  appearsIn: [21]
+  appearsIn: [20, 21]
 
 - id: tul-i-emel
   term: tûl-i emel
@@ -87,7 +87,7 @@
     The ego or "I-ness": the self's tendency to claim ownership, importance
     and independence, which obstructs sincerity and the recognition of God.
   relatedTerms: [nefis, tefani, ihlas]
-  appearsIn: [17, 21, 22, 30]
+  appearsIn: [17, 20, 21, 22, 30]
 
 - id: rabita-i-mevt
   term: râbıta-i mevt
@@ -105,7 +105,7 @@
     The lower self or soul that inclines toward ego, appetite and heedlessness;
     its purification (tazkiya) is a recurring concern.
   relatedTerms: [enaniyet, ihlas]
-  appearsIn: [1, 21]
+  appearsIn: [1, 13, 19, 21, 24, 28]
 
 - id: iman
   term: îmân
@@ -114,7 +114,7 @@
     Belief or faith — affirmation of God, His messengers and the hereafter;
     strengthening and saving belief is the overarching aim of the Risale-i Nur.
   relatedTerms: [tevhid, marifetullah]
-  appearsIn: [1, 17, 23, 30]
+  appearsIn: [1, 11, 13, 17, 23, 26, 28, 30]
 
 - id: tevhid
   term: tevhîd
@@ -132,7 +132,7 @@
     Knowledge of God: coming to know the Creator through reflection on His
     works and names, the fruit toward which much of the work is directed.
   relatedTerms: [tefekkur, tevhid, divine-names]
-  appearsIn: [3, 9, 17, 23, 29, 30]
+  appearsIn: [3, 9, 11, 17, 23, 29, 30]
 
 - id: tefekkur
   term: tefekkür
@@ -141,7 +141,7 @@
     Reflective thought: contemplating the signs in the universe to arrive at
     knowledge of God — described by Nursî as the way of the Risale-i Nur.
   relatedTerms: [marifetullah]
-  appearsIn: [29]
+  appearsIn: [28, 29]
 
 - id: divine-names
   term: esmâ-i hüsnâ
@@ -151,7 +151,7 @@
     especially those bearing the Greatest Name — are a major theme of the
     30th Flash.
   relatedTerms: [marifetullah, tevhid]
-  appearsIn: [3, 12, 14, 30]
+  appearsIn: [3, 12, 14, 29, 30]
 
 - id: sunnet
   term: sünnet
@@ -160,7 +160,7 @@
     The Sunna: the practice and example of the Prophet Muhammad (peace be
     upon him), following which is presented as a path of guidance and light.
   relatedTerms: [bidat]
-  appearsIn: [4, 5, 11, 14]
+  appearsIn: [4, 5, 11, 13, 14]
 
 - id: bidat
   term: bid'at
@@ -187,7 +187,7 @@
     Gratitude: recognising every blessing as a gift and responding with
     thankfulness, treated as a fundamental duty of the servant.
   relatedTerms: [iktisat, sabir, riza]
-  appearsIn: [2, 19]
+  appearsIn: [2, 19, 25]
 
 - id: sefkat
   term: şefkat
@@ -196,7 +196,7 @@
     Compassion and tender mercy — a quality Nursî foregrounds as a swift,
     pure path to God, and a lens for consoling the sick and the elderly.
   relatedTerms: []
-  appearsIn: [10, 25, 26]
+  appearsIn: [10, 24, 25, 26]
 
 - id: besmele
   term: besmele
@@ -217,7 +217,7 @@
     single day's trial, but wasted when spent grieving the past or dreading the
     future.
   relatedTerms: [sukur, riza, tevekkul]
-  appearsIn: [2]
+  appearsIn: [2, 25]
 
 - id: tevekkul
   term: tevekkül
@@ -228,7 +228,7 @@
     keeps a hardship from taking root: meet misfortune trusting its Sender and
     it loosens its grip.
   relatedTerms: [riza, sabir, kader]
-  appearsIn: [1, 2, 4, 5, 6, 12, 22]
+  appearsIn: [1, 2, 4, 5, 6, 12, 22, 26]
 
 - id: riza
   term: rızâ
@@ -238,7 +238,7 @@
     or protest. The Second Flash sets it against the anxious complaint that, it
     argues, drives an ailment from the body into the heart.
   relatedTerms: [tevekkul, kader, sabir]
-  appearsIn: [2]
+  appearsIn: [2, 25, 26]
 
 - id: kader
   term: kader
@@ -375,7 +375,7 @@
     Flash argues it is guaranteed and runs inverse to a creature's own power, so
     that the most helpless (the unborn, the infant) are fed most freely.
   relatedTerms: [tevekkul, divine-names]
-  appearsIn: [12]
+  appearsIn: [12, 19]
 
 - id: rahmet
   term: rahmet (divine mercy)
@@ -396,7 +396,7 @@
     unity" so the mind, faced with vast multiplicity, can still meet the One
     directly.
   relatedTerms: [tevhid, divine-names, tecelli]
-  appearsIn: [14, 23]
+  appearsIn: [14, 23, 29, 30]
 
 - id: mana-yi-harfi
   term: mânâ-yı harfî (other-indicating meaning)
@@ -440,3 +440,23 @@
     agent.
   relatedTerms: [esbab, tevhid]
   appearsIn: [23]
+
+- id: vesvese
+  term: vesvese (Satanic whispering)
+  arabic: وسوسة
+  definitionEn: >-
+    The involuntary "whisper" or intrusive suggestion that Satan casts into the
+    mind. The Thirteenth Flash teaches that recognising it as not one's own — and
+    simply refusing it attention — robs it of its power.
+  relatedTerms: [nefis]
+  appearsIn: [13]
+
+- id: tesettur
+  term: tesettür (covering / the veil)
+  arabic: تستّر
+  definitionEn: >-
+    The Islamic covering or veil for women. The Twenty-Fourth Flash argues — set
+    out as Nursî's own case, not adjudicated here — that it accords with women's
+    disposition and protects the dignity and trust of family life.
+  relatedTerms: [sefkat]
+  appearsIn: [24]

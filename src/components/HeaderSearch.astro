@@ -88,8 +88,9 @@ const searchUrl = withBase('/search/');
     }
 
     function render(items: Hit[], q: string) {
+      const foot = `<a class="hsearch-foot" href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">Open detailed search for “${escAttr(q)}” →</a>`;
       if (!items.length) {
-        panel.innerHTML = `<p class="hsearch-empty ui">No matches. <a href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">Open full search →</a></p>`;
+        panel.innerHTML = `<p class="hsearch-empty">No quick matches.</p>${foot}`;
         openPanel();
         return;
       }
@@ -98,13 +99,11 @@ const searchUrl = withBase('/search/');
           (r) =>
             `<a class="hsearch-row" role="option" href="${escAttr(linkWithBase(BASE, r.url))}">` +
             `<span class="hsearch-row-title">${escAttr(r.title)}</span>` +
-            `<span class="hsearch-row-kind ui">${kindLabel[r.type]}</span>` +
+            `<span class="hsearch-row-kind">${kindLabel[r.type]}</span>` +
             `</a>`
         )
         .join('');
-      panel.innerHTML =
-        rows +
-        `<a class="hsearch-all ui" href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">All results for “${escAttr(q)}” →</a>`;
+      panel.innerHTML = `<div class="hsearch-list">${rows}</div>${foot}`;
       openPanel();
     }
 
@@ -190,61 +189,84 @@ const searchUrl = withBase('/search/');
   .hsearch-input::-webkit-search-decoration,
   .hsearch-input::-webkit-search-cancel-button { -webkit-appearance: none; }
 
+  /* When the header stacks, let the search box grow to fill its row. */
+  @media (max-width: 40rem) {
+    .hsearch { flex: 1 1 auto; }
+  }
+</style>
+
+{/* The panel is portaled to <body> and its rows are built in JS, so these
+    styles must be global (scoped styles only reach template-rendered nodes). */}
+<style is:global>
   .hsearch-panel {
-    position: absolute;
-    top: calc(100% + 6px);
-    right: 0;
-    z-index: 30;
-    width: min(22rem, calc(100vw - 2 * var(--space-m)));
-    max-height: min(60vh, 28rem);
+    position: absolute; /* JS sets `fixed` + coords when open */
+    z-index: 60;
+    width: min(24rem, calc(100vw - 16px));
+    max-height: min(70vh, 30rem);
     overflow-y: auto;
     background: var(--surface-2);
     border: 1px solid var(--hairline);
     border-radius: var(--radius-m);
     box-shadow: var(--shadow);
     padding: var(--space-3xs);
+    font-family: var(--font-ui);
   }
   .hsearch-panel[hidden] { display: none; }
+  .hsearch-list { display: flex; flex-direction: column; }
 
   .hsearch-row {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+    align-items: center;
     gap: var(--space-s);
     padding: var(--space-2xs) var(--space-s);
     border-radius: var(--radius-s);
     text-decoration: none;
     color: var(--text);
   }
+  .hsearch-row + .hsearch-row {
+    border-top: 1px solid color-mix(in srgb, var(--hairline) 55%, transparent);
+  }
   .hsearch-row:hover,
   .hsearch-row:focus-visible {
-    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
     outline: none;
   }
-  .hsearch-row-title { font-size: var(--step--1); }
+  .hsearch-row-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: var(--step--1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .hsearch-row-kind {
     flex: none;
     font-size: var(--step--2);
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.06em;
     color: var(--muted);
+    border: 1px solid var(--hairline);
+    border-radius: 100px;
+    padding: 0.05rem 0.5rem;
   }
-  .hsearch-all,
-  .hsearch-empty {
+  .hsearch-foot {
     display: block;
+    margin-top: var(--space-3xs);
     padding: var(--space-2xs) var(--space-s);
-    margin: var(--space-3xs) 0 0;
-    font-size: var(--step--1);
-    color: var(--accent);
-    text-decoration: none;
     border-top: 1px solid var(--hairline);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-radius: 0 0 var(--radius-s) var(--radius-s);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: var(--step--1);
+    text-align: center;
+    text-decoration: none;
   }
-  .hsearch-empty { color: var(--muted); }
-  .hsearch-empty a { color: var(--accent); }
-  .hsearch-all:hover { text-decoration: underline; }
-
-  /* When the header stacks, let the search box grow to fill its row. */
-  @media (max-width: 40rem) {
-    .hsearch { flex: 1 1 auto; }
+  .hsearch-foot:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  .hsearch-empty {
+    margin: 0;
+    padding: var(--space-s);
+    font-size: var(--step--1);
+    color: var(--muted);
   }
 </style>

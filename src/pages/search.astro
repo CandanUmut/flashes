@@ -160,16 +160,21 @@ import { withBase } from '@lib/paths';
     flex-direction: column;
     gap: var(--space-s);
   }
-  .result {
+</style>
+
+{/* Result cards are built in JS, so their styles must be global — scoped
+    styles only reach elements rendered in the template. */}
+<style is:global>
+  .search-results .result {
     padding: var(--space-m);
     background: var(--surface);
     border: 1px solid var(--hairline);
     border-radius: var(--radius-m);
   }
-  .result-title { font-size: var(--step-1); margin: 0 0 var(--space-3xs); }
-  .result-title a { color: var(--text); text-decoration: none; }
-  .result-title a:hover { color: var(--accent); }
-  .result-kind {
+  .search-results .result-title { font-size: var(--step-1); margin: 0 0 var(--space-3xs); }
+  .search-results .result-title a { color: var(--text); text-decoration: none; }
+  .search-results .result-title a:hover { color: var(--accent); }
+  .search-results .result-kind {
     font-size: var(--step--2);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -178,19 +183,20 @@ import { withBase } from '@lib/paths';
     border-radius: 100px;
     padding: 0.05rem 0.5rem;
     vertical-align: middle;
+    margin-left: var(--space-2xs);
   }
-  .result-excerpt {
-    margin: 0 0 var(--space-s);
+  .search-results .result-excerpt {
+    margin: var(--space-3xs) 0 var(--space-s);
     color: var(--muted);
     font-size: var(--step--1);
     line-height: var(--leading-snug);
   }
-  .result-excerpt :global(mark) {
+  .search-results .result-excerpt mark {
     background: color-mix(in srgb, var(--accent) 30%, transparent);
     color: var(--text);
     border-radius: 3px;
   }
-  .result-actions {
+  .search-results .result-actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs) var(--space-m);
@@ -198,13 +204,13 @@ import { withBase } from '@lib/paths';
     margin: 0;
     font-size: var(--step--1);
   }
-  .result-companion { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
-  .result-companion:hover { color: var(--text); border-color: var(--accent); }
-  .result-source {
+  .search-results .result-companion { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  .search-results .result-companion:hover { color: var(--text); border-color: var(--accent); }
+  .search-results .result-source {
     color: var(--accent);
     font-weight: 600;
     text-decoration: none;
     border-bottom: 1px solid var(--accent);
   }
-  .result-source:hover { color: var(--accent-strong); }
+  .search-results .result-source:hover { color: var(--accent-strong); }
 </style>

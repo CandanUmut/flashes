@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { withBase } from '@lib/paths';
+
+const flashes = (await getCollection('flashes')).sort(
+  (a, b) => a.data.number - b.data.number
+);
+---
+
+<BaseLayout
+  title="Lem'alar"
+  description="Bediüzzaman Said Nursî'nin Lem'alar'ına bir rehber — sade Türkçe yönlendirmeler, planlar ve sözlük; her zaman asıl metne yönlendirir."
+  lang="tr"
+>
+  <section class="wrap">
+    <header class="page-head glow-title">
+      <h1>Lem'alar</h1>
+      <p class="prose muted">
+        Otuz üç Lem'a'nın her biri için kısa bir rehber: ne anlattığı, nasıl
+        ilerlediği ve anahtar kavramlar. Türkçe rehber metinleri kademeli olarak
+        ekleniyor; henüz çevrilmemiş Lem'alarda İngilizce özet gösterilir. Her
+        sayfa sizi <strong>erisale.com'daki Türkçe metne</strong> yönlendirir.
+      </p>
+    </header>
+
+    <ul class="flash-grid">
+      {flashes.map((f) => {
+        const d = f.data;
+        const hasTr = Boolean(d.summaryTr);
+        return (
+          <li class="card">
+            <a href={withBase(`/tr/flashes/${f.id}/`)}>
+              <span class="card-no ui">No. {d.number}</span>
+              <h2 class="card-title">{d.titleTr ?? d.title}</h2>
+              <p class="card-essence">{d.essenceTr ?? d.essence}</p>
+            </a>
+            {!hasTr && <span class="card-flag ui">Çeviri hazırlanıyor</span>}
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding-block: var(--space-l) var(--space-m); }
+  .page-head .prose { margin-top: var(--space-2xs); }
+  .flash-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: var(--space-m);
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  }
+  .card {
+    position: relative;
+    border: 1px solid var(--hairline); border-radius: var(--radius-m);
+    background: var(--surface); transition: border-color var(--dur-fast) var(--ease);
+  }
+  .card:hover { border-color: var(--accent); }
+  .card a { display: block; padding: var(--space-m); text-decoration: none; color: var(--text); }
+  .card-no { color: var(--accent); font-size: var(--step--1); }
+  .card-title { font-size: var(--step-1); margin: var(--space-3xs) 0; }
+  .card-essence { color: var(--muted); font-size: var(--step--1); line-height: var(--leading-snug); margin: 0; }
+  .card-flag {
+    position: absolute; top: var(--space-s); right: var(--space-s);
+    font-size: var(--step--2); color: var(--muted);
+    border: 1px dashed var(--hairline); border-radius: 100px; padding: 0.05rem 0.5rem;
+  }
+</style>

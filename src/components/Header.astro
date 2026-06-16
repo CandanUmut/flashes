@@ -12,7 +12,8 @@ const base = import.meta.env.BASE_URL;
 // Content sections are English for now, so they link to the English routes
 // regardless of locale; About has a Turkish twin. (Search has its own box.)
 const nav = [
-  { href: localePath('/flashes/', 'en'), label: t(locale, 'nav.flashes') },
+  // Flashes has a Turkish route; glossary/themes are English-only for now.
+  { href: localePath('/flashes/', locale), label: t(locale, 'nav.flashes') },
   { href: localePath('/glossary/', 'en'), label: t(locale, 'nav.glossary') },
   { href: localePath('/themes/', 'en'), label: t(locale, 'nav.themes') },
   { href: localePath('/about/', locale), label: t(locale, 'nav.about') },

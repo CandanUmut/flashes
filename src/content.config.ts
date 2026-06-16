@@ -14,6 +14,7 @@ import { glob, file } from 'astro/loaders';
 const verse = z.object({
   arabic: z.string(),
   translationEn: z.string(),
+  translationTr: z.string().optional(), // Turkish rendering of the verse meaning
   reference: z.string(), // e.g. "Qur'an 8:46"
   translationSource: z.string(), // e.g. "Sahih International" or "project's own rendering"
 });
@@ -21,14 +22,19 @@ const verse = z.object({
 const outlineNode = z.object({
   id: z.string(),
   heading: z.string(),
+  headingTr: z.string().optional(),
   note: z.string().optional(), // 1–2 line companion gloss (our analysis)
+  noteTr: z.string().optional(),
   sourcePageRef: z.string().url().optional(), // erisale deep link for this section, if known
 });
 
 const crossRef = z.object({
   work: z.string(),
+  workTr: z.string().optional(),
   ref: z.string(),
+  refTr: z.string().optional(),
   note: z.string().optional(),
+  noteTr: z.string().optional(),
 });
 
 const flashes = defineCollection({
@@ -38,6 +44,10 @@ const flashes = defineCollection({
     title: z.string(), // English
     titleTr: z.string().optional(),
     essence: z.string(), // one-line English summary (companion)
+    essenceTr: z.string().optional(),
+    // Turkish companion summary (plain paragraphs separated by blank lines).
+    // When absent, the Turkish page falls back to the English body.
+    summaryTr: z.string().optional(),
     themes: z.array(z.string()).default([]), // theme slugs
     keyConcepts: z.array(z.string()).default([]), // glossary slugs
     context: z
@@ -45,6 +55,7 @@ const flashes = defineCollection({
         writtenWhere: z.string().optional(),
         writtenWhen: z.string().optional(),
         note: z.string().optional(),
+        noteTr: z.string().optional(),
       })
       .optional(),
     openingVerses: z.array(verse).optional(),

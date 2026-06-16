@@ -329,6 +329,26 @@ Read each in full from the source; Sahih verses, Arabic verified:
   `appearsIn` updated across reused terms.
 - `astro check` 0/0/0; build clean (97 pages); all key-concept popovers resolve.
 
+#### 🇹🇷 Turkish phase — started (links + architecture + first translation)
+- **Turkish deep links (all 33):** pulled erisale's Turkish TOC (Lem'alar =
+  bookId 3) and added `source.erisaleUrlTr` to every Flash, pointing at its first
+  Turkish page (1st → `content.tr.3.27`, matching the maintainer's example).
+- **Turkish content model:** schema extended with optional Turkish fields
+  (`essenceTr`, `summaryTr`, `outline[].headingTr/noteTr`, `context.noteTr`,
+  `verse.translationTr`, `crossRef.workTr/refTr/noteTr`) — English fallback when
+  absent, so nothing breaks.
+- **Turkish routes:** `/tr/flashes/` (index) and `/tr/flashes/[slug]/` (single)
+  render the Turkish fields and the **Turkish source link**, falling back to the
+  English summary with a "çeviri hazırlanıyor" note where the translation isn't
+  done yet. TR header nav now points "Lem'alar" → `/tr/flashes/`; the language
+  switch maps `/flashes/N/` ↔ `/tr/flashes/N/`.
+- **First translation:** the **1st Flash** fully translated into Turkish
+  (essence, summary, outline, verse, cross-ref) as the gold-standard sample.
+- 133 pages build clean; `astro check` 0/0/0.
+- **Next phases (phase by phase):** translate glossary `definitionTr` +
+  essences; then Flash summaries in batches; later `/tr/glossary/` & `/tr/themes/`
+  routes.
+
 #### ✅ Final batch — collection complete (all 33 Flashes authored, in-review)
 Authored every remaining Flash from the source (Sahih verses, Arabic verified):
 - **Treatises:** 11 (Sunna), 13 (refuge from Satan), 19 (frugality), 20

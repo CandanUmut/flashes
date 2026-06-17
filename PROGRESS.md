@@ -341,6 +341,11 @@ Read each in full from the source; Sahih verses, Arabic verified:
   translated. Header nav (Lem'alar/Sözlük/Temalar/Hakkında) routes by locale;
   `hasTwin()` now covers glossary & theme pages so the language switch maps them
   in place. 193 pages; `astro check` 0/0/0.
+- **All 33 Flash summaries translated** (`summaryTr`): every Turkish Flash page
+  now shows a Turkish title, essence and full summary (no English-fallback note).
+  Remaining TR polish (small): per-Flash outline headings/notes, verse meanings,
+  context notes and cross-refs still fall back to English on Flashes 2–33 (Flash
+  1 has them fully). 194 pages; astro check 0/0/0.
 - **Bilingual search:** `/search-index.json` now carries EN+TR fields; the
   header box and `/search` are locale-aware, plus a new `/tr/search`. Footer is
   locale-aware too. The whole TR surface (nav, chips, glossary, themes, search,
@@ -392,6 +397,22 @@ above) and link to each Flash's first page. The earlier "unconfirmed starts"
 list and the 10th/1st-Flash page questions are closed (10→70, 1→17).
 
 ---
+
+## ✅ Turkish content — complete top to bottom (all 33 Flashes)
+Every Flash file now carries full Turkish twins for **all** nested fields, not
+just the chrome and summaries:
+- `context.noteTr`, `openingVerses[].translationTr` (Turkish verse meanings),
+  `outline[].headingTr`/`noteTr`, and `crossRefs[].workTr`/`refTr`/`noteTr`.
+- Inserted via a ruamel round-trip (matching indent `mapping=2, sequence=4,
+  offset=2`, width 4096) that preserves all existing English formatting; new
+  values use `>-` folded scalars (notes/verses) or plain scalars (headings/refs).
+- The TR Flash pages already read these with English fallback, so they now
+  render 100% Turkish. Verified: `astro check` 0/0/0, `npm run build` 194 pages
+  (33 EN + 33 TR), spot-checked rendered TR pages show Turkish outline/verse/
+  crossref text with no English leakage.
+- Terminology kept consistent (Lem'alar / Sözler / Mektubat, ordinal Flash
+  names, esmâ, ihlâs, haşir, etc.). Sensitive Flashes (4, 24) keep their
+  `TODO(review)` markers in the Turkish notes too.
 
 ## 🎉 All phases complete
 The companion is production-ready and deployable. To ship: push `main` →

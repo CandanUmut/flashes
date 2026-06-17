@@ -398,6 +398,22 @@ list and the 10th/1st-Flash page questions are closed (10→70, 1→17).
 
 ---
 
+## ✅ Turkish content — complete top to bottom (all 33 Flashes)
+Every Flash file now carries full Turkish twins for **all** nested fields, not
+just the chrome and summaries:
+- `context.noteTr`, `openingVerses[].translationTr` (Turkish verse meanings),
+  `outline[].headingTr`/`noteTr`, and `crossRefs[].workTr`/`refTr`/`noteTr`.
+- Inserted via a ruamel round-trip (matching indent `mapping=2, sequence=4,
+  offset=2`, width 4096) that preserves all existing English formatting; new
+  values use `>-` folded scalars (notes/verses) or plain scalars (headings/refs).
+- The TR Flash pages already read these with English fallback, so they now
+  render 100% Turkish. Verified: `astro check` 0/0/0, `npm run build` 194 pages
+  (33 EN + 33 TR), spot-checked rendered TR pages show Turkish outline/verse/
+  crossref text with no English leakage.
+- Terminology kept consistent (Lem'alar / Sözler / Mektubat, ordinal Flash
+  names, esmâ, ihlâs, haşir, etc.). Sensitive Flashes (4, 24) keep their
+  `TODO(review)` markers in the Turkish notes too.
+
 ## 🎉 All phases complete
 The companion is production-ready and deployable. To ship: push `main` →
 GitHub Actions builds (Astro + Pagefind + sitemap) and deploys to

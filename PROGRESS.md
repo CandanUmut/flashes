@@ -341,6 +341,11 @@ Read each in full from the source; Sahih verses, Arabic verified:
   translated. Header nav (Lem'alar/Sözlük/Temalar/Hakkında) routes by locale;
   `hasTwin()` now covers glossary & theme pages so the language switch maps them
   in place. 193 pages; `astro check` 0/0/0.
+- **All 33 Flash summaries translated** (`summaryTr`): every Turkish Flash page
+  now shows a Turkish title, essence and full summary (no English-fallback note).
+  Remaining TR polish (small): per-Flash outline headings/notes, verse meanings,
+  context notes and cross-refs still fall back to English on Flashes 2–33 (Flash
+  1 has them fully). 194 pages; astro check 0/0/0.
 - **Bilingual search:** `/search-index.json` now carries EN+TR fields; the
   header box and `/search` are locale-aware, plus a new `/tr/search`. Footer is
   locale-aware too. The whole TR surface (nav, chips, glossary, themes, search,

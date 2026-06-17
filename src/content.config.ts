@@ -94,7 +94,9 @@ const themes = defineCollection({
   schema: z.object({
     id: z.string(), // slug
     name: z.string(),
+    nameTr: z.string().optional(),
     description: z.string(),
+    descriptionTr: z.string().optional(),
   }),
 });
 

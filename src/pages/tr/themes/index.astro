@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { withBase } from '@lib/paths';
+
+const themes = await getCollection('themes');
+const flashes = await getCollection('flashes');
+const countFor = (id: string) => flashes.filter((f) => f.data.themes.includes(id)).length;
+const sorted = themes
+  .map((t) => ({ ...t, count: countFor(t.id) }))
+  .sort((a, b) => b.count - a.count);
+---
+
+<BaseLayout
+  title="Temalar"
+  description="Lem'aları birbirine bağlayan tematik gruplar — kendi editöryel tasnifimiz."
+  lang="tr"
+>
+  <section class="wrap">
+    <header class="page-head glow-title">
+      <h1>Temalar</h1>
+      <p class="prose muted">
+        Lem'aları birbirine bağlayan tematik gruplar. Bunlar metnin başlıkları
+        değil, bizim editöryel tasnifimizdir.
+      </p>
+    </header>
+
+    <ul class="theme-grid">
+      {sorted.map((t) => (
+        <li class="card">
+          <a href={withBase(`/tr/themes/${t.id}/`)}>
+            <h2 class="card-name">{t.data.nameTr ?? t.data.name}</h2>
+            <p class="card-desc">{t.data.descriptionTr ?? t.data.description}</p>
+            <span class="card-count ui">{t.count} Lem'a</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding-block: var(--space-l) var(--space-m); }
+  .page-head .prose { margin-top: var(--space-2xs); }
+  .theme-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-m); grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+  .card { border: 1px solid var(--hairline); border-radius: var(--radius-m); background: var(--surface); transition: border-color var(--dur-fast) var(--ease); }
+  .card:hover { border-color: var(--accent); }
+  .card a { display: block; padding: var(--space-m); text-decoration: none; color: var(--text); }
+  .card-name { font-size: var(--step-1); margin: 0 0 var(--space-3xs); }
+  .card-desc { color: var(--muted); font-size: var(--step--1); line-height: var(--leading-snug); margin: 0 0 var(--space-2xs); }
+  .card-count { color: var(--accent); font-size: var(--step--1); }
+</style>

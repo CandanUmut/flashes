@@ -3,72 +3,121 @@
 
 - id: sincerity
   name: Sincerity
+  nameTr: İhlâs
   description: >-
     Doing every act purely for God's pleasure — purified of show, ego and
     worldly reward. The central concern of the 20th and 21st Flashes.
+  descriptionTr: >-
+    Her ameli yalnız Allah'ın rızası için yapmak — gösterişten, enaniyetten ve
+    dünyevî karşılıktan arınmış olarak. 20. ve 21. Lem'aların ana meselesi.
 
 - id: brotherhood
   name: Brotherhood & unity
+  nameTr: Uhuvvet ve ittihad
   description: >-
     Solidarity among those who serve faith: avoiding rivalry and envy, taking
     pride in one another's merits, and acting as a single collective body.
+  descriptionTr: >-
+    İmana hizmet edenler arasında dayanışma: rekabet ve hasetten kaçınmak,
+    birbirinin meziyetiyle iftihar etmek ve tek bir şahs-ı manevî gibi hareket
+    etmek.
 
 - id: the-self
   name: The self & the ego
+  nameTr: Nefis ve enaniyet
   description: >-
     The "I" (enaniyet) — how the ego claims ownership and obstructs sincerity,
     and how it is dissolved through self-effacement and humility.
+  descriptionTr: >-
+    'Ben' (enaniyet) — egonun mülkiyet iddia edip ihlâsı nasıl engellediği ve
+    tefânî ile tevazu yoluyla nasıl eritildiği.
 
 - id: death-and-the-hereafter
   name: Death & the hereafter
+  nameTr: Ölüm ve âhiret
   description: >-
     Remembering mortality (the contemplation of death) and orienting one's
     work toward the everlasting life rather than the passing world.
+  descriptionTr: >-
+    Ölümü hatırlamak (rabıta-i mevt) ve ameli, geçici dünyaya değil ebedî
+    hayata yöneltmek.
 
 - id: knowledge-of-god
   name: Knowledge of God
+  nameTr: Marifetullah
   description: >-
     Coming to know the Creator through reflection on creation and on the
     divine names — the reflective thought (tefekkür) at the heart of the work.
+  descriptionTr: >-
+    Kâinat ve esmâ-i ilâhî üzerine tefekkürle Hâlık'ı tanımak — eserin
+    kalbindeki tefekkür.
 
 - id: divine-names
   name: The divine names
+  nameTr: Esmâ-i hüsnâ
   description: >-
     The manifestations of God's names in creation, especially the names
     bearing the Greatest Name, as windows onto knowledge of God.
+  descriptionTr: >-
+    Allah'ın isimlerinin kâinattaki tecellîleri — bilhassa İsm-i Âzam'ı
+    taşıyanlar — marifetullaha açılan pencereler olarak.
 
 - id: the-quran
   name: The Qur'an
+  nameTr: Kur'an
   description: >-
     Expositions of Qur'anic verses and phrases, and aspects of the Qur'an's
     inimitability (i'jaz).
+  descriptionTr: >-
+    Kur'an âyet ve ibarelerinin izahları ve Kur'an'ın i'câzının (mucizeliğinin)
+    veçheleri.
 
 - id: prophetic-sunna
   name: The Prophetic Sunna
+  nameTr: Sünnet-i seniyye
   description: >-
     Following the practices of the Prophet (peace be upon him) as a path of
     guidance, and the dangers of innovation.
+  descriptionTr: >-
+    Peygamber'in (s.a.v.) sünnetine bir hidayet yolu olarak uymak ve bid'atın
+    tehlikeleri.
 
 - id: belief
   name: Belief & divine unity
+  nameTr: İman ve tevhid
   description: >-
     Affirming the existence and oneness of God (tawhid) and refuting the
     denial of the Creator, as in the treatise on nature.
+  descriptionTr: >-
+    Allah'ın varlığını ve birliğini (tevhid) ispat etmek ve Tabiat Risalesi'nde
+    olduğu gibi Hâlık'ı inkârı çürütmek.
 
 - id: transience
   name: Transience & the Eternal
+  nameTr: Fânilik ve Bâkî
   description: >-
     "Everything will perish save His countenance" — the passing nature of the
     world set against the One who remains.
+  descriptionTr: >-
+    'Her şey helâk olur, ancak O'nun veçhi bâki kalır' — dünyanın geçiciliği,
+    bâki kalan Zât'ın karşısında.
 
 - id: trials-and-illness
   name: Trials, illness & old age
+  nameTr: Musibet, hastalık ve ihtiyarlık
   description: >-
     Consolation and perspective for the sick, the elderly and the
     disaster-struck, reframing hardship within divine wisdom and mercy.
+  descriptionTr: >-
+    Hasta, yaşlı ve musibetzedeler için teselli ve bakış açısı; sıkıntıyı
+    ilâhî hikmet ve rahmet çerçevesinde yeniden okumak.
 
 - id: gratitude-and-frugality
   name: Gratitude & frugality
+  nameTr: Şükür ve iktisat
   description: >-
     Contentment, thankfulness and economy as forms of worship, against waste
     and heedless consumption.
+  descriptionTr: >-
+    Kanaat, şükür ve iktisadın birer ibadet oluşu; israf ve gafletle tüketime
+    karşı.

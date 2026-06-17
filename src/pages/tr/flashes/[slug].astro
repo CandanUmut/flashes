@@ -23,7 +23,11 @@ const { Content } = await render(flash);
 
 const themes = await getCollection('themes');
 const themeNames: Record<string, string> = Object.fromEntries(
-  themes.map((t) => [t.id, t.data.name])
+  themes.map((t) => [t.id, t.data.nameTr ?? t.data.name])
+);
+const glossary = await getCollection('glossary');
+const termNames: Record<string, string> = Object.fromEntries(
+  glossary.map((g) => [g.id, g.data.term])
 );
 
 const title = d.titleTr ?? d.title;
@@ -119,7 +123,7 @@ const prevTitle = (p: typeof prev) => (p ? p.data.titleTr ?? p.data.title : '');
         <h2 class="section-head">Anahtar kavramlar</h2>
         <div class="concept-list">
           {d.keyConcepts.map((slug) => (
-            <a class="chip" href={withBase(`/glossary/${slug}/`)}>{slug}</a>
+            <a class="chip" href={withBase(`/tr/glossary/${slug}/`)}>{termNames[slug] ?? slug}</a>
           ))}
         </div>
       </section>
@@ -144,7 +148,7 @@ const prevTitle = (p: typeof prev) => (p ? p.data.titleTr ?? p.data.title : '');
     {d.themes.length > 0 && (
       <section class="flash-themes ui" aria-label="Temalar">
         {d.themes.map((t) => (
-          <a class="chip" href={withBase(`/themes/${t}/`)}>{themeNames[t] ?? t}</a>
+          <a class="chip" href={withBase(`/tr/themes/${t}/`)}>{themeNames[t] ?? t}</a>
         ))}
       </section>
     )}

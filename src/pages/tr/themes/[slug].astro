@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { withBase } from '@lib/paths';
+
+export async function getStaticPaths() {
+  const themes = await getCollection('themes');
+  return themes.map((theme) => ({ params: { slug: theme.id }, props: { theme } }));
+}
+
+const { theme } = Astro.props;
+const d = theme.data;
+
+const flashes = (await getCollection('flashes'))
+  .filter((f) => f.data.themes.includes(theme.id))
+  .sort((a, b) => a.data.number - b.data.number);
+
+const name = d.nameTr ?? d.name;
+const description = d.descriptionTr ?? d.description;
+---
+
+<BaseLayout title={`${name} — Tema`} description={description} lang="tr">
+  <section class="wrap">
+    <header class="page-head glow-title">
+      <p class="eyebrow"><a href={withBase('/tr/themes/')}>Temalar</a> · tema</p>
+      <h1>{name}</h1>
+      <p class="prose muted">{description}</p>
+      <p class="count ui">{flashes.length} Lem'a</p>
+    </header>
+
+    <ul class="flash-grid">
+      {flashes.map((f) => (
+        <li class="card">
+          <a href={withBase(`/tr/flashes/${f.id}/`)}>
+            <span class="card-no ui">No. {f.data.number}</span>
+            <h2 class="card-title">{f.data.titleTr ?? f.data.title}</h2>
+            <p class="card-essence">{f.data.essenceTr ?? f.data.essence}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding-block: var(--space-l) var(--space-m); }
+  .eyebrow a { color: var(--muted); text-decoration: none; }
+  .eyebrow a:hover { color: var(--accent); }
+  .page-head .prose { margin-top: var(--space-2xs); }
+  .count { color: var(--accent); font-size: var(--step--1); margin-top: var(--space-2xs); }
+  .flash-grid { list-style: none; margin: var(--space-m) 0 0; padding: 0; display: grid; gap: var(--space-m); grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+  .card { border: 1px solid var(--hairline); border-radius: var(--radius-m); background: var(--surface); transition: border-color var(--dur-fast) var(--ease); }
+  .card:hover { border-color: var(--accent); }
+  .card a { display: block; padding: var(--space-m); text-decoration: none; color: var(--text); }
+  .card-no { color: var(--accent); font-size: var(--step--1); }
+  .card-title { font-size: var(--step-1); margin: var(--space-3xs) 0; }
+  .card-essence { color: var(--muted); font-size: var(--step--1); line-height: var(--leading-snug); margin: 0; }
+</style>

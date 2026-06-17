@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { withBase } from '@lib/paths';
+
+export async function getStaticPaths() {
+  const glossary = await getCollection('glossary');
+  return glossary.map((term) => ({ params: { slug: term.id }, props: { term } }));
+}
+
+const { term } = Astro.props;
+const d = term.data;
+
+const glossary = await getCollection('glossary');
+const termNames: Record<string, string> = Object.fromEntries(
+  glossary.map((g) => [g.id, g.data.term])
+);
+const flashes = await getCollection('flashes');
+const flashByNumber = new Map(flashes.map((f) => [f.data.number, f]));
+
+const alsoRelated = glossary
+  .filter((g) => g.id !== term.id && g.data.relatedTerms.includes(term.id))
+  .map((g) => g.id);
+const related = [...new Set([...d.relatedTerms, ...alsoRelated])].filter((s) => termNames[s]);
+
+const appearsIn = d.appearsIn
+  .map((n) => flashByNumber.get(n))
+  .filter((f): f is NonNullable<typeof f> => Boolean(f));
+
+const definition = d.definitionTr ?? d.definitionEn;
+---
+
+<BaseLayout title={`${d.term} — Sözlük`} description={definition} lang="tr">
+  <article class="wrap prose term-page">
+    <p class="eyebrow"><a href={withBase('/tr/glossary/')}>Sözlük</a> · terim</p>
+    <h1 class="glow-title">{d.term}</h1>
+    {d.arabic && <p class="arabic term-arabic" lang="ar" dir="rtl">{d.arabic}</p>}
+
+    <p class="definition">{definition}</p>
+    {!d.definitionTr && <p class="fallback-note muted">Bu terimin Türkçe açıklaması hazırlanıyor; yukarıda İngilizcesi gösteriliyor.</p>}
+
+    <hr class="gleam" />
+
+    {related.length > 0 && (
+      <section class="related ui">
+        <h2 class="section-head">İlgili terimler</h2>
+        <ul class="term-chips">
+          {related.map((slug) => (
+            <li><a class="chip" href={withBase(`/tr/glossary/${slug}/`)}>{termNames[slug]}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {appearsIn.length > 0 && (
+      <section class="appears ui">
+        <h2 class="section-head">Şu Lem'alarda geçer</h2>
+        <ul class="appears-list">
+          {appearsIn.map((f) => (
+            <li>
+              <a href={withBase(`/tr/flashes/${f.id}/`)}>
+                <span class="ai-no">No. {f.data.number}</span>
+                <span class="ai-title">{f.data.titleTr ?? f.data.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .term-page { padding-block: var(--space-l); }
+  .eyebrow a { color: var(--muted); text-decoration: none; }
+  .eyebrow a:hover { color: var(--accent); }
+  .term-arabic { font-size: var(--step-2); color: var(--accent); margin: var(--space-2xs) 0; }
+  .definition { font-size: var(--step-1); }
+  .fallback-note { font-size: var(--step--1); }
+  .section-head { font-size: var(--step-0); margin-bottom: var(--space-2xs); }
+  .term-chips { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2xs); padding: 0; margin: 0 0 var(--space-l); }
+  .chip { padding: var(--space-3xs) var(--space-s); border: 1px solid var(--hairline); border-radius: 100px; color: var(--muted); text-decoration: none; font-size: var(--step--1); }
+  .chip:hover { color: var(--accent); border-color: var(--accent); }
+  .appears-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .appears-list a { display: flex; gap: var(--space-s); align-items: baseline; text-decoration: none; color: var(--text); padding: var(--space-2xs) var(--space-s); border: 1px solid var(--hairline); border-radius: var(--radius-m); }
+  .appears-list a:hover { border-color: var(--accent); }
+  .ai-no { color: var(--accent); font-size: var(--step--1); flex: none; }
+  .ai-title { font-size: var(--step--1); }
+</style>

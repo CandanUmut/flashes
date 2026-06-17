@@ -329,6 +329,23 @@ Read each in full from the source; Sahih verses, Arabic verified:
   `appearsIn` updated across reused terms.
 - `astro check` 0/0/0; build clean (97 pages); all key-concept popovers resolve.
 
+#### 🇹🇷 Turkish phase — glossary, themes & full navigation
+- **Turkish glossary** (`/tr/glossary/` + `/tr/glossary/[slug]/`): all 46
+  `definitionTr` translated; term, related-terms and "appears in" links stay on
+  the Turkish side.
+- **Turkish themes** (`/tr/themes/` + `/tr/themes/[slug]/`): schema gains
+  `nameTr`/`descriptionTr`; all 12 translated; member-Flash cards link to
+  `/tr/flashes/`.
+- **Wiring:** Turkish Flash pages' key-concept chips → `/tr/glossary/<slug>/`
+  (showing the term) and theme chips → `/tr/themes/<slug>/`; all 33 essences
+  translated. Header nav (Lem'alar/Sözlük/Temalar/Hakkında) routes by locale;
+  `hasTwin()` now covers glossary & theme pages so the language switch maps them
+  in place. 193 pages; `astro check` 0/0/0.
+- **Bilingual search:** `/search-index.json` now carries EN+TR fields; the
+  header box and `/search` are locale-aware, plus a new `/tr/search`. Footer is
+  locale-aware too. The whole TR surface (nav, chips, glossary, themes, search,
+  language switch) now stays Turkish.
+
 #### 🇹🇷 Turkish phase — started (links + architecture + first translation)
 - **Turkish deep links (all 33):** pulled erisale's Turkish TOC (Lem'alar =
   bookId 3) and added `source.erisaleUrlTr` to every Flash, pointing at its first

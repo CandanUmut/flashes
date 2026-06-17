@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { withBase } from '@lib/paths';
+
+const glossary = (await getCollection('glossary')).sort((a, b) =>
+  a.data.term.localeCompare(b.data.term, 'tr')
+);
+---
+
+<BaseLayout
+  title="Sözlük"
+  description="Risale-i Nur'da sık geçen Arapça/Osmanlıca terimlerin sade Türkçe açıklamaları."
+  lang="tr"
+>
+  <section class="wrap">
+    <header class="page-head glow-title">
+      <h1>Sözlük</h1>
+      <p class="prose muted">
+        Lem'alar'da sık geçen terimlerin sade açıklamaları — önce kök/temel
+        mânâsı, sonra Nursî'nin kullanımı. Henüz Türkçesi girilmemiş birkaç
+        terimde İngilizce açıklama görünebilir.
+      </p>
+    </header>
+
+    <ul class="term-grid">
+      {glossary.map((g) => (
+        <li class="card">
+          <a href={withBase(`/tr/glossary/${g.id}/`)}>
+            <h2 class="card-term">{g.data.term}</h2>
+            <p class="card-def">{g.data.definitionTr ?? g.data.definitionEn}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding-block: var(--space-l) var(--space-m); }
+  .page-head .prose { margin-top: var(--space-2xs); }
+  .term-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-m); grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+  .card { border: 1px solid var(--hairline); border-radius: var(--radius-m); background: var(--surface); transition: border-color var(--dur-fast) var(--ease); }
+  .card:hover { border-color: var(--accent); }
+  .card a { display: block; padding: var(--space-m); text-decoration: none; color: var(--text); }
+  .card-term { font-size: var(--step-1); margin: 0 0 var(--space-3xs); color: var(--accent); }
+  .card-def { color: var(--muted); font-size: var(--step--1); line-height: var(--leading-snug); margin: 0;
+    display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+</style>

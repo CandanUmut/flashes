@@ -1,0 +1,162 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { withBase } from '@lib/paths';
+---
+
+<BaseLayout
+  title="Ara"
+  description="Rehber notları, planlar ve sözlük içinde arayın — tamamen tarayıcınızda çalışır."
+  lang="tr"
+>
+  <section class="wrap search-page" data-pagefind-ignore>
+    <header class="search-head glow-title">
+      <p class="eyebrow">Rehberde ara</p>
+      <h1>Ara</h1>
+      <p class="prose muted">
+        Rehber notları, planlar, sözlük ve temalar içinde arayın. Tamamen
+        tarayıcınızda çalışır — hiçbir şey hiçbir yere gönderilmez. Asıl metni
+        aramaz; her Lem'a sonucu, Nursî'nin kendi sözlerini okuyabilmeniz için
+        doğrudan resmî kaynağa bağlanır.
+      </p>
+    </header>
+
+    <form class="search-form" role="search" autocomplete="off">
+      <label class="visually-hidden" for="search-input">Rehberde ara</label>
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="Lem'a, sözlük, tema ara…"
+        enterkeyhint="search"
+        aria-controls="search-results"
+      />
+    </form>
+
+    <p class="search-status ui muted" data-search-status aria-live="polite"></p>
+    <div id="search-results" class="search-results" aria-live="polite"></div>
+
+    <noscript>
+      <p class="ui muted">Arama için JavaScript gerekir. Yine de
+        <a href={withBase('/tr/flashes/')}>Lem'aları</a> ve
+        <a href={withBase('/tr/glossary/')}>sözlüğü</a> doğrudan gezebilir, ya da aslını
+        <a href="https://www.erisale.com/index.jsp?locale=tr" rel="noopener" target="_blank">erisale.com</a>'da okuyabilirsiniz.</p>
+    </noscript>
+  </section>
+</BaseLayout>
+
+<script>
+  import { loadIndex, searchDocs, linkWithBase, type Hit } from '@lib/search';
+
+  const BASE = import.meta.env.BASE_URL;
+  const input = document.querySelector<HTMLInputElement>('#search-input');
+  const resultsEl = document.querySelector<HTMLElement>('#search-results');
+  const statusEl = document.querySelector<HTMLElement>('[data-search-status]');
+
+  const escapeAttr = (s: string) =>
+    s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const kindLabel: Record<Hit['type'], string> = { flash: "Lem'a", term: 'Sözlük', theme: 'Tema' };
+
+  function render(items: Hit[]) {
+    if (!resultsEl) return;
+    resultsEl.innerHTML = '';
+    for (const r of items) {
+      const href = linkWithBase(BASE, r.url, 'tr');
+      const card = document.createElement('article');
+      card.className = 'result';
+
+      const title = document.createElement('h2');
+      title.className = 'result-title';
+      title.innerHTML =
+        `<a href="${escapeAttr(href)}">${escapeAttr(r.title)}</a>` +
+        ` <span class="result-kind ui">${kindLabel[r.type]}</span>`;
+
+      const excerpt = document.createElement('p');
+      excerpt.className = 'result-excerpt';
+      excerpt.innerHTML = r.excerptHtml;
+
+      const actions = document.createElement('p');
+      actions.className = 'result-actions ui';
+      actions.innerHTML = `<a class="result-companion" href="${escapeAttr(href)}">Rehber notları</a>`;
+      if (r.type === 'flash' && r.source) {
+        actions.innerHTML += ` <a class="result-source" href="${escapeAttr(r.source)}" rel="noopener" target="_blank">Resmî kaynakta oku →</a>`;
+      }
+
+      card.append(title, excerpt, actions);
+      resultsEl.appendChild(card);
+    }
+  }
+
+  let lastQuery = '';
+  async function run(query: string) {
+    const q = query.trim();
+    lastQuery = q;
+    if (!q) {
+      if (resultsEl) resultsEl.innerHTML = '';
+      if (statusEl) statusEl.textContent = '';
+      return;
+    }
+    if (statusEl) statusEl.textContent = 'Aranıyor…';
+    const docs = await loadIndex(BASE);
+    if (q !== lastQuery) return;
+    const items = searchDocs(docs, q, { locale: 'tr', limit: 30 });
+    render(items);
+    if (statusEl) {
+      const n = items.length;
+      statusEl.textContent = n === 0 ? `“${q}” için sonuç yok.` : `“${q}” için ${n} sonuç.`;
+    }
+  }
+
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  input?.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => run(input.value), 150);
+  });
+  input?.closest('form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    clearTimeout(timer);
+    run(input?.value ?? '');
+  });
+
+  const initial = new URLSearchParams(location.search).get('q');
+  if (initial && input) {
+    input.value = initial;
+    run(initial);
+  }
+  input?.addEventListener('focus', () => void loadIndex(BASE), { once: true });
+</script>
+
+<style>
+  .search-head { padding-block: var(--space-l) var(--space-m); text-align: center; }
+  .search-head .prose { margin-inline: auto; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .search-form { margin-top: var(--space-m); }
+  .search-input {
+    width: 100%; min-height: 48px; padding: var(--space-s) var(--space-m);
+    font-family: var(--font-ui); font-size: var(--step-0); color: var(--text);
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-m);
+  }
+  .search-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
+  .search-status { margin-block: var(--space-s) 0; text-align: center; }
+  .search-results { margin-top: var(--space-m); display: flex; flex-direction: column; gap: var(--space-s); }
+</style>
+
+{/* Result cards are built in JS, so their styles must be global. */}
+<style is:global>
+  .search-results .result { padding: var(--space-m); background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-m); }
+  .search-results .result-title { font-size: var(--step-1); margin: 0 0 var(--space-3xs); }
+  .search-results .result-title a { color: var(--text); text-decoration: none; }
+  .search-results .result-title a:hover { color: var(--accent); }
+  .search-results .result-kind {
+    font-size: var(--step--2); text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted); border: 1px solid var(--hairline); border-radius: 100px;
+    padding: 0.05rem 0.5rem; vertical-align: middle; margin-left: var(--space-2xs);
+  }
+  .search-results .result-excerpt { margin: var(--space-3xs) 0 var(--space-s); color: var(--muted); font-size: var(--step--1); line-height: var(--leading-snug); }
+  .search-results .result-excerpt mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--text); border-radius: 3px; }
+  .search-results .result-actions { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); align-items: center; margin: 0; font-size: var(--step--1); }
+  .search-results .result-companion { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  .search-results .result-companion:hover { color: var(--text); border-color: var(--accent); }
+  .search-results .result-source { color: var(--accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--accent); }
+  .search-results .result-source:hover { color: var(--accent-strong); }
+</style>

@@ -341,7 +341,10 @@ Read each in full from the source; Sahih verses, Arabic verified:
   translated. Header nav (Lem'alar/Sözlük/Temalar/Hakkında) routes by locale;
   `hasTwin()` now covers glossary & theme pages so the language switch maps them
   in place. 193 pages; `astro check` 0/0/0.
-- **Still English on the TR side:** search (header box + `/search`) — next step.
+- **Bilingual search:** `/search-index.json` now carries EN+TR fields; the
+  header box and `/search` are locale-aware, plus a new `/tr/search`. Footer is
+  locale-aware too. The whole TR surface (nav, chips, glossary, themes, search,
+  language switch) now stays Turkish.
 
 #### 🇹🇷 Turkish phase — started (links + architecture + first translation)
 - **Turkish deep links (all 33):** pulled erisale's Turkish TOC (Lem'alar =

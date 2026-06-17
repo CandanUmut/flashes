@@ -1,11 +1,10 @@
 ---
-import { withBase } from '@lib/paths';
-import { getLocale } from '@i18n/ui';
+import { getLocale, localePath } from '@i18n/ui';
 
 const locale = getLocale(Astro.url);
 const placeholder = locale === 'tr' ? 'Ara…' : 'Search…';
 const label = locale === 'tr' ? 'Sitede ara' : 'Search the companion';
-const searchUrl = withBase('/search/');
+const searchUrl = localePath('/search/', locale);
 ---
 
 <div class="hsearch" data-pagefind-ignore>
@@ -31,10 +30,14 @@ const searchUrl = withBase('/search/');
 </div>
 
 <script>
-  import { loadIndex, searchDocs, linkWithBase, type Hit } from '@lib/search';
+  import { loadIndex, searchDocs, linkWithBase, type Hit, type Locale } from '@lib/search';
 
   const BASE = import.meta.env.BASE_URL;
-  const kindLabel: Record<Hit['type'], string> = { flash: 'Flash', term: 'Glossary', theme: 'Theme' };
+  const LOCALE: Locale = document.documentElement.lang === 'tr' ? 'tr' : 'en';
+  const kindLabel: Record<Hit['type'], string> =
+    LOCALE === 'tr'
+      ? { flash: "Lem'a", term: 'Sözlük', theme: 'Tema' }
+      : { flash: 'Flash', term: 'Glossary', theme: 'Theme' };
   const escAttr = (s: string) =>
     s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -87,17 +90,23 @@ const searchUrl = withBase('/search/');
       }
     }
 
+    const footLabel = LOCALE === 'tr' ? 'için ayrıntılı aramayı aç' : 'Open detailed search for';
+    const emptyLabel = LOCALE === 'tr' ? 'Hızlı eşleşme yok.' : 'No quick matches.';
+
     function render(items: Hit[], q: string) {
-      const foot = `<a class="hsearch-foot" href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">Open detailed search for “${escAttr(q)}” →</a>`;
+      const foot =
+        LOCALE === 'tr'
+          ? `<a class="hsearch-foot" href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">“${escAttr(q)}” ${footLabel} →</a>`
+          : `<a class="hsearch-foot" href="${escAttr(searchHref)}?q=${encodeURIComponent(q)}">${footLabel} “${escAttr(q)}” →</a>`;
       if (!items.length) {
-        panel.innerHTML = `<p class="hsearch-empty">No quick matches.</p>${foot}`;
+        panel.innerHTML = `<p class="hsearch-empty">${emptyLabel}</p>${foot}`;
         openPanel();
         return;
       }
       const rows = items
         .map(
           (r) =>
-            `<a class="hsearch-row" role="option" href="${escAttr(linkWithBase(BASE, r.url))}">` +
+            `<a class="hsearch-row" role="option" href="${escAttr(linkWithBase(BASE, r.url, LOCALE))}">` +
             `<span class="hsearch-row-title">${escAttr(r.title)}</span>` +
             `<span class="hsearch-row-kind">${kindLabel[r.type]}</span>` +
             `</a>`
@@ -116,7 +125,7 @@ const searchUrl = withBase('/search/');
       }
       const docs = await loadIndex(BASE);
       if (input.value.trim() !== q) return;
-      render(searchDocs(docs, q, 6), q);
+      render(searchDocs(docs, q, { locale: LOCALE, limit: 6 }), q);
     }
 
     input.addEventListener('input', () => {

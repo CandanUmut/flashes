@@ -98,7 +98,7 @@ import { withBase } from '@lib/paths';
     if (statusEl) statusEl.textContent = 'Searching…';
     const docs = await loadIndex(BASE);
     if (q !== lastQuery) return; // a newer query superseded this one
-    const items = searchDocs(docs, q, 30);
+    const items = searchDocs(docs, q, { locale: 'en', limit: 30 });
     render(items);
     if (statusEl) {
       const n = items.length;

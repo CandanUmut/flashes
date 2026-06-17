@@ -17,7 +17,7 @@ export const defaultLocale: Locale = 'en';
  * sections (glossary, themes) fall back to the other locale's home for now.
  */
 function hasTwin(logical: string): boolean {
-  if (['/', '/about/', '/flashes/', '/glossary/', '/themes/'].includes(logical)) return true;
+  if (['/', '/about/', '/flashes/', '/glossary/', '/themes/', '/search/'].includes(logical)) return true;
   // Single Flash, glossary term and theme pages all have Turkish twins.
   return /^\/(flashes|glossary|themes)\/[^/]+\/$/.test(logical);
 }

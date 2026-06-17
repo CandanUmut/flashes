@@ -11,8 +11,15 @@ export const locales = ['en', 'tr'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'en';
 
-/** Logical paths that have a Turkish twin page. Others fall back to English. */
-const TR_TWINS = new Set(['/', '/about/']);
+/**
+ * Logical paths that have a Turkish twin page. The Flashes index and every
+ * single-Flash page now exist under /tr/, so they switch in place; other
+ * sections (glossary, themes) fall back to the other locale's home for now.
+ */
+function hasTwin(logical: string): boolean {
+  if (logical === '/' || logical === '/about/' || logical === '/flashes/') return true;
+  return /^\/flashes\/[^/]+\/$/.test(logical); // /flashes/<slug>/
+}
 
 type Dict = Record<string, string>;
 
@@ -97,7 +104,7 @@ export function localePath(path: string, locale: Locale): string {
  */
 export function localeAlternates(url: URL): { hreflang: string; path: string }[] {
   const logical = logicalPath(url);
-  if (!TR_TWINS.has(logical)) return [];
+  if (!hasTwin(logical)) return [];
   return [
     { hreflang: 'en', path: localePath(logical, 'en') },
     { hreflang: 'tr', path: localePath(logical, 'tr') },
@@ -111,6 +118,6 @@ export function languageSwitchTarget(url: URL): { locale: Locale; href: string }
   const other: Locale = current === 'en' ? 'tr' : 'en';
   const logical = logicalPath(url);
   // If the page has no twin in the other locale, fall back to that locale's home.
-  const target = TR_TWINS.has(logical) ? logical : '/';
+  const target = hasTwin(logical) ? logical : '/';
   return { locale: other, href: localePath(target, other) };
 }
